@@ -18,6 +18,12 @@ export const metadata: Metadata = {
       '개발자들을 위해 만들어진 블로그를 작성해보세요! 발자국 시스템, PR 시스템으로 블로그를 꾸준히 쓸 수 있도록 도와줍니다',
     images: '/assets/GLOG__LOGO',
   },
+  verification: {
+    google: 'Ot9R1wLIt3DP15IpoikrTHTptAcVxD5f-MX5poEjgrQ',
+    other: {
+      'naver-site-verification': '3dfd0cdaeff6632ccb0dbc69fab0545fe7e83d44',
+    },
+  },
   icons: [{ rel: 'icon', url: Favicon.src }],
 };
 
