@@ -12,14 +12,12 @@ export const getCurrentThemeClass = (
   return userTheme === 'light' ? light : dark;
 };
 
-export const API_BASE_URL =
-  'http://glogglogglog-env.eba-fuksumx7.ap-northeast-2.elasticbeanstalk.com';
+export const API_BASE_URL = 'https://port-0-glog-ly8kvahp40d24095.sel5.cloudtype.app';
 
 // export const OAUTH2_REDIRECT_URI = 'http://localhost:3000/oauth2/redirect';
-export const OAUTH2_REDIRECT_URI = 'http://15.164.221.35:3000/oauth2/redirect';
+export const OAUTH2_REDIRECT_URI = 'https://gloog.vercel.app/oauth2/redirect';
 
 export const GITHUB_AUTH_URL =
   API_BASE_URL + '/oauth2/authorization/github?redirect_uri=' + OAUTH2_REDIRECT_URI;
 
-export const SERVER_URL =
-  'http://glogglogglog-env.eba-fuksumx7.ap-northeast-2.elasticbeanstalk.com';
+export const SERVER_URL = 'https://port-0-glog-ly8kvahp40d24095.sel5.cloudtype.app';
