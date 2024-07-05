@@ -1,0 +1,186 @@
+html {
+  background-color: white;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 30%;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgb(236, 216, 164);
+  border-radius: 15px;
+}
+*::-webkit-scrollbar-track {
+  background-color: rgb(250, 250, 250);
+}
+
+.w-md-editor {
+  background-color: transparent !important;
+  --md-editor-box-shadow-color: #d0d7de !important;
+  --color-fg-default: #000000;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+
+    --primary-glow: radial-gradient(rgba(1, 65, 255, 0.4), rgba(1, 65, 255, 0));
+    --secondary-glow: linear-gradient(
+      to bottom right,
+      rgba(1, 65, 255, 0),
+      rgba(1, 65, 255, 0),
+      rgba(1, 65, 255, 0.3)
+    );
+
+    --tile-start-rgb: 2, 13, 46;
+    --tile-end-rgb: 2, 5, 19;
+    --tile-border: conic-gradient(
+      #ffffff80,
+      #ffffff40,
+      #ffffff30,
+      #ffffff20,
+      #ffffff10,
+      #ffffff10,
+      #ffffff80
+    );
+
+    --callout-rgb: 20, 20, 20;
+    --callout-border-rgb: 108, 108, 108;
+    --card-rgb: 100, 100, 100;
+    --card-border-rgb: 200, 200, 200;
+  }
+}
+
+.wmde-markdown {
+  background-color: transparent !important;
+}
+
+.w-md-editor-toolbar {
+  background-color: transparent !important;
+}
+
+.wmde-markdown h1 {
+  border-bottom: transparent !important;
+}
+
+.wmde-markdown p {
+  border-bottom: transparent !important;
+}
+.wmde-markdown h2 {
+  border-bottom: transparent !important;
+}
+.wmde-markdown h3 {
+  border-bottom: transparent !important;
+}
+
+@font-face {
+  font-family: 'SUITE';
+  font-weight: 300;
+  src: url('/fonts/SUITE-Light.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'SUITE';
+  font-weight: 400;
+  src: url('/fonts/SUITE-Medium.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'SUITE';
+  font-weight: 500;
+  src: url('/fonts/SUITE-Medium.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'SUITE';
+  font-weight: 600;
+  src: url('/fonts/SUITE-SemiBold.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'SUITE';
+  font-weight: 700;
+  src: url('/fonts/SUITE-Bold.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'SUITE';
+  font-weight: 800;
+  src: url('/fonts/SUITE-ExtraBold.ttf') format('truetype');
+}
+
+body {
+  font-family: SUITE, sans-serif;
+}
+
+#canvas {
+  position: fixed;
+  left: 0;
+  top: 0;
+}
+
+.footPrintWrapper {
+  height: 600vh;
+  background-color: antiquewhite;
+  overflow: hidden;
+  position: relative;
+}
+
+.content {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  height: 100vh;
+  background-size: 100% 100%;
+  background-image: url('./login/b.png');
+}
+
+.footPrint {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  scale: 9;
+}
+
+.description {
+  position: absolute;
+  left: 2%;
+  top: 6.9%;
+  opacity: 0;
+}
+
+.cursor {
+  position: absolute;
+  top: 7.6%;
+  left: 10%;
+  opacity: 0;
+}
+
+.firstLayout {
+  /* height: 600vh; */
+  width: 100%;
+  opacity: 1;
+  /* position: fixed; */
+  /* background-color: red; */
+  background-color: #e4ba5a;
+  color: black;
+  z-index: 10000;
+  font-size: 40px;
+}
+
+.displayLayout {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.firstDescription {
+  opacity: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.secondDescription {
+  /* position: fixed; */
+  opacity: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
