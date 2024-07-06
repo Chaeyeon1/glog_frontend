@@ -109,8 +109,6 @@ function RepliesComponent({
   isLiked: boolean;
   who: string;
 }) {
-  console.log(who);
-
   const theme = useTheme();
   const queryClient = useQueryClient();
   const [putReplyOpen, setPutReplyOpen] = useState<boolean>(false);
