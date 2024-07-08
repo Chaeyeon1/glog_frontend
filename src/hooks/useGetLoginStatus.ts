@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 
 const useGetLoginStatus = () => {
-  const [token, setToken] = useState<string | null>('');
+  const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
-    setToken(localStorage.getItem('token'));
-  }, [localStorage]);
+    if (typeof window !== 'undefined') {
+      setToken(localStorage.getItem('token'));
+    }
+  }, []);
 
   return { isLogin: !!token };
 };
