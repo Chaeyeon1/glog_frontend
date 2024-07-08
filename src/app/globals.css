@@ -6,7 +6,7 @@ html {
   height: 30%;
 }
 *::-webkit-scrollbar-thumb {
-  background: rgb(236, 216, 164);
+  background: rgba(249, 65, 68, 0.6);
   border-radius: 15px;
 }
 *::-webkit-scrollbar-track {
