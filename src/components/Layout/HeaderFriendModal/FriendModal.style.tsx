@@ -14,6 +14,7 @@ import Modal from '@/components/Modal/Modal';
 import { ModalContent } from '@/components/Modal/Modal.style';
 import { useGetIntroduceQuery } from '@/api/introduce-api';
 import { IIntroduce } from '@/types/dto';
+import { DEFAULT_IMAGE } from '@/constant/common';
 
 export const FriendModalArea = styled(Stack)({
   display: 'flex',
@@ -139,7 +140,7 @@ function FriendListComponent({
         <Button
           sx={{ minWidth: '30px', width: '30px', height: '30px', borderRadius: '50%' }}
           onClick={() => setIntroduceOpen(true)}>
-          <ProfileImage imageSrc={profileImg} />
+          <ProfileImage imageSrc={profileImg ?? DEFAULT_IMAGE} />
         </Button>
 
         <UserName alignItems="center">
@@ -246,7 +247,7 @@ function FriendListComponent({
                     height: '100px',
                     borderRadius: '50%',
                   }}
-                  src={introduce?.imageUrl}
+                  src={introduce?.imageUrl ?? DEFAULT_IMAGE}
                   alt="profileImage"
                 />
                 <Stack>

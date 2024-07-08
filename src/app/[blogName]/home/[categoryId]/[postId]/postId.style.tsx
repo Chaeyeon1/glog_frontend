@@ -18,6 +18,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { DeleteReplyApi, PatchReplyLikeApi, putReplyApi } from '@/api/reply-api';
 import { Dialog } from '@/components/Dialog/Dialog';
 import { enqueueSnackbar } from 'notistack';
+import { DEFAULT_IMAGE } from '@/constant/common';
 
 export const ThumbnailArea = styled(Stack)({
   width: '100%',
@@ -217,7 +218,7 @@ function RepliesComponent({
                 height: '35px',
                 borderRadius: '50%',
               }}
-              src={profileImage}
+              src={profileImage ?? DEFAULT_IMAGE}
               alt="profileImage"
             />
           </Button>
@@ -295,7 +296,7 @@ function RepliesComponent({
                     height: '100px',
                     borderRadius: '50%',
                   }}
-                  src={introduce?.imageUrl}
+                  src={introduce?.imageUrl ?? DEFAULT_IMAGE}
                   alt="profileImage"
                 />
                 <Stack>
