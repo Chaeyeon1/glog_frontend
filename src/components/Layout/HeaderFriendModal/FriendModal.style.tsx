@@ -277,7 +277,7 @@ function FriendListComponent({
                 width="500px"
                 borderLeft={`1px solid ${theme.palette.primary.main}`}
                 padding={'0px 0px 0px 12px'}
-                sx={{ overflowY: 'scroll', wordBreak: 'break-all' }}
+                sx={{ overflowY: 'overlay', wordBreak: 'break-all' }}
                 height="fit-content"
                 maxHeight="200px">
                 {introduce?.introduction}
