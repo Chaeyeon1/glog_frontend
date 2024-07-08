@@ -141,7 +141,7 @@ export default function Header() {
         }}>
         {alarm?.alarmDtos?.map((alarm, i) => {
           return (
-            <MenuItem sx={{ padding: '4px' }} key={i}>
+            <MenuItem sx={{ padding: '4px', width: '100%' }} key={i}>
               <Stack
                 bgcolor={alarm.checked ? 'primary.light' : 'transparent'}
                 py={4}
