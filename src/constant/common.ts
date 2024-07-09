@@ -14,8 +14,8 @@ export const getCurrentThemeClass = (
 
 export const API_BASE_URL = 'https://port-0-glog-ly8kvahp40d24095.sel5.cloudtype.app';
 
-export const OAUTH2_REDIRECT_URI = 'http://localhost:3000/oauth2/redirect';
-// export const OAUTH2_REDIRECT_URI = 'https://gloog.vercel.app/oauth2/redirect';
+// export const OAUTH2_REDIRECT_URI = 'http://localhost:3000/oauth2/redirect';
+export const OAUTH2_REDIRECT_URI = 'https://gloog.vercel.app/oauth2/redirect';
 
 export const GITHUB_AUTH_URL =
   API_BASE_URL + '/oauth2/authorization/github?redirect_uri=' + OAUTH2_REDIRECT_URI;
