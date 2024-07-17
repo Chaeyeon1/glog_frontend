@@ -38,6 +38,11 @@ export const getRecentPosts = () => {
     });
 };
 
+const formatISODate = (dateString: string): string => {
+  const date = new Date(dateString);
+  return date.toISOString();
+};
+
 type PostType = {
   postPreviewDtos: {
     blogUrl: string;
@@ -54,7 +59,7 @@ const Sitemap = async (): Promise<MetadataRoute.Sitemap> => {
 
   const blogPosts = likeProducts.postPreviewDtos.map((post) => ({
     url: `https://gloog.vercel.app/${post.blogUrl}/home/${post.categoryId}/${post.postId}`,
-    lastModified: post.createdAt,
+    lastModified: formatISODate(post.createdAt),
     changeFrequency: 'always' as const,
     priority: 1,
   }));
@@ -62,7 +67,7 @@ const Sitemap = async (): Promise<MetadataRoute.Sitemap> => {
   blogPosts.push(
     ...viewProducts.postPreviewDtos.map((post) => ({
       url: `https://gloog.vercel.app/${post.blogUrl}/home/${post.categoryId}/${post.postId}`,
-      lastModified: post.createdAt,
+      lastModified: formatISODate(post.createdAt),
       changeFrequency: 'always' as const,
       priority: 1,
     })),
@@ -71,7 +76,7 @@ const Sitemap = async (): Promise<MetadataRoute.Sitemap> => {
   blogPosts.push(
     ...recentProducts.postPreviewDtos.map((post) => ({
       url: `https://gloog.vercel.app/${post.blogUrl}/home/${post.categoryId}/${post.postId}`,
-      lastModified: post.createdAt,
+      lastModified: formatISODate(post.createdAt),
       changeFrequency: 'always' as const,
       priority: 1,
     })),
