@@ -53,7 +53,7 @@ const Sitemap = async (): Promise<MetadataRoute.Sitemap> => {
   const recentProducts: PostType = await getRecentPosts();
 
   const blogPosts = likeProducts.postPreviewDtos.map((post) => ({
-    url: `${process.env.NEXT_PUBLIC_API_URL}/${post.blogUrl}/home/${post.categoryId}/${post.postId}`,
+    url: `https://gloog.vercel.app/${post.blogUrl}/home/${post.categoryId}/${post.postId}`,
     lastModified: post.createdAt,
     changeFrequency: 'always' as const,
     priority: 1,
@@ -61,7 +61,7 @@ const Sitemap = async (): Promise<MetadataRoute.Sitemap> => {
 
   blogPosts.push(
     ...viewProducts.postPreviewDtos.map((post) => ({
-      url: `${process.env.NEXT_PUBLIC_API_URL}/${post.blogUrl}/home/${post.categoryId}/${post.postId}`,
+      url: `https://gloog.vercel.app/${post.blogUrl}/home/${post.categoryId}/${post.postId}`,
       lastModified: post.createdAt,
       changeFrequency: 'always' as const,
       priority: 1,
@@ -70,7 +70,7 @@ const Sitemap = async (): Promise<MetadataRoute.Sitemap> => {
 
   blogPosts.push(
     ...recentProducts.postPreviewDtos.map((post) => ({
-      url: `${process.env.NEXT_PUBLIC_API_URL}/${post.blogUrl}/home/${post.categoryId}/${post.postId}`,
+      url: `https://gloog.vercel.app/${post.blogUrl}/home/${post.categoryId}/${post.postId}`,
       lastModified: post.createdAt,
       changeFrequency: 'always' as const,
       priority: 1,
@@ -79,7 +79,7 @@ const Sitemap = async (): Promise<MetadataRoute.Sitemap> => {
 
   return [
     {
-      url: process.env.NEXT_PUBLIC_API_URL!,
+      url: 'https://gloog.vercel.app',
       lastModified: new Date(),
       changeFrequency: 'always',
       priority: 0.5,
