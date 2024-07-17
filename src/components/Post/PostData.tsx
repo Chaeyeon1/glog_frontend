@@ -325,7 +325,16 @@ const PostData = ({
                       setMessage(e.target.value);
                     }}
                   />
-                  <Button variant="outlined" sx={{ width: '25px' }} onClick={() => ReplyOnClick()}>
+                  <Button
+                    variant="outlined"
+                    sx={{ width: '25px' }}
+                    onClick={() => {
+                      if (!message) {
+                        enqueueSnackbar({ variant: 'error', message: '댓글을 입력해주세요.' });
+                        return;
+                      }
+                      ReplyOnClick();
+                    }}>
                     등록
                   </Button>
                 </WriteReply>
