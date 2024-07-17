@@ -27,7 +27,7 @@ export const useGetReadMeQuery = ({
     error,
     data: backendData,
   } = useQuery([`readMe`, params, token], () => getReadMeApi({ params, token }), {
-    enabled: !!params.blogId && !!token,
+    enabled: !!params.blogId,
   });
 
   const data: { blogName: string; content: string; isMe: boolean } = backendData;
