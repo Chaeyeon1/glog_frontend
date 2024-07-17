@@ -8,17 +8,19 @@ import '@uiw/react-markdown-preview/markdown.css';
 import { useUserThemeSSR } from '../../../../../hooks/useRecoilSSR';
 import Button from '@/components/Button/Button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { PutReadMeApi, useGetReadMeQuery, usegetblogIdQuery } from '@/api/readme-api';
+import { PutReadMeApi, useGetReadMeQuery, useGetBlogIdQuery } from '@/api/readme-api';
 import { useRouter } from 'next/navigation';
 import { enqueueSnackbar } from 'notistack';
+import { TokenType } from '@/types/common';
 
 const ReadMe = ({ params }: { params: { blogName: string } }) => {
   const [userTheme] = useUserThemeSSR();
   const [content, setContent] = useState<string | undefined>('');
   const queryClient = useQueryClient();
   const router = useRouter();
-  const { data: blogIdData } = usegetblogIdQuery({ blogUrl: params.blogName });
-  const { data: readMeData } = useGetReadMeQuery({ blogId: blogIdData });
+  const [token, setToken] = useState<TokenType>(null);
+  const { data: blogIdData } = useGetBlogIdQuery({ params: { blogUrl: params.blogName }, token });
+  const { data: readMeData } = useGetReadMeQuery({ params: { blogId: blogIdData }, token });
 
   const putReadmeQuery = useMutation(PutReadMeApi, {
     onSuccess: () => {
@@ -26,6 +28,12 @@ const ReadMe = ({ params }: { params: { blogName: string } }) => {
       router.push(`/${params.blogName}`);
     },
   });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setToken(localStorage.getItem('token'));
+    }
+  }, []);
 
   useEffect(() => {
     setContent(readMeData.content);
@@ -36,12 +44,15 @@ const ReadMe = ({ params }: { params: { blogName: string } }) => {
       readme: content,
     };
 
-    putReadmeQuery.mutate(newReadMeBody, {
-      onSuccess: () =>
-        enqueueSnackbar({ message: '리드미 생성에 성공하였습니다.', variant: 'success' }),
-      onError: () =>
-        enqueueSnackbar({ message: '리드미 생성에 실패하였습니다.', variant: 'error' }),
-    });
+    putReadmeQuery.mutateAsync(
+      { body: newReadMeBody, token },
+      {
+        onSuccess: () =>
+          enqueueSnackbar({ message: '리드미 생성에 성공하였습니다.', variant: 'success' }),
+        onError: () =>
+          enqueueSnackbar({ message: '리드미 생성에 실패하였습니다.', variant: 'error' }),
+      },
+    );
   };
 
   return (

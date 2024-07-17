@@ -1,3 +1,4 @@
+export type TokenType = string | null | undefined;
 // 테마
 export type ThemeType = 'light' | 'dark';
 
@@ -19,7 +20,7 @@ export type CategorySettingModalType = {
   open: boolean;
   categoryId: number;
   onClose: () => void;
-}
+};
 
 // Private 버튼 Map Type
 type ColorType = 'oppositeColor' | 'primary';

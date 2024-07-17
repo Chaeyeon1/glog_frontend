@@ -9,6 +9,7 @@ import { ICollectContent } from '@/types/dto';
 import { useGetCollectDataQuery } from '@/api/collect-api';
 import Toast from '@/components/Toast/Toast';
 import CollectPost from './CollectPost';
+import { TokenType } from '@/types/common';
 
 function CollectArray({ kind }: { kind: 'likes' | 'views' | 'recent' }) {
   const [toastOpen, setToastOpen] = useState(false);
@@ -16,6 +17,7 @@ function CollectArray({ kind }: { kind: 'likes' | 'views' | 'recent' }) {
   const isPhone = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.down('md'));
   const isLabtop = useMediaQuery(theme.breakpoints.down('lg'));
+  const [token, setToken] = useState<TokenType>(null);
 
   const responsivePostCountMap = {
     isPhone: 1,
@@ -27,16 +29,22 @@ function CollectArray({ kind }: { kind: 'likes' | 'views' | 'recent' }) {
   const postCount = isPhone
     ? responsivePostCountMap.isPhone
     : isTablet
-    ? responsivePostCountMap.isTablet
-    : isLabtop
-    ? responsivePostCountMap.isLaptop
-    : responsivePostCountMap.isDesktop;
+      ? responsivePostCountMap.isTablet
+      : isLabtop
+        ? responsivePostCountMap.isLaptop
+        : responsivePostCountMap.isDesktop;
 
   const [page, setPage] = useState(0);
   const [backendSendPage, setBackendSendPage] = useState(1);
 
-  const { data } = useGetCollectDataQuery({ kind, page: backendSendPage });
+  const { data } = useGetCollectDataQuery({ params: { kind, page: backendSendPage }, token });
   const [kindArray, setKindArray] = useState<ICollectContent>(data);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setToken(localStorage.getItem('token'));
+    }
+  }, []);
 
   useEffect(() => {
     if (!kindArray) {

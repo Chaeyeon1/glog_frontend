@@ -8,42 +8,87 @@ import {
 } from '@/types/dto';
 import { defaultInstance } from '.';
 import { useQuery } from '@tanstack/react-query';
+import { TokenType } from '@/types/common';
 
 //친구 정보 불러오기
-export const GetFriendApi = async (params: IFriendsParams) => {
-  const { data } = await defaultInstance.get(`/friend/${params.kind}`);
+export const GetFriendApi = async ({
+  params,
+  token,
+}: {
+  params: IFriendsParams;
+  token: TokenType;
+}) => {
+  const { data } = await defaultInstance(token).get(`/friend/${params.kind}`);
 
   return data;
 };
 
-export const useGetFriendQuery = (params: IFriendsParams) => {
-  const { isLoading, error, data } = useQuery(['friend', params], () => GetFriendApi(params));
+export const useGetFriendQuery = ({
+  params,
+  token,
+}: {
+  params: IFriendsParams;
+  token: TokenType;
+}) => {
+  const { isLoading, error, data } = useQuery(
+    ['friend', params, token],
+    () => GetFriendApi({ params, token }),
+    { enabled: !!params.kind && !!token },
+  );
   return { data, isLoading, error };
 };
 
 //친구 검색
-export const GetFriendSearchApi = async (params: IFriendSearchParams) => {
-  const { data } = await defaultInstance.get('/search/friend/name', { params });
+export const GetFriendSearchApi = async ({
+  params,
+  token,
+}: {
+  params: IFriendSearchParams;
+  token: TokenType;
+}) => {
+  const { data } = await defaultInstance(token).get('/search/friend/name', { params });
 
   return data;
 };
 
-export const useGetFriendSearchQuery = (params: IFriendSearchParams) => {
-  const { isLoading, error, data } = useQuery(['search', params], () => GetFriendSearchApi(params));
+export const useGetFriendSearchQuery = ({
+  params,
+  token,
+}: {
+  params: IFriendSearchParams;
+  token: TokenType;
+}) => {
+  const { isLoading, error, data } = useQuery(
+    ['search', params, token],
+    () => GetFriendSearchApi({ params, token }),
+    { enabled: !!params.name && !!token },
+  );
 
   return { isLoading, error, data };
 };
 
 //친구 요청
-export const PutFriendRequestApi = async (body: IFriendRequest) => {
-  const { data } = await defaultInstance.put(`/friend?userId=${body.userId}`, body);
+export const PutFriendRequestApi = async ({
+  body,
+  token,
+}: {
+  body: IFriendRequest;
+  token: TokenType;
+}) => {
+  const { data } = await defaultInstance(token).put(`/friend?userId=${body.userId}`, body);
 
   return data;
 };
 
 //친구 요청 수락/거절
-export const PutFriendAllowApi = async (body: IFriendAllow) => {
-  const { data } = await defaultInstance.put(
+export const PutFriendAllowApi = async ({
+  body,
+  token,
+}: {
+  body: IFriendAllow;
+  token: TokenType;
+}) => {
+  const { data } = await defaultInstance(token).put(
     `/friend/allow?isAccept=${body.isAccept}&userId=${body.userId}`,
     body,
   );
@@ -52,8 +97,14 @@ export const PutFriendAllowApi = async (body: IFriendAllow) => {
 };
 
 //친구 삭제
-export const DeleteFriendApi = async (params: IDeleteFriend) => {
-  const { data } = await defaultInstance.delete('/friend', {
+export const DeleteFriendApi = async ({
+  params,
+  token,
+}: {
+  params: IDeleteFriend;
+  token: TokenType;
+}) => {
+  const { data } = await defaultInstance(token).delete('/friend', {
     params,
   });
 
@@ -61,15 +112,29 @@ export const DeleteFriendApi = async (params: IDeleteFriend) => {
 };
 
 //새 포스트 읽음 유무
-export const GetFriendReadApi = async (params: IFriendReadParams) => {
-  const { data } = await defaultInstance.get('/friend/read', { params });
+export const GetFriendReadApi = async ({
+  params,
+  token,
+}: {
+  params: IFriendReadParams;
+  token: TokenType;
+}) => {
+  const { data } = await defaultInstance(token).get('/friend/read', { params });
 
   return data;
 };
 
-export const useGetFriendReadQuery = (params: IFriendReadParams) => {
-  const { isLoading, error, data } = useQuery(['friendRead', params], () =>
-    GetFriendReadApi(params),
+export const useGetFriendReadQuery = ({
+  params,
+  token,
+}: {
+  params: IFriendReadParams;
+  token: TokenType;
+}) => {
+  const { isLoading, error, data } = useQuery(
+    ['friendRead', params, token],
+    () => GetFriendReadApi({ params, token }),
+    { enabled: !!params.userId && !!token },
   );
   return { data, isLoading, error };
 };

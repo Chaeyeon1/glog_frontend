@@ -8,11 +8,19 @@ import CenterContent from '@/components/Layout/CenterContent';
 import StarIcon from '@mui/icons-material/Star';
 import { useGetScrapQuery } from '@/api/scrap-api';
 import { IScrapContent } from '@/types/dto';
+import { TokenType } from '@/types/common';
 
 export default function Scrap() {
   const [page, setPage] = useState(0);
-  const { data } = useGetScrapQuery({ page });
+  const [token, setToken] = useState<TokenType>(null);
+  const { data } = useGetScrapQuery({ params: { page }, token });
   const [result, setResult] = useState<IScrapContent[]>();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setToken(localStorage.getItem('token'));
+    }
+  }, []);
 
   useEffect(() => {
     setResult(data?.postPreviewDtos);

@@ -1,35 +1,70 @@
 import { useQuery } from '@tanstack/react-query';
 import { defaultInstance } from '.';
 import { IDeleteGuestbook, IGuestbookParams, IPostGuestbook, IPutGuestbook } from '@/types/dto';
+import { TokenType } from '@/types/common';
 
 //방명록 메시지 불러오기
-export const GetGuestbookApi = async (params: IGuestbookParams) => {
-  const { data } = await defaultInstance.get('/guestbook', { params });
+export const GetGuestbookApi = async ({
+  token,
+  params,
+}: {
+  params: IGuestbookParams;
+  token: TokenType;
+}) => {
+  const { data } = await defaultInstance(token).get('/guestbook', { params });
 
   return data;
 };
 
-export const useGetGuestbookQuery = (params: IGuestbookParams) => {
-  const { isLoading, error, data } = useQuery(['guestbook', params], () => GetGuestbookApi(params));
+export const useGetGuestbookQuery = ({
+  token,
+  params,
+}: {
+  params: IGuestbookParams;
+  token: TokenType;
+}) => {
+  const { isLoading, error, data } = useQuery(
+    ['guestbook', params, token],
+    () => GetGuestbookApi({ params, token }),
+    { enabled: !!params.blogId && !!token },
+  );
 
   return { isLoading, error, data };
 };
 
 //방명록 작성
-export const PostGuestbookApi = async (body: IPostGuestbook) => {
-  const { data } = await defaultInstance.post('/guestbook', body);
+export const PostGuestbookApi = async ({
+  token,
+  body,
+}: {
+  body: IPostGuestbook;
+  token: TokenType;
+}) => {
+  const { data } = await defaultInstance(token).post('/guestbook', body);
   return data;
 };
 
 //방명록 수정
-export const PutGuestbookApi = async (body: IPutGuestbook) => {
-  const { data } = await defaultInstance.put('/guestbook', body);
+export const PutGuestbookApi = async ({
+  token,
+  body,
+}: {
+  body: IPutGuestbook;
+  token: TokenType;
+}) => {
+  const { data } = await defaultInstance(token).put('/guestbook', body);
   return data;
 };
 
 //방명록 삭제
-export const DeleteGuestbookApi = async (params: IDeleteGuestbook) => {
-  const { data } = await defaultInstance.delete('/guestbook', {
+export const DeleteGuestbookApi = async ({
+  token,
+  params,
+}: {
+  params: IDeleteGuestbook;
+  token: TokenType;
+}) => {
+  const { data } = await defaultInstance(token).delete('/guestbook', {
     params,
   });
   return data;

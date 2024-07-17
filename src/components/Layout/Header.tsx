@@ -17,7 +17,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import { useGetAlarmsQuery } from '@/api/blog-api';
 import CommentIcon from '@mui/icons-material/Comment';
 import { DEFAULT_IMAGE } from '@/constant/common';
-import useGetLoginStatus from '@/hooks/useGetLoginStatus';
+import { TokenType } from '@/types/common';
 
 export default function Header() {
   const [userTheme, setUserTheme] = useUserThemeSSR();
@@ -25,12 +25,18 @@ export default function Header() {
   const [isSearch, setIsSearch] = useIsSearchSSR();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [alarmAnchorEl, setAlarmAnchorEl] = useState<null | HTMLElement>(null);
-  const { data: userDetailData } = useGetUserDetailQuery();
+  const [token, setToken] = useState<TokenType>(null);
+  const { data: userDetailData } = useGetUserDetailQuery({ token });
   const [userDetail, setUserDetail] = useState<IUserDetail>();
   const [open, setOpen] = useState(false);
-  const { data: alarmData } = useGetAlarmsQuery();
+  const { data: alarmData } = useGetAlarmsQuery({ token });
   const [alarm, setAlarm] = useState<IAlarm>();
-  const { isLogin } = useGetLoginStatus();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setToken(localStorage.getItem('token'));
+    }
+  }, []);
 
   useEffect(() => {
     setAlarm(alarmData);
@@ -118,7 +124,7 @@ export default function Header() {
           borderRadius="20px"
           overflow="hidden"
           sx={{ cursor: 'pointer', backgroundColor: '#ffffff' }}>
-          <PageLink href={`/${!isLogin ? 'login' : userDetail?.blogUrl}` ?? ''}>
+          <PageLink href={`/${!token ? 'login' : userDetail?.blogUrl}` ?? ''}>
             <Image
               width={40}
               height={40}

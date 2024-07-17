@@ -1,6 +1,6 @@
 import Modal from '@/components/Modal/Modal';
 import { ModalContent } from '@/components/Modal/Modal.style';
-import { ModalType } from '@/types/common';
+import { ModalType, TokenType } from '@/types/common';
 import { InputAdornment, Menu, MenuItem, Stack, TextField } from '@mui/material';
 import FriendListComponent, { FriendModalArea, TopStack } from './FriendModal.style';
 import { useGetFriendQuery, useGetFriendSearchQuery } from '@/api/friend-api';
@@ -13,18 +13,21 @@ import { useGetUserDetailQuery } from '@/api/userDetail-api';
 
 function FriendModal({ open, onClose }: ModalType) {
   const [kind, setKind] = useState('recentFriend');
+  const [token, setToken] = useState<TokenType>(null);
   const { data: friendData } = useGetFriendQuery({
-    kind: kind,
+    params: { kind },
+    token,
   });
   const [friend, setFriend] = useState<IFriendsContent>();
   const kindList = ['recentFriend', 'name', 'recentPost'];
   const friendCount = friend?.userSimpleDtos.simpleDtos.length;
-  const { data: userDetailData } = useGetUserDetailQuery();
+  const { data: userDetailData } = useGetUserDetailQuery({ token });
   const [userDetail, setUserDetail] = useState<IUserDetail>();
 
   const [nickname, setNickname] = useState('');
   const { data: searchFriendData } = useGetFriendSearchQuery({
-    name: nickname,
+    params: { name: nickname },
+    token,
   });
   const [search, setSearch] = useState<IFriendsContent>();
   useEffect(() => {
@@ -32,6 +35,12 @@ function FriendModal({ open, onClose }: ModalType) {
     setSearch(searchFriendData);
     setUserDetail(userDetailData);
   }, [friendData, searchFriendData, userDetailData]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setToken(localStorage.getItem('token'));
+    }
+  }, []);
 
   //정렬기준
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Modal from '../Modal/Modal';
-import { GuestbookType } from '@/types/common';
+import { GuestbookType, TokenType } from '@/types/common';
 import { ModalContent, ModalTitle } from '../Modal/Modal.style';
 import { Stack, TextField } from '@mui/material';
 import Comment from './Comment';
@@ -11,11 +11,19 @@ import Button from '../Button/Button';
 
 function GuestBookModal({ open, blogId, onClose }: GuestbookType) {
   const queryClient = useQueryClient();
+  const [token, setToken] = useState<TokenType>(null);
   //방명록 get
   const { data: guestbookData } = useGetGuestbookQuery({
-    blogId: blogId,
+    params: { blogId },
+    token,
   });
   const [guestbook, setGuestBook] = useState<IGuestbook>();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setToken(localStorage.getItem('token'));
+    }
+  }, []);
 
   //방명록 post
   const [message, setMessage] = useState('');
@@ -31,16 +39,12 @@ function GuestBookModal({ open, blogId, onClose }: GuestbookType) {
       messageId: 0,
       message: message,
     };
-    postGuestbookQuery.mutate(newPostGuestbookBody);
+    postGuestbookQuery.mutateAsync({ body: newPostGuestbookBody, token });
   };
-
-  
 
   useEffect(() => {
     setGuestBook(guestbookData);
   }, [guestbookData]);
-
-
 
   return (
     <Modal maxWidth="lg" open={open} onClose={onClose}>

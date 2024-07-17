@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Modal from '../Modal/Modal';
 import { ModalTitle } from '../Modal/Modal.style';
 import { PostRepository, useGetRepositoryQuery } from '@/api/github-api';
@@ -8,6 +8,7 @@ import List from '../List/List';
 import Button from '../Button/Button';
 import { Stack } from '@mui/material';
 import { enqueueSnackbar } from 'notistack';
+import { TokenType } from '@/types/common';
 
 function Github({
   open,
@@ -19,9 +20,15 @@ function Github({
   categoryId?: number;
 }) {
   const queryClient = useQueryClient();
-  const { data: datas } = useGetRepositoryQuery();
+  const [token, setToken] = useState<TokenType>(null);
+  const { data: datas } = useGetRepositoryQuery({ token });
   const [clickList, setClickList] = useState<number>(0);
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setToken(localStorage.getItem('token'));
+    }
+  }, []);
   const putAllowFriendIdCreateQuery = useMutation(PostRepository, {
     onSuccess: () => {
       queryClient.invalidateQueries(['repository']);
@@ -36,9 +43,9 @@ function Github({
           <ModalTitle>Repository 선택</ModalTitle>
           <Button
             onClick={() => {
-              putAllowFriendIdCreateQuery.mutate({
-                categoryId,
-                repo: datas?.repository[clickList],
+              putAllowFriendIdCreateQuery.mutateAsync({
+                body: { categoryId, repo: datas?.repository[clickList] },
+                token,
               });
             }}
             size="medium"

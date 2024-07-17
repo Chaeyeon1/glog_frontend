@@ -43,35 +43,35 @@ import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import Image from 'next/image';
 import FootPrintAnimation from '@/components/FootPrint/FootPrintAnimation';
-import { usegetblogIdQuery } from '@/api/readme-api';
+import { useGetBlogIdQuery } from '@/api/readme-api';
 import { AddLikeApi, DeleteWriteApi } from '@/api/write-api';
 import { enqueueSnackbar } from 'notistack';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import { postVisitApi } from '@/api/mypage-api';
 import { useUserThemeSSR } from '../../../hooks/useRecoilSSR';
 import { DEFAULT_IMAGE } from '@/constant/common';
+import { TokenType } from '@/types/common';
 
 const PostData = ({
   params,
 }: {
   params: { blogName: string; categoryId: string; postId: string };
 }) => {
-  const { data: blogIdData } = usegetblogIdQuery({ blogUrl: params.blogName });
+  const [token, setToken] = useState<TokenType>(null);
+  const { data: blogIdData } = useGetBlogIdQuery({ params: { blogUrl: params.blogName }, token });
   const [blogId, setBlogId] = useState<number>();
-  const { data: sidebarData } = useGetSidebarQuery({ blogId: blogIdData });
-  const { data: postData } = useGetPostQuery({ postId: Number(params.postId) });
+  const { data: sidebarData } = useGetSidebarQuery({ params: { blogId: blogIdData }, token });
+  const { data: postData } = useGetPostQuery({ params: { postId: Number(params.postId) }, token });
   const [IntroduceOpen, setIntroduceOpen] = useState<boolean>(false);
   const [userTheme] = useUserThemeSSR();
   const router = useRouter();
   const theme = useTheme();
-
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('likesCount');
   const orderList = ['likesCount', 'createdAt'];
   const { data: replyData } = useGetReplyQuery({
-    postId: Number(params.postId),
-    page: page,
-    order: order,
+    params: { postId: Number(params.postId), page: page, order: order },
+    token,
   });
   const [reply, setReply] = useState<IReplyContent>();
 
@@ -79,6 +79,12 @@ const PostData = ({
   const [writeList, setWriteList] = useState<ISidebarContent[]>();
   const [post, setPost] = useState<IPostContent>();
   const sidebarContent: ISidebarContent[] = sidebarData?.sidebarDtos;
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setToken(localStorage.getItem('token'));
+    }
+  }, []);
 
   //댓글 post 기능 연동
   const queryClient = useQueryClient();
@@ -103,7 +109,7 @@ const PostData = ({
   });
 
   useEffect(() => {
-    blogId && blogId > 0 && postVisitQuery.mutate({ blogId });
+    blogId && blogId > 0 && postVisitQuery.mutateAsync({ body: { blogId }, token });
   }, [blogId]);
 
   const ReplyOnClick = () => {
@@ -112,7 +118,7 @@ const PostData = ({
       message: message,
     };
 
-    postReplyCreateQuery.mutate(newReplyBody);
+    postReplyCreateQuery.mutateAsync({ body: newReplyBody, token });
   };
 
   //친구 요청/수락/거절
@@ -128,7 +134,7 @@ const PostData = ({
       userId: post?.author?.userId ?? 0,
     };
 
-    putAllowFriendIdCreateQuery.mutate(newAllowBody);
+    putAllowFriendIdCreateQuery.mutateAsync({ body: newAllowBody, token });
   };
   const PutFriendRequestQuery = useMutation(PutFriendRequestApi, {
     onSuccess: () => {
@@ -139,11 +145,12 @@ const PostData = ({
     const newRequestBody = {
       userId: post?.author?.userId ?? 0,
     };
-    PutFriendRequestQuery.mutate(newRequestBody);
+    PutFriendRequestQuery.mutateAsync({ body: newRequestBody, token });
   };
 
   const { data: introduceData } = useGetIntroduceQuery({
-    userId: post?.author?.userId ?? 0,
+    params: { userId: post?.author?.userId ?? 0 },
+    token,
   });
 
   const [introduce, setIntroduce] = useState<IIntroduce>();
@@ -167,7 +174,7 @@ const PostData = ({
   });
 
   const deletePrPostOnClick = (postId: number) => {
-    deleteWritePrQuery.mutate({ postId });
+    deleteWritePrQuery.mutateAsync({ params: { postId }, token });
   };
 
   //댓글 정렬기준
@@ -255,7 +262,12 @@ const PostData = ({
                     <Stack fontSize="14px">추천수 : {post?.likesCount} </Stack>
                     <IconButton
                       size="small"
-                      onClick={() => patchAddLikeQuery.mutate({ postId: Number(params?.postId) })}>
+                      onClick={() =>
+                        patchAddLikeQuery.mutateAsync({
+                          params: { postId: Number(params?.postId) },
+                          token,
+                        })
+                      }>
                       <ThumbUpIcon color={post?.isLiked ? 'primary' : undefined} />
                     </IconButton>
                   </Stack>

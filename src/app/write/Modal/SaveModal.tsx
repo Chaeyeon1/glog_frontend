@@ -2,7 +2,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import Modal from '@/components/Modal/Modal';
 import { Dialog } from '@/components/Dialog/Dialog';
-import { ModalType, PrivateMapType } from '@/types/common';
+import { ModalType, PrivateMapType, TokenType } from '@/types/common';
 import ModalButton from '@/components/Modal/ModalButton';
 import { ModalActions, ModalContent } from '@/components/Modal/Modal.style';
 import { Chip, Stack } from '@mui/material';
@@ -45,15 +45,23 @@ function SaveModal({
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const fileInput = useRef<any>(null);
+  const [token, setToken] = useState<TokenType>(null);
   const [image, setImage] = useState('');
   const [privateMode, setPrivateMode] = useState<'private' | 'public'>('private');
   const queryClient = useQueryClient();
   // const isPrUpdate = pathname.startsWith('/write/pr/update');
   const isPr = pathname.startsWith('/write/pr');
   const { data: blogUrlData } = useGetBlogUrlQuery({
-    categoryId: categoryId,
+    params: { categoryId },
+    token,
   });
   const [blogUrl, setBlogUrl] = useState<IBlogUrl>();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setToken(localStorage.getItem('token'));
+    }
+  }, []);
 
   const postWriteCreateQuery = useMutation(PostWriteApi, {
     onSuccess: () => {
@@ -148,7 +156,7 @@ function SaveModal({
       },
     });
 
-    postWriteCreateQuery.mutate(formData);
+    postWriteCreateQuery.mutateAsync({ body: formData, token });
   };
 
   const postUpdateOnClick = () => {
@@ -166,7 +174,7 @@ function SaveModal({
       },
     });
 
-    updateWriteCreateQuery.mutate(formData);
+    updateWriteCreateQuery.mutateAsync({ body: formData, token });
   };
 
   const postTemplateOnClick = () => {
@@ -182,7 +190,7 @@ function SaveModal({
       },
     });
 
-    postTemplateAddTemplate.mutate(formData);
+    postTemplateAddTemplate.mutateAsync({ postData: formData, token });
   };
 
   const postTemporaryOnClick = () => {
@@ -198,7 +206,7 @@ function SaveModal({
       },
     });
 
-    postTemporaryAddTemplate.mutate(formData);
+    postTemporaryAddTemplate.mutateAsync({ postData: formData, token });
   };
 
   const onUpload = async (e: any) => {

@@ -15,6 +15,7 @@ import { ModalContent } from '@/components/Modal/Modal.style';
 import { useGetIntroduceQuery } from '@/api/introduce-api';
 import { IIntroduce } from '@/types/dto';
 import { DEFAULT_IMAGE } from '@/constant/common';
+import { TokenType } from '@/types/common';
 
 export const FriendModalArea = styled(Stack)({
   display: 'flex',
@@ -84,6 +85,7 @@ function FriendListComponent({
   const [IntroduceOpen, setIntroduceOpen] = useState<boolean>(false);
   const [deleteConfirmOpen, setDeleteConFirmOpen] = useState<boolean>(false);
   const [isAccept, setIsAccept] = useState<number>(Number);
+  const [token, setToken] = useState<TokenType>(null);
   const [acceptConfirmOpen, setAcceptConfirmOpen] = useState<boolean>(false);
   const [refuseConfirmOpen] = useState<boolean>(false);
   const putAllowFriendIdCreateQuery = useMutation(PutFriendAllowApi, {
@@ -97,7 +99,7 @@ function FriendListComponent({
       userId: userId,
     };
 
-    putAllowFriendIdCreateQuery.mutate(newAllowBody);
+    putAllowFriendIdCreateQuery.mutateAsync({ body: newAllowBody, token });
   };
 
   const deleteFriendQuery = useMutation(DeleteFriendApi, {
@@ -106,13 +108,20 @@ function FriendListComponent({
     },
   });
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setToken(localStorage.getItem('token'));
+    }
+  }, []);
+
   const { data: friendReadData } = useGetFriendReadQuery({
-    userId: userId,
+    params: { userId },
+    token,
   });
   const [, setReadData] = useState();
 
   const deleteClick = () => {
-    deleteFriendQuery.mutate({ userId: userId });
+    deleteFriendQuery.mutateAsync({ params: { userId }, token });
   };
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -125,7 +134,8 @@ function FriendListComponent({
   };
 
   const { data: introduceData } = useGetIntroduceQuery({
-    userId: userId,
+    params: { userId },
+    token,
   });
   const [introduce, setIntroduce] = useState<IIntroduce>();
 

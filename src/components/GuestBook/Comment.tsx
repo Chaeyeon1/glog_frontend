@@ -1,5 +1,5 @@
 import { Stack, TextField } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CommentTime from './CommentTime';
 import StarRateIcon from '@mui/icons-material/StarRate';
 import Button from '../Button/Button';
@@ -9,6 +9,7 @@ import { Dialog } from '@/components/Dialog/Dialog';
 import Modal from '../Modal/Modal';
 import { ModalTitle, ModalContent } from '../Modal/Modal.style';
 import { DEFAULT_IMAGE } from '@/constant/common';
+import { TokenType } from '@/types/common';
 
 function Comment({
   nickname,
@@ -32,13 +33,19 @@ function Comment({
   const queryClient = useQueryClient();
   //방명록 delete
   const [deleteConfirmOpen, setDeleteConFirmOpen] = useState<boolean>(false);
+  const [token, setToken] = useState<TokenType>(null);
   const deleteGuestbookQuery = useMutation(DeleteGuestbookApi, {
     onSuccess() {
       queryClient.invalidateQueries(['guestbook']);
     },
   });
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setToken(localStorage.getItem('token'));
+    }
+  }, []);
   const deleteClick = () => {
-    deleteGuestbookQuery.mutate({ messageId: messageId });
+    deleteGuestbookQuery.mutateAsync({ params: { messageId }, token });
   };
   //방명록 put
   const [putMessageOpen, setPutMessageOpen] = useState<boolean>(false);
@@ -54,7 +61,7 @@ function Comment({
       messageId: messageId,
       message: putMessage,
     };
-    putGuestbookQuery.mutate(newPutGuestbookBody);
+    putGuestbookQuery.mutateAsync({ body: newPutGuestbookBody, token });
   };
 
   return (

@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Modal from '../Modal/Modal';
 import { ModalActions, ModalContent, ModalTitle } from '../Modal/Modal.style';
 import { Stack, TextField } from '@mui/material';
 import ModalButton from '../Modal/ModalButton';
-import { CategorySettingModalType } from '@/types/common';
+import { CategorySettingModalType, TokenType } from '@/types/common';
 import Button from '../Button/Button';
 import { Dialog } from '../Dialog/Dialog';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -13,6 +13,7 @@ import { enqueueSnackbar } from 'notistack';
 function CategorySettingModal({ open, categoryId, onClose }: CategorySettingModalType) {
   const queryClient = useQueryClient();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [token, setToken] = useState<TokenType>(null);
   const deleteCategoryQuery = useMutation(DeleteCategoryApi, {
     onSuccess() {
       queryClient.invalidateQueries(['sidebar']);
@@ -22,8 +23,14 @@ function CategorySettingModal({ open, categoryId, onClose }: CategorySettingModa
       enqueueSnackbar({ message: '카테고리가 삭제되지 않았습니다', variant: 'error' });
     },
   });
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setToken(localStorage.getItem('token'));
+    }
+  }, []);
+
   const deleteClick = () => {
-    deleteCategoryQuery.mutate({ categoryId: categoryId });
+    deleteCategoryQuery.mutateAsync({ params: { categoryId }, token });
     onClose();
   };
 
@@ -38,7 +45,7 @@ function CategorySettingModal({ open, categoryId, onClose }: CategorySettingModa
       categoryId: categoryId,
       newCategoryName: newCategoryName,
     };
-    putCategoryQuery.mutate(newCategoryNameBody);
+    putCategoryQuery.mutateAsync({ body: newCategoryNameBody, token });
     onClose();
   };
 

@@ -1,67 +1,92 @@
 import { IBlogInfo, IUserInfo } from '@/types/dto';
 import { defaultInstance } from '.';
 import { useQuery } from '@tanstack/react-query';
+import { TokenType } from '@/types/common';
 
-const getMypageApi = async () => {
-  const { data } = await defaultInstance.get(`/user/detail`);
+const getMypageApi = async ({ token }: { token: TokenType }) => {
+  const { data } = await defaultInstance(token).get(`/user/detail`);
 
   return data;
 };
 
-export const useGetMypageQuery = ({ isLogin }: { isLogin: boolean }) => {
-  const { isLoading, error, data } = useQuery([`mypage`, isLogin], () => getMypageApi(), {
-    enabled: isLogin,
+export const useGetMypageQuery = ({ token }: { token: TokenType }) => {
+  const { isLoading, error, data } = useQuery([`mypage`, token], () => getMypageApi({ token }), {
+    enabled: !!token,
   });
 
   return { data, isLoading, error };
 };
 
-const getHistoryApi = async () => {
-  const { data } = await defaultInstance.get(`/history`);
+const getHistoryApi = async ({ token }: { token: TokenType }) => {
+  const { data } = await defaultInstance(token).get(`/history`);
 
   return data;
 };
 
-export const useGetHistoryQuery = () => {
-  const { isLoading, error, data } = useQuery([`history`], () => getHistoryApi());
-  return { data, isLoading, error };
-};
-
-export const postChangeUserInfoApi = async (body: IUserInfo) => {
-  const { data } = await defaultInstance.post('/change/user/info', body);
-
-  return data;
-};
-
-export const postChangeUserImageApi = async (body: FormData) => {
-  const { data } = await defaultInstance.post('/change/user/image', body, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
+export const useGetHistoryQuery = ({ token }: { token: TokenType }) => {
+  const { isLoading, error, data } = useQuery([`history`, token], () => getHistoryApi({ token }), {
+    enabled: !!token,
   });
-
-  return data;
-};
-
-export const postChangeBlogNameApi = async (body: IBlogInfo) => {
-  const { data } = await defaultInstance.post(`/change/blog/name`, body);
-
-  return data;
-};
-
-export const getVisitApi = async () => {
-  const { data } = await defaultInstance.get(`/visit`);
-
-  return data;
-};
-
-export const useGetVisitQuery = () => {
-  const { isLoading, error, data } = useQuery([`visit`], () => getVisitApi());
   return { data, isLoading, error };
 };
 
-export const postVisitApi = async (body: { blogId: number }) => {
-  const { data } = await defaultInstance.post(`/visit?blogId=${body.blogId}`);
+export const postChangeUserInfoApi = async ({
+  body,
+  token,
+}: {
+  body: IUserInfo;
+  token: TokenType;
+}) => {
+  const { data } = await defaultInstance(token).post('/change/user/info', body);
+
+  return data;
+};
+
+export const postChangeUserImageApi = async ({
+  body,
+  token,
+}: {
+  body: FormData;
+  token: TokenType;
+}) => {
+  const { data } = await defaultInstance(token).post('/change/user/image', body);
+
+  return data;
+};
+
+export const postChangeBlogNameApi = async ({
+  body,
+  token,
+}: {
+  body: IBlogInfo;
+  token: TokenType;
+}) => {
+  const { data } = await defaultInstance(token).post(`/change/blog/name`, body);
+
+  return data;
+};
+
+export const getVisitApi = async ({ token }: { token: TokenType }) => {
+  const { data } = await defaultInstance(token).get(`/visit`);
+
+  return data;
+};
+
+export const useGetVisitQuery = ({ token }: { token: TokenType }) => {
+  const { isLoading, error, data } = useQuery([`visit`, token], () => getVisitApi({ token }), {
+    enabled: !!token,
+  });
+  return { data, isLoading, error };
+};
+
+export const postVisitApi = async ({
+  body,
+  token,
+}: {
+  body: { blogId: number };
+  token: TokenType;
+}) => {
+  const { data } = await defaultInstance(token).post(`/visit?blogId=${body.blogId}`);
 
   return data;
 };

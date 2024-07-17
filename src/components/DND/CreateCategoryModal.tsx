@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Modal from '../Modal/Modal';
 import { ModalActions, ModalContent, ModalTitle } from '../Modal/Modal.style';
 import { Stack, TextField } from '@mui/material';
 import ModalButton from '../Modal/ModalButton';
-import { ModalType } from '@/types/common';
+import { ModalType, TokenType } from '@/types/common';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { PostCategoryApi } from '@/api/category-api';
 import { enqueueSnackbar } from 'notistack';
@@ -11,6 +11,7 @@ import { enqueueSnackbar } from 'notistack';
 function CreateCategoryModal({ open, onClose }: ModalType) {
   const queryClient = useQueryClient();
   const [categoryName, setCategoryName] = useState('');
+  const [token, setToken] = useState<TokenType>(null);
   const postCategoryQuery = useMutation(PostCategoryApi, {
     onSuccess() {
       queryClient.invalidateQueries(['sidebar']);
@@ -20,13 +21,19 @@ function CreateCategoryModal({ open, onClose }: ModalType) {
       enqueueSnackbar({ message: '카테고리가 생성되지 않았습니다.', variant: 'error' });
     },
   });
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setToken(localStorage.getItem('token'));
+    }
+  }, []);
+
   const postCategoryClick = () => {
     const newCategoryBody = {
       categoryName: categoryName,
       isPrCategory: false,
       repositoryUrl: '',
     };
-    postCategoryQuery.mutate(newCategoryBody);
+    postCategoryQuery.mutateAsync({ body: newCategoryBody, token });
     onClose();
   };
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { MenuItem, Select, Stack, TextField, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CollectArray from './CollectArray';
 import { Search, Star } from '@mui/icons-material';
 import { useIsSearchSSR } from '../../../hooks/useRecoilSSR';
@@ -9,12 +9,23 @@ import { useGetCollectSearchQuery } from '@/api/collect-api';
 import { ICollectPost } from '@/types/dto';
 import PostComponent from '@/components/Post/Post';
 import { PostAreaComponent } from '../scrap/scrap.style';
+import { TokenType } from '@/types/common';
 
 function Collect() {
   const [isSearch] = useIsSearchSSR();
   const [searchText, setSearchText] = useState<string>('');
   const [searchType, setSearchType] = useState<'user' | 'title' | 'hashtag' | 'content'>('user');
-  const { data } = useGetCollectSearchQuery({ type: searchType, value: searchText });
+  const [token, setToken] = useState<TokenType>(null);
+  const { data } = useGetCollectSearchQuery({
+    params: { type: searchType, value: searchText },
+    token,
+  });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setToken(localStorage.getItem('token'));
+    }
+  }, []);
 
   return (
     <Stack mt={16}>

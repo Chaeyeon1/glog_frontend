@@ -10,21 +10,28 @@ import { useGetSidebarQuery } from '@/api/blog-api';
 import { ISearchCategory, ISidebarContent } from '@/types/dto';
 import DragAndDrop from '@/components/DND/DragAndDrop';
 import { Stack } from '@mui/material';
-import { usegetblogIdQuery } from '@/api/readme-api';
+import { useGetBlogIdQuery } from '@/api/readme-api';
 import { useGetSearchCategoryQuery } from '@/api/category-api';
+import { TokenType } from '@/types/common';
 
 function page({ params }: { params: { blogName: string; categoryId: string } }) {
   const [page, setPage] = useState(0);
+  const [token, setToken] = useState<TokenType>(null);
   const [, setBlogId] = useState();
-  const { data: blogIdData } = usegetblogIdQuery({ blogUrl: params.blogName });
-  const { data: sidebarData } = useGetSidebarQuery({ blogId: blogIdData });
+  const { data: blogIdData } = useGetBlogIdQuery({ params: { blogUrl: params.blogName }, token });
+  const { data: sidebarData } = useGetSidebarQuery({ params: { blogId: blogIdData }, token });
   const [writeList, setWriteList] = useState<ISidebarContent[]>();
 
   const { data: searchCategoryData } = useGetSearchCategoryQuery({
-    categoryId: Number(params.categoryId),
-    page: page,
+    params: { categoryId: Number(params.categoryId), page },
+    token,
   });
   const [searchCategory, setSearchCategory] = useState<ISearchCategory>();
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setToken(localStorage.getItem('token'));
+    }
+  }, []);
 
   useEffect(() => {
     setBlogId(blogIdData);

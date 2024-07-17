@@ -2,6 +2,7 @@
 import { useGetIsNewBlogQuery } from '@/api/blog-api';
 import { PostMakeAccountApi } from '@/api/makeAccount-api';
 import CenterContent from '@/components/Layout/CenterContent';
+import LoginCheck from '@/components/LoginCheck';
 import { TextField } from '@mui/material';
 import { Button } from '@mui/material';
 import { Stack } from '@mui/material';
@@ -24,20 +25,18 @@ const Page = () => {
   });
 
   const postOnClick = () => {
+    const getTokenValue = params.get('token');
     const newAccountBody = {
-      blogUrl: blogUrl,
-      blogName: blogName,
-      nickname: nickname,
+      blogUrl,
+      blogName,
+      nickname,
     };
 
-    postMakeAccountCreateQuery.mutate(newAccountBody);
+    postMakeAccountCreateQuery.mutateAsync({ body: newAccountBody, token: getTokenValue });
   };
 
   useEffect(() => {
-    if (data) {
-      router.push('/collect');
-      enqueueSnackbar({ message: '로그인 성공하였습니다.', variant: 'success' });
-    }
+    if (data) router.push('/collect');
   }, [data]);
 
   useEffect(() => {
@@ -101,11 +100,7 @@ const Page = () => {
           <Stack fontSize="10px" color="red" marginBottom="15px">
             *닉네임이 블로그 주소에 반영 됩니다.
           </Stack>
-          <Button
-            fullWidth
-            sx={{ height: '50px' }}
-            variant="outlined"
-            onClick={() => postOnClick()}>
+          <Button fullWidth sx={{ height: '50px' }} variant="outlined" onClick={postOnClick}>
             입력
           </Button>
         </Stack>
@@ -114,4 +109,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default LoginCheck(Page);

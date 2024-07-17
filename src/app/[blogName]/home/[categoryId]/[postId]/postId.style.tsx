@@ -7,7 +7,7 @@ import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import Button from '@/components/Button/Button';
 import { IIntroduce } from '@/types/dto';
 import { useGetIntroduceQuery } from '@/api/introduce-api';
-import { useInsertionEffect, useState } from 'react';
+import { useEffect, useInsertionEffect, useState } from 'react';
 import Modal from '@/components/Modal/Modal';
 import { ModalContent, ModalTitle } from '@/components/Modal/Modal.style';
 import PageLink from '@/components/PageLink/PageLink';
@@ -19,6 +19,7 @@ import { DeleteReplyApi, PatchReplyLikeApi, putReplyApi } from '@/api/reply-api'
 import { Dialog } from '@/components/Dialog/Dialog';
 import { enqueueSnackbar } from 'notistack';
 import { DEFAULT_IMAGE } from '@/constant/common';
+import { TokenType } from '@/types/common';
 
 export const ThumbnailArea = styled(Stack)({
   width: '100%',
@@ -114,12 +115,19 @@ function RepliesComponent({
   const queryClient = useQueryClient();
   const [putReplyOpen, setPutReplyOpen] = useState<boolean>(false);
   const [deleteReplyOpen, setDeleteReplyOpen] = useState<boolean>(false);
-
+  const [token, setToken] = useState<TokenType>(null);
   const [IntroduceOpen, setIntroduceOpen] = useState<boolean>(false);
   const { data: introduceData } = useGetIntroduceQuery({
-    userId: userId,
+    params: { userId },
+    token,
   });
   const [introduce, setIntroduce] = useState<IIntroduce>();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setToken(localStorage.getItem('token'));
+    }
+  }, []);
 
   const deleteReplyQuery = useMutation(DeleteReplyApi, {
     onSuccess() {
@@ -128,8 +136,8 @@ function RepliesComponent({
   });
 
   const deleteClick = () => {
-    deleteReplyQuery.mutate(
-      { replyId: replyId },
+    deleteReplyQuery.mutateAsync(
+      { params: { replyId }, token },
       {
         onSuccess: () => {
           queryClient.invalidateQueries(['replies']);
@@ -154,7 +162,7 @@ function RepliesComponent({
       userId: userId,
     };
 
-    putAllowFriendIdCreateQuery.mutate(newAllowBody);
+    putAllowFriendIdCreateQuery.mutateAsync({ body: newAllowBody, token });
   };
 
   const PutFriendRequestQuery = useMutation(PutFriendRequestApi, {
@@ -166,7 +174,7 @@ function RepliesComponent({
     const newRequestBody = {
       userId: userId,
     };
-    PutFriendRequestQuery.mutate(newRequestBody);
+    PutFriendRequestQuery.mutateAsync({ body: newRequestBody, token });
   };
 
   const [newReply, setNewReply] = useState('');
@@ -180,7 +188,7 @@ function RepliesComponent({
       repyId: replyId,
       message: newReply,
     };
-    PutReplyQuery.mutate(newReplyBody);
+    PutReplyQuery.mutateAsync({ body: newReplyBody, token });
   };
 
   const PatchReplyLikeQuery = useMutation(PatchReplyLikeApi, {
@@ -192,7 +200,7 @@ function RepliesComponent({
     const newReplyLikeBody = {
       replyId: replyId,
     };
-    PatchReplyLikeQuery.mutate(newReplyLikeBody);
+    PatchReplyLikeQuery.mutateAsync({ params: newReplyLikeBody, token });
   };
 
   useInsertionEffect(() => {

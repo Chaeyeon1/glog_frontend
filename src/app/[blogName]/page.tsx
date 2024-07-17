@@ -1,7 +1,7 @@
 'use client';
 
 import { useGetSidebarQuery } from '@/api/blog-api';
-import { useGetReadMeQuery, usegetblogIdQuery } from '@/api/readme-api';
+import { useGetReadMeQuery, useGetBlogIdQuery } from '@/api/readme-api';
 import Button from '@/components/Button/Button';
 import DragAndDrop from '@/components/DND/DragAndDrop';
 import FootPrintAnimation from '@/components/FootPrint/FootPrintAnimation';
@@ -10,18 +10,26 @@ import { Stack } from '@mui/material';
 import MDEditor from '@uiw/react-md-editor';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { TokenType } from '@/types/common';
 
 const Home = ({ params }: { params: { blogName: string } }) => {
   const [writeList, setWriteList] = useState<ISidebarContent[]>();
-  const { data: blogIdData } = usegetblogIdQuery({ blogUrl: params.blogName });
-  const { data: sidebarData } = useGetSidebarQuery({ blogId: blogIdData });
-  const { data: readMeData } = useGetReadMeQuery({ blogId: blogIdData });
+  const [token, setToken] = useState<TokenType>(null);
+  const { data: blogIdData } = useGetBlogIdQuery({ params: { blogUrl: params.blogName }, token });
+  const { data: sidebarData } = useGetSidebarQuery({ params: { blogId: blogIdData }, token });
+  const { data: readMeData } = useGetReadMeQuery({ params: { blogId: blogIdData }, token });
   const [readMe, setReadMe] = useState<{
     blogName: string;
     content: string;
     isMe: boolean;
   }>();
   const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setToken(localStorage.getItem('token'));
+    }
+  }, []);
 
   useEffect(() => {
     setWriteList(sidebarData?.sidebarDtos);

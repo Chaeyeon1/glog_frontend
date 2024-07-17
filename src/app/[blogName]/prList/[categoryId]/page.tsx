@@ -12,11 +12,17 @@ import EmptyContent from '../../../../../public/assets/box.png';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { DeleteWriteApi } from '@/api/write-api';
 import { enqueueSnackbar } from 'notistack';
+import { TokenType } from '@/types/common';
 
 function page({ params }: { params: { categoryId: string } }) {
-  const { data: postedData } = useGetPRQuery({ categoryId: Number(params.categoryId) });
+  const [token, setToken] = useState<TokenType>(null);
+  const { data: postedData } = useGetPRQuery({
+    params: { categoryId: Number(params.categoryId) },
+    token,
+  });
   const { data: unPostedData } = useGetPRUnpostedQuery({
-    categoryId: Number(params.categoryId),
+    params: { categoryId: Number(params.categoryId) },
+    token,
   });
   const [unPosted, setUnPosted] = useState(unPostedData);
   const queryClient = useQueryClient();
@@ -31,8 +37,14 @@ function page({ params }: { params: { categoryId: string } }) {
   });
 
   const deletePrPostOnClick = (postId: number) => {
-    deleteWritePrQuery.mutate({ postId });
+    deleteWritePrQuery.mutateAsync({ params: { postId }, token });
   };
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setToken(localStorage.getItem('token'));
+    }
+  }, []);
 
   useEffect(() => {
     setUnPosted(unPostedData);

@@ -17,6 +17,7 @@ import '@uiw/react-markdown-preview/markdown.css';
 import { WriteProps } from '@/util/useWriteProps';
 import { useGetTemplateDetailQuery, useGetTemporaryDetailQuery } from '@/api/write-api';
 import { useGetPostQuery } from '@/api/blog-api';
+import { TokenType } from '@/types/common';
 
 const Update = ({ params }: { params: { categoryId: number; postId: number } }) => {
   const [userTheme] = useUserThemeSSR();
@@ -25,13 +26,22 @@ const Update = ({ params }: { params: { categoryId: number; postId: number } }) 
   const [tags, setTags] = useState<string[]>([]);
   const [templateId] = useTemplateIdSSR();
   const [temporaryId] = useTemporaryIdSSR();
-  const { data: postData } = useGetPostQuery({ postId: Number(params.postId) });
+  const [token, setToken] = useState<TokenType>(null);
+  const { data: postData } = useGetPostQuery({ params: { postId: Number(params.postId) }, token });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setToken(localStorage.getItem('token'));
+    }
+  }, []);
 
   const { data: templateData, refetch: templateRefetch } = useGetTemplateDetailQuery({
-    templateId,
+    params: { templateId },
+    token,
   });
   const { data: temporaryData, refetch: temporaryRefetch } = useGetTemporaryDetailQuery({
-    temporaryId,
+    params: { temporaryId },
+    token,
   });
 
   useEffect(() => {

@@ -25,7 +25,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 import { DEFAULT_IMAGE } from '@/constant/common';
 import PageProgress from '@/components/Progress/PageProgress';
-import useGetLoginStatus from '@/hooks/useGetLoginStatus';
+import { TokenType } from '@/types/common';
 
 function page() {
   const theme = useTheme();
@@ -36,18 +36,24 @@ function page() {
   const [isUserInfoEdit, setIsUserInfoEdit] = useState(false);
   const [isBlogNameEdit, setIsBlogNameEdit] = useState(false);
   const [blogName, setBlogName] = useState('');
+  const [token, setToken] = useState<TokenType>(null);
   const fileInput = useRef<any>(null);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [image, setImage] = useState('');
-  const { data } = useGetVisitQuery();
+  const { data } = useGetVisitQuery({ token });
   const handleAlignment = (_: React.MouseEvent<HTMLElement>, newYearWeekToggle: string | null) => {
     if (newYearWeekToggle !== null) {
       setYearWeekToggle(newYearWeekToggle);
     }
   };
-  const { isLogin } = useGetLoginStatus();
-  const { data: userData } = useGetMypageQuery({ isLogin });
-  const { data: historyData } = useGetHistoryQuery();
+  const { data: userData } = useGetMypageQuery({ token });
+  const { data: historyData } = useGetHistoryQuery({ token });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setToken(localStorage.getItem('token'));
+    }
+  }, []);
 
   const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 
@@ -78,14 +84,14 @@ function page() {
       introduction,
     };
 
-    postChangeUserInfoQuery.mutate(body);
+    postChangeUserInfoQuery.mutateAsync({ body, token });
   };
 
   const userProfileOnClick = () => {
     const formData = new FormData();
     formData.append('image', image);
 
-    postChangeUserImageQuery.mutate(formData);
+    postChangeUserImageQuery.mutateAsync({ body: formData, token });
   };
 
   const blogNameOnClick = () => {
@@ -93,7 +99,7 @@ function page() {
       newBlogName: blogName,
     };
 
-    postChangeBlogNameQuery.mutate(body);
+    postChangeBlogNameQuery.mutateAsync({ body, token });
   };
 
   useEffect(() => {

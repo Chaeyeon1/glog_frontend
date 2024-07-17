@@ -5,7 +5,7 @@ import List from '@/components/List/List';
 import { Stack } from '@mui/material';
 import Button from '@/components/Button/Button';
 import { Dialog } from '@/components/Dialog/Dialog';
-import { ModalType } from '@/types/common';
+import { ModalType, TokenType } from '@/types/common';
 import ModalButton from '@/components/Modal/ModalButton';
 import { DeleteTemporaryApi, useGetTemporaryQuery } from '@/api/write-api';
 import { useTemporaryIdSSR } from '../../../../hooks/useRecoilSSR';
@@ -14,7 +14,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 function TempSaveModal({ open, onClose }: ModalType) {
   const [clickList, setClickList] = useState<number>(0);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState<boolean>(false);
-  const { data } = useGetTemporaryQuery();
+  const [token, setToken] = useState<TokenType>(null);
+  const { data } = useGetTemporaryQuery({ token });
   const [lists, setLists] = useState<{ postTitleResponse?: { id?: number; title?: string }[] }>();
   const [, setTemporary] = useTemporaryIdSSR();
   const queryClient = useQueryClient();
@@ -24,6 +25,12 @@ function TempSaveModal({ open, onClose }: ModalType) {
       queryClient.invalidateQueries(['template']);
     },
   });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setToken(localStorage.getItem('token'));
+    }
+  }, []);
 
   useEffect(() => {
     setLists(data);
@@ -36,7 +43,7 @@ function TempSaveModal({ open, onClose }: ModalType) {
   };
 
   const deleteClick = () => {
-    deleteTemporaryQuery.mutate({ temporaryId: clickList });
+    deleteTemporaryQuery.mutateAsync({ params: { temporaryId: clickList }, token });
   };
 
   return (

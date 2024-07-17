@@ -17,6 +17,7 @@ import '@uiw/react-markdown-preview/markdown.css';
 import { WriteProps } from '@/util/useWriteProps';
 import { useGetTemplateDetailQuery, useGetTemporaryDetailQuery } from '@/api/write-api';
 import onImagePasted from '@/util/onImagePasted';
+import { TokenType } from '@/types/common';
 
 const Write = ({ params }: { params: { categoryId: number } }) => {
   const [userTheme] = useUserThemeSSR();
@@ -25,14 +26,23 @@ const Write = ({ params }: { params: { categoryId: number } }) => {
   const [tags, setTags] = useState<string[]>([]);
   const [templateId] = useTemplateIdSSR();
   const [temporaryId] = useTemporaryIdSSR();
+  const [token, setToken] = useState<TokenType>(null);
   // const [temporaryId, setTemporary] = useTemporaryIdSSR();
 
   const { data: templateData, refetch: templateRefetch } = useGetTemplateDetailQuery({
-    templateId,
+    params: { templateId },
+    token,
   });
   const { data: temporaryData, refetch: temporaryRefetch } = useGetTemporaryDetailQuery({
-    temporaryId,
+    params: { temporaryId },
+    token,
   });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setToken(localStorage.getItem('token'));
+    }
+  }, []);
 
   useEffect(() => {
     templateRefetch();

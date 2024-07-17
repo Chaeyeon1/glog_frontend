@@ -5,7 +5,7 @@ import List from '@/components/List/List';
 import { Stack } from '@mui/material';
 import Button from '@/components/Button/Button';
 import { Dialog } from '@/components/Dialog/Dialog';
-import { ModalType } from '@/types/common';
+import { ModalType, TokenType } from '@/types/common';
 import ModalButton from '@/components/Modal/ModalButton';
 import { DeleteTemplateApi, useGetTemplateQuery } from '@/api/write-api';
 import { ITemplate } from '@/types/dto';
@@ -16,9 +16,16 @@ function TemplateModal({ open, onClose }: ModalType) {
   const [clickList, setClickList] = useState<number>(0);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState<boolean>(false);
   const [lists, setLists] = useState<ITemplate>({ postTitleResponse: [{ title: '', id: 0 }] });
-  const { data: templateListData } = useGetTemplateQuery();
+  const [token, setToken] = useState<TokenType>(null);
+  const { data: templateListData } = useGetTemplateQuery({ token });
   const [, setTemplate] = useTemplateIdSSR();
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setToken(localStorage.getItem('token'));
+    }
+  }, []);
 
   const deleteTemplateQuery = useMutation(DeleteTemplateApi, {
     onSuccess() {
@@ -37,7 +44,7 @@ function TemplateModal({ open, onClose }: ModalType) {
   };
 
   const deleteClick = () => {
-    deleteTemplateQuery.mutate({ templateId: clickList });
+    deleteTemplateQuery.mutateAsync({ params: { templateId: clickList }, token });
   };
 
   return (

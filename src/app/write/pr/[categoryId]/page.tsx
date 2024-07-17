@@ -16,22 +16,32 @@ import {
 } from '../../../../../hooks/useRecoilSSR';
 import { WriteProps } from '@/util/useWriteProps';
 import { useGetTemplateDetailQuery, useGetTemporaryDetailQuery } from '@/api/write-api';
+import { TokenType } from '@/types/common';
 
 const PR = ({ params }: { params: { categoryId: number } }) => {
   const [userTheme] = useUserThemeSSR();
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string | undefined>('');
   const [tags, setTags] = useState<string[]>([]);
+  const [token, setToken] = useState<TokenType>(null);
   const [templateId] = useTemplateIdSSR();
   const [temporaryId] = useTemporaryIdSSR();
   // const [temporaryId, setTemporary] = useTemporaryIdSSR();
 
   const { data: templateData, refetch: templateRefetch } = useGetTemplateDetailQuery({
-    templateId,
+    params: { templateId },
+    token,
   });
   const { data: temporaryData, refetch: temporaryRefetch } = useGetTemporaryDetailQuery({
-    temporaryId,
+    params: { temporaryId },
+    token,
   });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setToken(localStorage.getItem('token'));
+    }
+  }, []);
 
   useEffect(() => {
     templateRefetch();

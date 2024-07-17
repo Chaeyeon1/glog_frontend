@@ -9,88 +9,161 @@ import {
 } from '@/types/dto';
 import { defaultInstance } from '.';
 import { useQuery } from '@tanstack/react-query';
+import { TokenType } from '@/types/common';
 
-const GetCollectDataApi = async (params: ICollect) => {
-  const { data } = await defaultInstance.get(`/post/previews/${params.kind}?page=${params.page}`);
+const GetCollectDataApi = async ({ token, params }: { params: ICollect; token: TokenType }) => {
+  const { data } = await defaultInstance(token).get(
+    `/post/previews/${params.kind}?page=${params.page}`,
+  );
 
   return data;
 };
 
-export const useGetCollectDataQuery = (params: ICollect) => {
+export const useGetCollectDataQuery = ({
+  params,
+  token,
+}: {
+  params: ICollect;
+  token: TokenType;
+}) => {
   const {
     isLoading,
     error,
     data: queryData,
-  } = useQuery([`collectData`, params], () => GetCollectDataApi(params));
+  } = useQuery([`collectData`, params, token], () => GetCollectDataApi({ params, token }), {
+    enabled: !!params.kind && !!params.page && !!token,
+  });
   const data: ICollectContent = queryData;
   return { data, isLoading, error };
 };
 
-const getColletSearchApi = async (params: ISearch) => {
-  const { data } = await defaultInstance.get(`/search`, { params });
+const getColletSearchApi = async ({ params, token }: { params: ISearch; token: TokenType }) => {
+  const { data } = await defaultInstance(token).get(`/search`, { params });
 
   return data;
 };
 
-export const useGetCollectSearchQuery = (params: ISearch) => {
+export const useGetCollectSearchQuery = ({
+  params,
+  token,
+}: {
+  params: ISearch;
+  token: TokenType;
+}) => {
   const { isLoading, error, data } = useQuery(
-    [`search`, params],
-    () => getColletSearchApi(params),
+    [`search`, params, token],
+    () => getColletSearchApi({ params, token }),
     {
-      enabled: !!params.value,
+      enabled: !!params.value && !!params.type && !!token,
     },
   );
   return { data, isLoading, error };
 };
 
-const GetColletSearchUserApi = async (params: ISearchUser) => {
-  const { data } = await defaultInstance.get(`/search/user`, { params });
+const GetColletSearchUserApi = async ({
+  params,
+  token,
+}: {
+  params: ISearchUser;
+  token: TokenType;
+}) => {
+  const { data } = await defaultInstance(token).get(`/search/user`, { params });
 
   return data;
 };
 
-export const useGetCollectSearchUserQuery = (params: ISearchUser) => {
-  const { isLoading, error, data } = useQuery([`searchUser`, params], () =>
-    GetColletSearchUserApi(params),
+export const useGetCollectSearchUserQuery = ({
+  params,
+  token,
+}: {
+  params: ISearchUser;
+  token: TokenType;
+}) => {
+  const { isLoading, error, data } = useQuery(
+    [`searchUser`, params, token],
+    () => GetColletSearchUserApi({ params, token }),
+    { enabled: !!params.nickname && !!token },
   );
   return { data, isLoading, error };
 };
 
-const GetColletSearchTitleApi = async (params: ISearchTitle) => {
-  const { data } = await defaultInstance.get(`/search/title`, { params });
+const GetColletSearchTitleApi = async ({
+  params,
+  token,
+}: {
+  params: ISearchTitle;
+  token: TokenType;
+}) => {
+  const { data } = await defaultInstance(token).get(`/search/title`, { params });
 
   return data;
 };
 
-export const useGetCollectSearchTitleQuery = (params: ISearchTitle) => {
-  const { isLoading, error, data } = useQuery([`searchTitle`, params], () =>
-    GetColletSearchTitleApi(params),
+export const useGetCollectSearchTitleQuery = ({
+  params,
+  token,
+}: {
+  params: ISearchTitle;
+  token: TokenType;
+}) => {
+  const { isLoading, error, data } = useQuery(
+    [`searchTitle`, params, token],
+    () => GetColletSearchTitleApi({ params, token }),
+    { enabled: !!params.title && !!token },
   );
   return { data, isLoading, error };
 };
 
-const GetColletSearchHashtagApi = async (params: ISearchHashtag) => {
-  const { data } = await defaultInstance.get(`/search/hashtag`, { params });
+const GetColletSearchHashtagApi = async ({
+  params,
+  token,
+}: {
+  params: ISearchHashtag;
+  token: TokenType;
+}) => {
+  const { data } = await defaultInstance(token).get(`/search/hashtag`, { params });
 
   return data;
 };
 
-export const useGetCollectSearchHashtagQuery = (params: ISearchHashtag) => {
-  const { isLoading, error, data } = useQuery([`searchHashtag`, params], () =>
-    GetColletSearchHashtagApi(params),
+export const useGetCollectSearchHashtagQuery = ({
+  params,
+  token,
+}: {
+  params: ISearchHashtag;
+  token: TokenType;
+}) => {
+  const { isLoading, error, data } = useQuery(
+    [`searchHashtag`, params, token],
+    () => GetColletSearchHashtagApi({ params, token }),
+    { enabled: !!params.hashtag && !!token },
   );
   return { data, isLoading, error };
 };
 
-const GetColletSearchContentApi = async (params: ISearchContent) => {
-  const { data } = await defaultInstance.get(`/search/content`, { params });
+const GetColletSearchContentApi = async ({
+  params,
+  token,
+}: {
+  params: ISearchContent;
+  token: TokenType;
+}) => {
+  const { data } = await defaultInstance(token).get(`/search/content`, { params });
 
   return data;
 };
 
-export const useGetCollectSearchContentQuery = (params: ISearchContent) => {
-  const { isLoading, error, data } = useQuery([`searchContent`, params], () =>
-    GetColletSearchContentApi(params),
+export const useGetCollectSearchContentQuery = ({
+  params,
+  token,
+}: {
+  params: ISearchContent;
+  token: TokenType;
+}) => {
+  const { isLoading, error, data } = useQuery(
+    [`searchContent`, params, token],
+    () => GetColletSearchContentApi({ params, token }),
+    { enabled: !!token },
   );
   return { data, isLoading, error };
 };
