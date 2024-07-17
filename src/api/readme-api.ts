@@ -34,7 +34,7 @@ export const useGetReadMeQuery = ({
   return { data, isLoading, error };
 };
 
-export const getblogIdApi = async ({
+export const getBlogIdApi = async ({
   token,
   params,
 }: {
@@ -55,8 +55,8 @@ export const useGetBlogIdQuery = ({
 }) => {
   const { isLoading, error, data } = useQuery(
     [`blogid`, params, token],
-    () => getblogIdApi({ params, token }),
-    { enabled: !!params.blogUrl && !!token },
+    () => getBlogIdApi({ params, token }),
+    { enabled: !!params.blogUrl },
   );
   return { data, isLoading, error };
 };

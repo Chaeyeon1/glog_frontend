@@ -21,7 +21,7 @@ export const useGetPostQuery = ({ token, params }: { token: TokenType; params: I
   const { isLoading, error, data } = useQuery(
     [`post`, params, token],
     () => getPostApi({ params, token }),
-    { enabled: !!params.postId && !!token },
+    { enabled: !!params.postId },
   );
   return { data, isLoading, error };
 };
@@ -56,7 +56,7 @@ export const PostChangeBlogNameApi = async ({
 };
 
 // 사이드바 얻어오기
-const GetSidebarApi = async ({ params, token }: { params: ISidebar; token: TokenType }) => {
+const getSidebarApi = async ({ params, token }: { params: ISidebar; token: TokenType }) => {
   const { data } = await defaultInstance(token).get(`/category/sidebar/${params.blogId}`, {
     params,
   });
@@ -67,9 +67,9 @@ const GetSidebarApi = async ({ params, token }: { params: ISidebar; token: Token
 export const useGetSidebarQuery = ({ params, token }: { params: ISidebar; token: TokenType }) => {
   const { isLoading, error, data } = useQuery(
     [`sidebar`, params, token],
-    () => GetSidebarApi({ params, token }),
+    () => getSidebarApi({ params, token }),
     {
-      enabled: !!params.blogId && !!token,
+      enabled: !!params.blogId,
     },
   );
   return { data, isLoading, error };

@@ -185,7 +185,6 @@ const PostData = ({
   const handleClose = () => {
     setAnchorEl(null);
   };
-
   return (
     <Stack>
       <ThumbnailArea>
