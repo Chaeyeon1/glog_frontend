@@ -185,6 +185,7 @@ const PostData = ({
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   return (
     <Stack>
       <ThumbnailArea>
@@ -415,7 +416,14 @@ const PostData = ({
                   </>
                 ) : (
                   <Stack>
-                    <Button onClick={() => FriendRequestOnClick()}>친구 요청</Button>
+                    {!post?.isAuthor && (
+                      <Button
+                        onClick={() => {
+                          FriendRequestOnClick();
+                        }}>
+                        친구 요청
+                      </Button>
+                    )}
                   </Stack>
                 )}
               </Stack>
