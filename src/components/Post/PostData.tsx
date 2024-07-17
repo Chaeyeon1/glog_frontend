@@ -261,12 +261,14 @@ const PostData = ({
                     <Stack fontSize="14px">추천수 : {post?.likesCount} </Stack>
                     <IconButton
                       size="small"
-                      onClick={() =>
-                        patchAddLikeQuery.mutateAsync({
-                          params: { postId: Number(params?.postId) },
-                          token,
-                        })
-                      }>
+                      onClick={() => {
+                        !token
+                          ? enqueueSnackbar({ variant: 'error', message: '로그인이 필요합니다.' })
+                          : patchAddLikeQuery.mutateAsync({
+                              params: { postId: Number(params?.postId) },
+                              token,
+                            });
+                      }}>
                       <ThumbUpIcon color={post?.isLiked ? 'primary' : undefined} />
                     </IconButton>
                   </Stack>
@@ -279,73 +281,80 @@ const PostData = ({
                   })}
                 </Stack>
               </Stack>
-              <ReplyHandle>
-                <Stack flexDirection={'row'}>
-                  <Stack>
-                    <Button onClick={handleClick} sx={{ padding: '0 10px 0 0', minWidth: '24px' }}>
-                      <AlignHorizontalLeftIcon fontSize="medium"></AlignHorizontalLeftIcon>
-                    </Button>
-                    <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-                      <MenuItem
-                        onClick={() => {
-                          handleClose();
-                          setOrder(orderList[0]);
-                        }}>
-                        인기순
-                      </MenuItem>
-                      <MenuItem
-                        onClick={() => {
-                          handleClose();
-                          setOrder(orderList[1]);
-                        }}>
-                        최신순
-                      </MenuItem>
-                    </Menu>
+              {!!reply?.replyDtos.length && (
+                <ReplyHandle>
+                  <Stack flexDirection={'row'}>
+                    <Stack>
+                      <Button
+                        onClick={handleClick}
+                        sx={{ padding: '0 10px 0 0', minWidth: '24px' }}>
+                        <AlignHorizontalLeftIcon fontSize="medium"></AlignHorizontalLeftIcon>
+                      </Button>
+                      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+                        <MenuItem
+                          onClick={() => {
+                            handleClose();
+                            setOrder(orderList[0]);
+                          }}>
+                          인기순
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() => {
+                            handleClose();
+                            setOrder(orderList[1]);
+                          }}>
+                          최신순
+                        </MenuItem>
+                      </Menu>
+                    </Stack>
+                    <Stack>정렬기준</Stack>
                   </Stack>
-                  <Stack>정렬기준</Stack>
-                </Stack>
-              </ReplyHandle>
-              <WriteReply>
-                <Avatar sx={{ width: 35, height: 35 }} alt="" src="/static/images/avatar/1.jpg" />
-                <TextField
-                  fullWidth
-                  variant="standard"
-                  label={'댓글 추가'}
-                  sx={{ margin: '0 30px' }}
-                  value={message}
-                  onChange={(e) => {
-                    setMessage(e.target.value);
-                  }}
-                />
-                <Button variant="outlined" sx={{ width: '25px' }} onClick={() => ReplyOnClick()}>
-                  등록
-                </Button>
-              </WriteReply>
+                </ReplyHandle>
+              )}
+              {token && (
+                <WriteReply>
+                  <Avatar sx={{ width: 35, height: 35 }} alt="" src="/static/images/avatar/1.jpg" />
+                  <TextField
+                    fullWidth
+                    variant="standard"
+                    label={'댓글 추가'}
+                    sx={{ margin: '0 30px' }}
+                    value={message}
+                    onChange={(e) => {
+                      setMessage(e.target.value);
+                    }}
+                  />
+                  <Button variant="outlined" sx={{ width: '25px' }} onClick={() => ReplyOnClick()}>
+                    등록
+                  </Button>
+                </WriteReply>
+              )}
             </PostReply>
-            <GetReplies>
-              {/* map 이용해서 뿌려야함 */}
-              {reply?.replyDtos?.map((replyInfo) => {
-                return (
-                  <RepliesComponent
-                    key={replyInfo.replyId}
-                    replyId={replyInfo.replyId}
-                    userId={replyInfo.userDto.userId}
-                    nickname={replyInfo.userDto.nickname}
-                    profileImage={replyInfo.userDto.profileImage}
-                    message={replyInfo.message}
-                    likesCount={replyInfo.likesCount}
-                    isLiked={replyInfo.isLiked}
-                    who={replyInfo.who}></RepliesComponent>
-                );
-              })}
-              <ReplyPagenation
-                count={replyData?.totalPages}
-                page={page + 1}
-                sx={{ margin: '30px 0' }}
-                onChange={(_, newPage) => {
-                  setPage(newPage - 1);
-                }}></ReplyPagenation>
-            </GetReplies>
+            {!!reply?.replyDtos.length && (
+              <GetReplies>
+                {reply.replyDtos.map((replyInfo) => {
+                  return (
+                    <RepliesComponent
+                      key={replyInfo.replyId}
+                      replyId={replyInfo.replyId}
+                      userId={replyInfo.userDto.userId}
+                      nickname={replyInfo.userDto.nickname}
+                      profileImage={replyInfo.userDto.profileImage}
+                      message={replyInfo.message}
+                      likesCount={replyInfo.likesCount}
+                      isLiked={replyInfo.isLiked}
+                      who={replyInfo.who}></RepliesComponent>
+                  );
+                })}
+                <ReplyPagenation
+                  count={replyData?.totalPages}
+                  page={page + 1}
+                  sx={{ margin: '30px 0' }}
+                  onChange={(_, newPage) => {
+                    setPage(newPage - 1);
+                  }}></ReplyPagenation>
+              </GetReplies>
+            )}
           </Stack>
         }
       />
