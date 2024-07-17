@@ -33,8 +33,5 @@ const unAxiosApi = (url: string, data?: any) => {
   return instance;
 };
 
-export const defaultInstance = axiosApi('https://port-0-glog-ly8kvahp40d24095.sel5.cloudtype.app');
-
-export const unAxiosDefaultInstance = unAxiosApi(
-  'https://port-0-glog-ly8kvahp40d24095.sel5.cloudtype.app',
-);
+export const defaultInstance = axiosApi(process.env.NEXT_PUBLIC_API_URL!);
+export const unAxiosDefaultInstance = unAxiosApi(process.env.NEXT_PUBLIC_API_URL!);

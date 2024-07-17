@@ -126,8 +126,6 @@ function page() {
     fileInput.current?.click();
   };
 
-  console.log(userData);
-
   return (
     <>
       {!userData ? (

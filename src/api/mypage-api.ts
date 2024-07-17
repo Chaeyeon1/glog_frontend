@@ -9,7 +9,6 @@ const getMypageApi = async () => {
 };
 
 export const useGetMypageQuery = ({ isLogin }: { isLogin: boolean }) => {
-  console.log('api 쏨');
   const { isLoading, error, data } = useQuery([`mypage`, isLogin], () => getMypageApi(), {
     enabled: isLogin,
   });
