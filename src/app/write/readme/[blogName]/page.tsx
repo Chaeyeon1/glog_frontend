@@ -37,7 +37,7 @@ const ReadMe = ({ params }: { params: { blogName: string } }) => {
   }, []);
 
   useEffect(() => {
-    setContent(readMeData.content);
+    setContent(readMeData?.content);
   }, [readMeData]);
 
   const readmeSaveOnClick = () => {

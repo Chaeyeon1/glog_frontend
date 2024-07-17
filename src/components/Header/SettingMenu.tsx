@@ -62,7 +62,6 @@ function SettingMenu({ open, onClose, anchorEl }: ModalType & { anchorEl: null |
           sx={{ color: theme.palette.oppositeColor.main }}
           onClick={() => {
             setFriendOpen(true);
-            onClose();
           }}>
           친구
         </MenuItem>

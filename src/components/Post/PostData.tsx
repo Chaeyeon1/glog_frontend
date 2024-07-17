@@ -252,7 +252,7 @@ const PostData = ({
         isMe={sidebarData?.isMyPage}
         rightContainer={
           <Stack width={'100%'} bgcolor={userTheme === 'dark' ? 'transparent' : '#FCFAF1'} p={12}>
-            <MDEditor.Markdown source={post?.content} />
+            <MDEditor.Markdown key={post?.content} source={post?.content} />
             {/* 댓글 */}
             <PostReply>
               <Stack mb={8} spacing={2}>

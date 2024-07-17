@@ -64,9 +64,9 @@ function SaveModal({
   }, []);
 
   const postWriteCreateQuery = useMutation(PostWriteApi, {
-    onSuccess: () => {
+    onSuccess: (newPostId: string) => {
       queryClient.invalidateQueries(['post']);
-      router.push(`/${blogUrl}`);
+      router.push(`/${blogUrl}/home/${Number(categoryId)}/${Number(newPostId)}`);
       enqueueSnackbar({ message: '글 작성이 완료되었습니다.', variant: 'success' });
     },
     onError: (e: Error) => {
