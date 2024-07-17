@@ -32,11 +32,11 @@ export const getAlarmsApi = async ({ token }: { token: TokenType }) => {
   return data;
 };
 
-export const useGetAlarmsQuery = ({ token }: { token: TokenType }) => {
+export const useGetAlarmsQuery = ({ token, open }: { token: TokenType; open?: boolean }) => {
   const { isLoading, error, data } = useQuery(
-    [`alarms`, token],
+    [`alarms`, token, open],
     () => getAlarmsApi({ token: token }),
-    { enabled: !!token },
+    { enabled: !!token && open },
   );
 
   return { data, isLoading, error };

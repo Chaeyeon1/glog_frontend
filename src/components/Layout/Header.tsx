@@ -29,7 +29,7 @@ export default function Header() {
   const { data: userDetailData } = useGetUserDetailQuery({ token });
   const [userDetail, setUserDetail] = useState<IUserDetail>();
   const [open, setOpen] = useState(false);
-  const { data: alarmData } = useGetAlarmsQuery({ token });
+  const { data: alarmData } = useGetAlarmsQuery({ token, open });
   const [alarm, setAlarm] = useState<IAlarm>();
 
   useEffect(() => {

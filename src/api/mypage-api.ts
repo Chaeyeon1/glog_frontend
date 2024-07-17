@@ -12,6 +12,7 @@ const getMypageApi = async ({ token }: { token: TokenType }) => {
 export const useGetMypageQuery = ({ token }: { token: TokenType }) => {
   const { isLoading, error, data } = useQuery([`mypage`, token], () => getMypageApi({ token }), {
     enabled: !!token,
+    refetchOnWindowFocus: false,
   });
 
   return { data, isLoading, error };
@@ -26,6 +27,7 @@ const getHistoryApi = async ({ token }: { token: TokenType }) => {
 export const useGetHistoryQuery = ({ token }: { token: TokenType }) => {
   const { isLoading, error, data } = useQuery([`history`, token], () => getHistoryApi({ token }), {
     enabled: !!token,
+    refetchOnWindowFocus: false,
   });
   return { data, isLoading, error };
 };
@@ -75,6 +77,7 @@ export const getVisitApi = async ({ token }: { token: TokenType }) => {
 export const useGetVisitQuery = ({ token }: { token: TokenType }) => {
   const { isLoading, error, data } = useQuery([`visit`, token], () => getVisitApi({ token }), {
     enabled: !!token,
+    refetchOnWindowFocus: false,
   });
   return { data, isLoading, error };
 };

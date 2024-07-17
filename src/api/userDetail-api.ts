@@ -22,6 +22,7 @@ export const useGetUserDetailQuery = ({ token }: { token: TokenType }) => {
     data: backendData,
   } = useQuery(['userDetail', token], () => GetUserDetailApi({ token }), {
     enabled: !!token,
+    refetchOnWindowFocus: false,
   });
 
   const data: IUserDetail = backendData;

@@ -67,6 +67,7 @@ function page() {
   const postChangeUserImageQuery = useMutation(postChangeUserImageApi, {
     onSuccess: () => {
       queryClient.invalidateQueries(['mypage']);
+      queryClient.invalidateQueries(['userDetail']);
       setIsUserInfoEdit(false);
     },
   });
