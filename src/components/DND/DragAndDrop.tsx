@@ -168,61 +168,59 @@ function DragAndDrop({ rightContainer, footprintList, blogName, isMe }: DragAndD
                               )
                             )}
                           </Stack>
-                          {!category?.isPrCategory && (
-                            <Stack
-                              sx={{
-                                padding: '8px',
-                                borderRadius: '8px',
-                              }}>
-                              {category.postTitleDtos?.map((post) => {
-                                return (
-                                  <Draggable
-                                    key={post.postId}
-                                    draggableId={`${post.postId}`}
-                                    index={post.postId}>
-                                    {(provided) => (
-                                      <Stack
-                                        sx={{
-                                          padding: '4px 8px',
-                                          ':hover': {
-                                            borderRadius: '8px',
-                                            backgroundColor: 'primary.light',
-                                          },
-                                          ':active': {
-                                            backgroundColor: 'transparent',
-                                          },
-                                        }}
-                                        ref={provided.innerRef}
-                                        {...provided.draggableProps}
-                                        {...provided.dragHandleProps}>
-                                        <PageLink
-                                          href={`/${blogName}/home/${category.categoryId}/${post.postId}`}>
+                          <Stack
+                            sx={{
+                              padding: '8px',
+                              borderRadius: '8px',
+                            }}>
+                            {category.postTitleDtos?.map((post) => {
+                              return (
+                                <Draggable
+                                  key={post.postId}
+                                  draggableId={`${post.postId}`}
+                                  index={post.postId}>
+                                  {(provided) => (
+                                    <Stack
+                                      sx={{
+                                        padding: '4px 8px',
+                                        ':hover': {
+                                          borderRadius: '8px',
+                                          backgroundColor: 'primary.light',
+                                        },
+                                        ':active': {
+                                          backgroundColor: 'transparent',
+                                        },
+                                      }}
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}>
+                                      <PageLink
+                                        href={`/${blogName}/home/${category.categoryId}/${post.postId}`}>
+                                        <Stack
+                                          direction="row"
+                                          justifyContent="left"
+                                          alignItems="center"
+                                          width="fit-content"
+                                          gap={2}>
+                                          <Image
+                                            src={FootPrint ?? DEFAULT_IMAGE}
+                                            alt="footPrint"
+                                            width="15"
+                                            height="15"
+                                          />
                                           <Stack
-                                            direction="row"
-                                            justifyContent="left"
-                                            alignItems="center"
-                                            width="fit-content"
-                                            gap={2}>
-                                            <Image
-                                              src={FootPrint ?? DEFAULT_IMAGE}
-                                              alt="footPrint"
-                                              width="15"
-                                              height="15"
-                                            />
-                                            <Stack
-                                              width="101px"
-                                              color={theme.palette.oppositeColor.main}>
-                                              {post.title}
-                                            </Stack>
+                                            width="101px"
+                                            color={theme.palette.oppositeColor.main}>
+                                            {post.title}
                                           </Stack>
-                                        </PageLink>
-                                      </Stack>
-                                    )}
-                                  </Draggable>
-                                );
-                              })}
-                            </Stack>
-                          )}
+                                        </Stack>
+                                      </PageLink>
+                                    </Stack>
+                                  )}
+                                </Draggable>
+                              );
+                            })}
+                          </Stack>
                           {provided.placeholder}
                         </div>
                       )}

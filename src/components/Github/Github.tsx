@@ -32,6 +32,7 @@ function Github({
   const putAllowFriendIdCreateQuery = useMutation(PostRepository, {
     onSuccess: () => {
       queryClient.invalidateQueries(['repository']);
+      queryClient.invalidateQueries(['sidebar']);
       onClose();
       enqueueSnackbar({ message: 'Repository 연동이 완료되었습니다.', variant: 'success' });
     },
