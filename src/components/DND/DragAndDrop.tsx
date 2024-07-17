@@ -60,7 +60,10 @@ function DragAndDrop({ rightContainer, footprintList, blogName, isMe }: DragAndD
         <DragDropContext onDragEnd={dragHandler}>
           <CenterContent bgcolor="themeColor.main">
             <Stack gap={8} width="100%" height="100%" direction="row">
-              <Stack sx={{ transition: 'all .35s ease-in-out' }} position="relative" gap={8}>
+              <Stack
+                sx={{ transition: 'all .35s ease-in-out', flexShrink: 0 }}
+                position="relative"
+                gap={8}>
                 {isMe && (
                   <Button
                     variant="outlined"

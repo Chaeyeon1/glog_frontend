@@ -11,7 +11,7 @@ import { defaultInstance } from '.';
 import { useQuery } from '@tanstack/react-query';
 import { TokenType } from '@/types/common';
 
-const GetCollectDataApi = async ({ token, params }: { params: ICollect; token: TokenType }) => {
+const getCollectDataApi = async ({ token, params }: { params: ICollect; token: TokenType }) => {
   const { data } = await defaultInstance(token).get(
     `/post/previews/${params.kind}?page=${params.page}`,
   );
@@ -30,8 +30,8 @@ export const useGetCollectDataQuery = ({
     isLoading,
     error,
     data: queryData,
-  } = useQuery([`collectData`, params, token], () => GetCollectDataApi({ params, token }), {
-    enabled: !!params.kind && !!params.page && !!token,
+  } = useQuery([`collectData`, params, token], () => getCollectDataApi({ params, token }), {
+    enabled: !!params.kind && !!params.page,
   });
   const data: ICollectContent = queryData;
   return { data, isLoading, error };
@@ -54,7 +54,7 @@ export const useGetCollectSearchQuery = ({
     [`search`, params, token],
     () => getColletSearchApi({ params, token }),
     {
-      enabled: !!params.value && !!params.type && !!token,
+      enabled: !!params.value && !!params.type,
     },
   );
   return { data, isLoading, error };

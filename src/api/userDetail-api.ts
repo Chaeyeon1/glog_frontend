@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { defaultInstance } from '.';
 import { IUserDetail } from '@/types/dto';
 import { TokenType } from '@/types/common';
+import { usePathname } from 'next/navigation';
 
 export const GetUserDetailApi = async ({ token }: { token: TokenType }) => {
   const { data } = await defaultInstance(token).get('/user/detail');
@@ -16,13 +17,13 @@ export const deleteUserApi = async ({ token }: { token: TokenType }) => {
 };
 
 export const useGetUserDetailQuery = ({ token }: { token: TokenType }) => {
+  const pathname = usePathname();
   const {
     isLoading,
     error,
     data: backendData,
-  } = useQuery(['userDetail', token], () => GetUserDetailApi({ token }), {
+  } = useQuery(['userDetail', token, pathname], () => GetUserDetailApi({ token }), {
     enabled: !!token,
-    refetchOnWindowFocus: false,
   });
 
   const data: IUserDetail = backendData;

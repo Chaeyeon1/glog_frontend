@@ -26,17 +26,18 @@ export default function Header() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [alarmAnchorEl, setAlarmAnchorEl] = useState<null | HTMLElement>(null);
   const [token, setToken] = useState<TokenType>(null);
-  const { data: userDetailData } = useGetUserDetailQuery({ token });
+  const { data: userDetailData, isLoading } = useGetUserDetailQuery({ token });
   const [userDetail, setUserDetail] = useState<IUserDetail>();
   const [open, setOpen] = useState(false);
   const { data: alarmData } = useGetAlarmsQuery({ token, open });
   const [alarm, setAlarm] = useState<IAlarm>();
 
   useEffect(() => {
+    console.log(isLoading);
     if (typeof window !== 'undefined') {
       setToken(localStorage.getItem('token'));
     }
-  }, []);
+  }, [isLoading]);
 
   useEffect(() => {
     setAlarm(alarmData);

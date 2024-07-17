@@ -18,7 +18,7 @@ const LoginCheck = <P extends LoginCheckProps>(Component: ComponentType<P>) => {
           enqueueSnackbar({ variant: 'error', message: '로그인이 필요합니다.' });
         }
       }
-    }, [window]);
+    }, []);
 
     return <Component {...props} />;
   };

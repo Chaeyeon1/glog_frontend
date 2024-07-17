@@ -7,7 +7,7 @@ import PageLink from '../PageLink/PageLink';
 import FriendModal from '../Layout/HeaderFriendModal/FriendModal';
 import { enqueueSnackbar } from 'notistack';
 import { deleteUserApi } from '@/api/userDetail-api';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import Button from '../Button/Button';
 import useModalOpen from '@/hooks/useModalOpen';
@@ -16,6 +16,7 @@ function SettingMenu({ open, onClose, anchorEl }: ModalType & { anchorEl: null |
   const [friendOpen, setFriendOpen] = useState<boolean>(false);
   const [token, setToken] = useState<TokenType>(null);
   const theme = useTheme();
+  const queryClient = useQueryClient();
   const {
     open: dialogOpen,
     handleClose: handleDialogClose,
@@ -31,7 +32,7 @@ function SettingMenu({ open, onClose, anchorEl }: ModalType & { anchorEl: null |
   }, [open]);
   const { mutateAsync: deleteUserMutate } = useMutation(deleteUserApi, {
     onSuccess: () => {
-      // queryClient.invalidateQueries(['mypage']);
+      queryClient.invalidateQueries(['userDetail']);
       enqueueSnackbar({
         message: '회원탈퇴가 성공적으로 완료되었습니다.',
         variant: 'success',

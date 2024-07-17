@@ -33,6 +33,7 @@ const ReadMe = ({ params }: { params: { blogName: string } }) => {
     if (typeof window !== 'undefined') {
       setToken(localStorage.getItem('token'));
     }
+    queryClient.invalidateQueries(['userDetail']);
   }, []);
 
   useEffect(() => {

@@ -107,12 +107,14 @@ function page() {
     setName(userData?.nickName ?? '');
     setIntroduction(userData?.introduction ?? '');
     setImageSrc(userData?.thumbnail ?? '');
+    setBlogName(userData?.blogName ?? '');
   }, [userData, isUserInfoEdit]);
 
   useEffect(() => {
     setName(userData?.nickName ?? '');
     setIntroduction(userData?.introduction ?? '');
     setImageSrc(userData?.thumbnail ?? '');
+    setBlogName(userData?.blogName ?? '');
   }, []);
 
   const onUpload = async (e: any) => {
