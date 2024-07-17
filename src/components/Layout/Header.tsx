@@ -64,7 +64,6 @@ export default function Header() {
     setUserDetail(userDetailData);
   }, [userDetailData]);
 
-  console.log(alarm);
   return (
     <Stack
       bgcolor={pathname.includes('/home') ? 'transparent' : 'primary.main'}
