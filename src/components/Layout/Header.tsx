@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { IconButton, Menu, MenuItem, Stack } from '@mui/material';
+import { IconButton, Menu, MenuItem, Stack, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
@@ -10,7 +10,7 @@ import { usePathname } from 'next/navigation';
 import PageLink from '../PageLink/PageLink';
 import Image from 'next/image';
 import SettingMenu from '../Header/SettingMenu';
-import { Home, Search } from '@mui/icons-material';
+import { Alarm, Home, Search } from '@mui/icons-material';
 import { useGetUserDetailQuery } from '@/api/userDetail-api';
 import { IAlarm, IUserDetail } from '@/types/dto';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -25,15 +25,14 @@ export default function Header() {
   const [isSearch, setIsSearch] = useIsSearchSSR();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [alarmAnchorEl, setAlarmAnchorEl] = useState<null | HTMLElement>(null);
+  const alarmOpen = Boolean(alarmAnchorEl);
   const [token, setToken] = useState<TokenType>(null);
   const { data: userDetailData, isLoading } = useGetUserDetailQuery({ token });
   const [userDetail, setUserDetail] = useState<IUserDetail>();
-  const [open, setOpen] = useState(false);
-  const { data: alarmData } = useGetAlarmsQuery({ token, open });
+  const { data: alarmData } = useGetAlarmsQuery({ token, open: alarmOpen });
   const [alarm, setAlarm] = useState<IAlarm>();
 
   useEffect(() => {
-    console.log(isLoading);
     if (typeof window !== 'undefined') {
       setToken(localStorage.getItem('token'));
     }
@@ -65,6 +64,7 @@ export default function Header() {
     setUserDetail(userDetailData);
   }, [userDetailData]);
 
+  console.log(alarm);
   return (
     <Stack
       bgcolor={pathname.includes('/home') ? 'transparent' : 'primary.main'}
@@ -110,13 +110,7 @@ export default function Header() {
             <LightModeIcon fontSize="large" />
           </IconButton>
         )}
-        <IconButton
-          sx={{ color: '#ffffff' }}
-          size="medium"
-          onClick={(e) => {
-            setOpen(true);
-            handleAlarmClick(e);
-          }}>
+        <IconButton sx={{ color: '#ffffff' }} size="medium" onClick={handleAlarmClick}>
           <NotificationsIcon fontSize="large" />
         </IconButton>
         <Stack
@@ -141,31 +135,37 @@ export default function Header() {
       </Stack>
       <Menu
         anchorEl={alarmAnchorEl}
-        open={open}
+        open={alarmOpen}
         onClose={() => {
-          setOpen(false);
-          setAnchorEl(null);
+          setAlarmAnchorEl(null);
         }}>
-        {alarm?.alarmDtos?.map((alarm, i) => {
-          return (
-            <MenuItem sx={{ padding: '4px', width: '100%' }} key={i}>
-              <Stack
-                bgcolor={alarm.checked ? 'primary.light' : 'transparent'}
-                py={4}
-                px={6}
-                spacing={2}>
-                <Stack>
-                  <CommentIcon sx={{ marginBottom: '4px' }} />
-                  {alarm.message}
+        {alarm?.alarmDtos.length ? (
+          alarm?.alarmDtos.map((alarm, i) => {
+            return (
+              <MenuItem sx={{ padding: '4px', width: '100%' }} key={i}>
+                <Stack
+                  bgcolor={alarm.checked ? 'primary.light' : 'transparent'}
+                  py={4}
+                  px={6}
+                  spacing={2}>
+                  <Stack>
+                    <CommentIcon sx={{ marginBottom: '4px' }} />
+                    {alarm.message}
+                  </Stack>
+                  <Stack direction="row" spacing={2}>
+                    <Stack fontSize="13px">{alarm.createdAt.slice(0, 10)}</Stack>
+                    <Stack fontSize="13px">{alarm.createdAt.slice(11, 19)}</Stack>
+                  </Stack>
                 </Stack>
-                <Stack direction="row" spacing={2}>
-                  <Stack fontSize="13px">{alarm.createdAt.slice(0, 10)}</Stack>
-                  <Stack fontSize="13px">{alarm.createdAt.slice(11, 19)}</Stack>
-                </Stack>
-              </Stack>
-            </MenuItem>
-          );
-        })}
+              </MenuItem>
+            );
+          })
+        ) : (
+          <Stack py={4} px={6} direction="row" spacing={2}>
+            <Alarm />
+            <Typography>알람이 존재하지 않습니다.</Typography>
+          </Stack>
+        )}
       </Menu>
     </Stack>
   );
