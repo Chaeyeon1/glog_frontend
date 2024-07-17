@@ -132,40 +132,44 @@ export default function Header() {
         </IconButton>
         <SettingMenu open={menuOpen} onClose={handleClose} anchorEl={anchorEl} />
       </Stack>
-      <Menu
-        anchorEl={alarmAnchorEl}
-        open={alarmOpen}
-        onClose={() => {
-          setAlarmAnchorEl(null);
-        }}>
-        {alarm?.alarmDtos.length ? (
-          alarm?.alarmDtos.map((alarm, i) => {
-            return (
-              <MenuItem sx={{ padding: '4px', width: '100%' }} key={i}>
-                <Stack
-                  bgcolor={alarm.checked ? 'primary.light' : 'transparent'}
-                  py={4}
-                  px={6}
-                  spacing={2}>
-                  <Stack>
-                    <CommentIcon sx={{ marginBottom: '4px' }} />
-                    {alarm.message}
+      {alarm?.alarmDtos && (
+        <Menu
+          anchorEl={alarmAnchorEl}
+          open={alarmOpen}
+          onClose={() => {
+            setAlarmAnchorEl(null);
+          }}>
+          {alarm?.alarmDtos.length ? (
+            alarm?.alarmDtos.map((alarm, i) => {
+              return (
+                <MenuItem sx={{ padding: '4px', width: '100%' }} key={i}>
+                  <Stack
+                    bgcolor={alarm.checked ? 'primary.light' : 'transparent'}
+                    py={4}
+                    px={6}
+                    spacing={2}>
+                    <Stack maxWidth="200px">
+                      <CommentIcon sx={{ marginBottom: '4px' }} />
+                      <Typography sx={{ wordBreak: 'break-all', whiteSpace: 'pre-wrap' }}>
+                        {alarm.message}
+                      </Typography>
+                    </Stack>
+                    <Stack direction="row" spacing={2}>
+                      <Stack fontSize="13px">{alarm.createdAt.slice(0, 10)}</Stack>
+                      <Stack fontSize="13px">{alarm.createdAt.slice(11, 19)}</Stack>
+                    </Stack>
                   </Stack>
-                  <Stack direction="row" spacing={2}>
-                    <Stack fontSize="13px">{alarm.createdAt.slice(0, 10)}</Stack>
-                    <Stack fontSize="13px">{alarm.createdAt.slice(11, 19)}</Stack>
-                  </Stack>
-                </Stack>
-              </MenuItem>
-            );
-          })
-        ) : (
-          <Stack py={4} px={6} direction="row" spacing={2}>
-            <Alarm />
-            <Typography>알람이 존재하지 않습니다.</Typography>
-          </Stack>
-        )}
-      </Menu>
+                </MenuItem>
+              );
+            })
+          ) : (
+            <Stack py={4} px={6} direction="row" spacing={2}>
+              <Alarm />
+              {<Typography>알람이 존재하지 않습니다.</Typography>}
+            </Stack>
+          )}
+        </Menu>
+      )}
     </Stack>
   );
 }
