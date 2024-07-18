@@ -22,7 +22,7 @@ export const generateMetadata = async ({
       siteName: 'GLOG',
       title: data.title,
       description: data.content,
-      images: `https://gloog.vercel.app/GLOG_LOGO.png`,
+      images: data.thumbnail,
     },
   };
 };
