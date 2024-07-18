@@ -22,8 +22,7 @@ export const generateMetadata = async ({
       siteName: 'GLOG',
       title: data.title,
       description: data.content,
-      images:
-        'https://elasticbeanstalk-us-east-1-064991853848.s3.amazonaws.com/profile/defaultImages.jpg',
+      images: `https://gloog.vercel.app/GLOG_LOGO.png`,
     },
   };
 };
