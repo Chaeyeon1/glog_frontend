@@ -26,7 +26,7 @@ export const useGetIntroduceQuery = ({
   const { isLoading, error, data } = useQuery(
     ['friend', params, token],
     () => getIntroducedApi({ params, token }),
-    { enabled: !!params.userId && !!token },
+    { enabled: !!params.userId },
   );
   return { data, isLoading, error };
 };

@@ -425,7 +425,7 @@ const PostData = ({
                   </>
                 ) : (
                   <Stack>
-                    {!post?.isAuthor && (
+                    {!post?.isAuthor && token && (
                       <Button
                         onClick={() => {
                           FriendRequestOnClick();
