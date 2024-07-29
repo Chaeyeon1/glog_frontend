@@ -67,11 +67,12 @@ export interface IUserDetail {
 // 알람
 export interface IAlarm {
   alarmDtos: {
-    message: string;
+    categoryId: number;
     checked: boolean;
-    type: string;
-    referencedId: number;
     createdAt: string;
+    message: string;
+    postId: number;
+    type: string;
   }[];
 }
 

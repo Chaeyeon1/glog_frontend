@@ -6,7 +6,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import { useIsSearchSSR, useUserThemeSSR } from '../../../hooks/useRecoilSSR';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import PageLink from '../PageLink/PageLink';
 import Image from 'next/image';
 import SettingMenu from '../Header/SettingMenu';
@@ -31,6 +31,7 @@ export default function Header() {
   const [userDetail, setUserDetail] = useState<IUserDetail>();
   const { data: alarmData } = useGetAlarmsQuery({ token, open: alarmOpen });
   const [alarm, setAlarm] = useState<IAlarm>();
+  const router = useRouter();
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -145,8 +146,12 @@ export default function Header() {
           }}>
           {alarm?.alarmDtos.length ? (
             alarm?.alarmDtos.map((alarm, i) => {
+              const { categoryId, postId } = alarm ?? {};
               return (
-                <MenuItem sx={{ padding: '4px', width: '100%' }} key={i}>
+                <MenuItem
+                  onClick={() => router.push(`${userDetail?.blogUrl}/home/${categoryId}/${postId}`)}
+                  sx={{ padding: '4px', width: '100%' }}
+                  key={i}>
                   <Stack
                     bgcolor={alarm.checked ? 'primary.light' : 'transparent'}
                     py={4}
