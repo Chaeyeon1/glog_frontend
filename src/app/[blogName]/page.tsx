@@ -79,7 +79,7 @@ const Home = ({ params }: { params: { blogName: string } }) => {
                     <Button
                       size="small"
                       variant="outlined"
-                      onClick={() => router.push(`/히write/readme/${params.blogName}`)}>
+                      onClick={() => router.push(`/write/readme/${params.blogName}`)}>
                       Readme 추가
                     </Button>
                   )}
