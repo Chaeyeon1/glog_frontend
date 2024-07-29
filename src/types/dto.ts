@@ -72,7 +72,7 @@ export interface IAlarm {
     createdAt: string;
     message: string;
     postId: number;
-    type: string;
+    type: 'friend' | 'reply';
   }[];
 }
 

@@ -18,6 +18,8 @@ import { useGetAlarmsQuery } from '@/api/blog-api';
 import CommentIcon from '@mui/icons-material/Comment';
 import { DEFAULT_IMAGE } from '@/constant/common';
 import { TokenType } from '@/types/common';
+import FriendModal from './HeaderFriendModal/FriendModal';
+import useModalOpen from '@/hooks/useModalOpen';
 
 export default function Header() {
   const [userTheme, setUserTheme] = useUserThemeSSR();
@@ -32,6 +34,11 @@ export default function Header() {
   const { data: alarmData } = useGetAlarmsQuery({ token, open: alarmOpen });
   const [alarm, setAlarm] = useState<IAlarm>();
   const router = useRouter();
+  const {
+    handleClose: handleFriendModalClose,
+    handleOpen: handleFriendModalOpen,
+    open: friendModalOpen,
+  } = useModalOpen();
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -146,12 +153,20 @@ export default function Header() {
           }}>
           {alarm?.alarmDtos.length ? (
             alarm?.alarmDtos.map((alarm, i) => {
-              const { categoryId, postId } = alarm ?? {};
+              const { categoryId, postId, type } = alarm ?? {};
+
+              const handleAlarmClick = () => {
+                if (type === 'friend') {
+                  handleFriendModalOpen();
+                  setAlarmAnchorEl(null);
+                  return;
+                }
+
+                router.push(`/${userDetail?.blogUrl}/home/${categoryId}/${postId}`);
+                setAlarmAnchorEl(null);
+              };
               return (
-                <MenuItem
-                  onClick={() => router.push(`${userDetail?.blogUrl}/home/${categoryId}/${postId}`)}
-                  sx={{ padding: '4px', width: '100%' }}
-                  key={i}>
+                <MenuItem onClick={handleAlarmClick} sx={{ padding: '4px', width: '100%' }} key={i}>
                   <Stack
                     bgcolor={alarm.checked ? 'primary.light' : 'transparent'}
                     py={4}
@@ -179,6 +194,7 @@ export default function Header() {
           )}
         </Menu>
       )}
+      <FriendModal open={friendModalOpen} onClose={handleFriendModalClose} />
     </Stack>
   );
 }
