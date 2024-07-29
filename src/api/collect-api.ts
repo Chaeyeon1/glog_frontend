@@ -11,6 +11,7 @@ import { defaultInstance } from '.';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { TokenType } from '@/types/common';
 import { useMemo } from 'react';
+import { CollectFilter } from '@/app/collect/_related/types';
 
 const getCollectDataApi = async ({ params }: { params: ICollect }) => {
   const { data } = await defaultInstance().get(`/post/previews/${params.kind}?page=${params.page}`);
@@ -18,7 +19,13 @@ const getCollectDataApi = async ({ params }: { params: ICollect }) => {
   return data;
 };
 
-export const useGetCollectDataQuery = () => {
+export const useGetCollectDataQuery = ({
+  searchType,
+  searchText,
+}: {
+  searchType: CollectFilter;
+  searchText?: string;
+}) => {
   // const {
   //   isLoading,
   //   error,
@@ -33,23 +40,14 @@ export const useGetCollectDataQuery = () => {
     fetchNextPage: getNextPage,
     isSuccess: getDataIsSuccess,
     hasNextPage: getNextPageIsPossible,
-  } = useInfiniteQuery(
-    // ['collectData'],
-    // ({ pageParam = 1 }) => getCollectDataApi({ params: { kind: 'likes', page: pageParam } }),
-    // {
-    //   getNextPageParam: (lastPage) => {
-    //     if (!lastPage.isLast) return lastPage.current_page + 1;
-    //     return undefined;
-    //   },
-    // },
-    {
-      queryKey: ['collectData'],
-      queryFn: ({ pageParam = 1 }) =>
-        getCollectDataApi({ params: { kind: 'likes', page: pageParam } }),
-      getNextPageParam: (lastPage) => lastPage.nextCursor,
-      getPreviousPageParam: (firstPage) => firstPage.prevCursor,
-    },
-  );
+  } = useInfiniteQuery({
+    queryKey: ['collectData', searchType, searchText],
+    queryFn: ({ pageParam = 1 }) =>
+      getCollectDataApi({ params: { kind: searchType, page: pageParam } }),
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
+    getPreviousPageParam: (firstPage) => firstPage.prevCursor,
+    enabled: !searchText,
+  });
 
   const newData: ICollectPost[] = useMemo(
     () => (queryData ? queryData.pages.flatMap(({ postPreviewDtos }) => postPreviewDtos) : []),
@@ -58,27 +56,40 @@ export const useGetCollectDataQuery = () => {
   return { data: newData, getNextPage, getDataIsSuccess, getNextPageIsPossible };
 };
 
-const getColletSearchApi = async ({ params, token }: { params: ISearch; token: TokenType }) => {
-  const { data } = await defaultInstance(token).get(`/search`, { params });
+const getColletSearchApi = async ({ params }: { params: ISearch }) => {
+  const { data } = await defaultInstance().get(`/search`, { params });
 
   return data;
 };
 
-export const useGetCollectSearchQuery = ({
-  params,
-  token,
-}: {
-  params: ISearch;
-  token: TokenType;
-}) => {
-  const { isLoading, error, data } = useQuery(
-    [`search`, params, token],
-    () => getColletSearchApi({ params, token }),
-    {
-      enabled: !!params.value && !!params.type,
-    },
+export const useGetCollectSearchQuery = ({ params }: { params: ISearch }) => {
+  // const {
+  //   isLoading,
+  //   error,
+  //   data: queryData,
+
+  // } = useQuery([`collectData`, params, token], () => getCollectDataApi({ params, token }), {
+  //   enabled: !!params.kind && !!params.page,
+  // });
+
+  const {
+    data: queryData,
+    fetchNextPage: getNextPage,
+    isSuccess: getDataIsSuccess,
+    hasNextPage: getNextPageIsPossible,
+  } = useInfiniteQuery({
+    queryKey: ['search', params.type, params.value],
+    queryFn: () => getColletSearchApi({ params }),
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
+    getPreviousPageParam: (firstPage) => firstPage.prevCursor,
+    enabled: !!params.value && !!params.type && !!params.value,
+  });
+
+  const newData: ICollectPost[] = useMemo(
+    () => (queryData ? queryData.pages.flatMap(({ postPreviewDtos }) => postPreviewDtos) : []),
+    [queryData],
   );
-  return { data, isLoading, error };
+  return { data: newData, getNextPage, getDataIsSuccess, getNextPageIsPossible };
 };
 
 const GetColletSearchUserApi = async ({
