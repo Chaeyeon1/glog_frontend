@@ -81,7 +81,7 @@ const Update = ({ params }: { params: { categoryId: number; postId: number } }) 
   };
 
   return (
-    <Stack mt={10} spacing={4} data-color-mode={userTheme}>
+    <Stack mt={10} px={8} spacing={4} data-color-mode={userTheme}>
       <TextField
         sx={{ width: '30%' }}
         value={title}

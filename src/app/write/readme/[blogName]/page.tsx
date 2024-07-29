@@ -57,7 +57,7 @@ const ReadMe = ({ params }: { params: { blogName: string } }) => {
   };
 
   return (
-    <Stack mt={10} spacing={4} data-color-mode={userTheme}>
+    <Stack mt={10} px={8} spacing={4} data-color-mode={userTheme}>
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Stack fontSize="18px" fontWeight="bold">
           README
