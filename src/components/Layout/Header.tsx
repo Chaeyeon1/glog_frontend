@@ -109,24 +109,28 @@ export default function Header() {
             <LightModeIcon fontSize="large" />
           </IconButton>
         )}
-        <IconButton sx={{ color: '#ffffff' }} size="medium" onClick={handleAlarmClick}>
-          <NotificationsIcon fontSize="large" />
-        </IconButton>
-        <Stack
-          width="40px"
-          height="40px"
-          borderRadius="20px"
-          overflow="hidden"
-          sx={{ cursor: 'pointer', backgroundColor: '#ffffff' }}>
-          <PageLink href={`/${!token ? 'login' : userDetail?.blogUrl}` ?? ''}>
-            <Image
-              width={40}
-              height={40}
-              alt="profile Image"
-              src={userDetail?.thumbnail ?? DEFAULT_IMAGE}
-            />
-          </PageLink>
-        </Stack>
+        {token && (
+          <IconButton sx={{ color: '#ffffff' }} size="medium" onClick={handleAlarmClick}>
+            <NotificationsIcon fontSize="large" />
+          </IconButton>
+        )}
+        {token && (
+          <Stack
+            width="40px"
+            height="40px"
+            borderRadius="20px"
+            overflow="hidden"
+            sx={{ cursor: 'pointer', backgroundColor: '#ffffff' }}>
+            <PageLink href={`/${!token ? 'login' : userDetail?.blogUrl}` ?? ''}>
+              <Image
+                width={40}
+                height={40}
+                alt="profile Image"
+                src={userDetail?.thumbnail ?? DEFAULT_IMAGE}
+              />
+            </PageLink>
+          </Stack>
+        )}
         <IconButton sx={{ color: '#ffffff' }} size="medium" onClick={handleClick}>
           <MenuIcon fontSize="large" />
         </IconButton>
@@ -165,7 +169,7 @@ export default function Header() {
           ) : (
             <Stack py={4} px={6} direction="row" spacing={2}>
               <Alarm />
-              {<Typography>알람이 존재하지 않습니다.</Typography>}
+              <Typography>알람이 존재하지 않습니다.</Typography>
             </Stack>
           )}
         </Menu>

@@ -273,7 +273,8 @@ function RepliesComponent({
             defaultValue={message}
             onChange={(e) => {
               setNewReply(e.target.value);
-            }}></TextField>
+            }}
+          />
           <Button
             onClick={() => {
               PutReplyOnClick();

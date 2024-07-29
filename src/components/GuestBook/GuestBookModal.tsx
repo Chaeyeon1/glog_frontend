@@ -67,25 +67,27 @@ function GuestBookModal({ open, blogId, onClose }: GuestbookType) {
             );
           })}
         </Stack>
-        <Stack flexDirection="row" marginTop="20px">
-          <TextField
-            size="small"
-            fullWidth
-            variant="outlined"
-            placeholder="방명록을 남겨보세요"
-            sx={{ marginRight: '20px' }}
-            value={message}
-            onChange={(e) => {
-              setMessage(e.target.value);
-            }}
-          />
-          <Button
-            onClick={() => {
-              postGuestbookClick();
-            }}>
-            게시하기
-          </Button>
-        </Stack>
+        {token && (
+          <Stack flexDirection="row" marginTop="20px">
+            <TextField
+              size="small"
+              fullWidth
+              variant="outlined"
+              placeholder="방명록을 남겨보세요"
+              sx={{ marginRight: '20px' }}
+              value={message}
+              onChange={(e) => {
+                setMessage(e.target.value);
+              }}
+            />
+            <Button
+              onClick={() => {
+                postGuestbookClick();
+              }}>
+              게시하기
+            </Button>
+          </Stack>
+        )}
       </ModalContent>
     </Modal>
   );
