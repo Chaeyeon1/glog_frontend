@@ -16,7 +16,7 @@ const MainStack = styled(Stack, {
   width: '100%',
   height: 'auto',
   minHeight: '100vh',
-  padding: pathname.includes('/home') || pathname.includes('/login') ? '0px' : '64px 24px 0px 24px',
+  padding: pathname.includes('/home') || pathname.includes('/login') ? '0px' : '64px 0px 0px 0px',
   backgroundColor: theme?.palette.themeColor.main,
 }));
 

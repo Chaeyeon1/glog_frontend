@@ -48,61 +48,73 @@ function Collect() {
   }, []);
 
   return (
-    <Stack mt={16} margin="0 auto" width="60%">
-      {!isSearch ? (
-        getDataIsSuccess && (
-          <ImageList variant="masonry" cols={3} gap={8}>
-            {kindArray?.map((item) => {
-              return <CollectPost item={item} key={item.postId} />;
-            })}
-            <div ref={ref} />
-          </ImageList>
-        )
-      ) : (
-        <Stack direction="row" spacing={4} justifyContent="center">
-          <Select value={searchType}>
-            <MenuItem value="user" onClick={() => setSearchType('user')}>
-              작성자
-            </MenuItem>
-            <MenuItem value="title" onClick={() => setSearchType('title')}>
-              제목
-            </MenuItem>
-            <MenuItem value="hashtag" onClick={() => setSearchType('hashtag')}>
-              해시태그
-            </MenuItem>
-            <MenuItem value="content" onClick={() => setSearchType('content')}>
-              글 내용
-            </MenuItem>
-          </Select>
-          <TextField
-            placeholder="검색어를 입력해주세요"
-            InputProps={{
-              startAdornment: <Search sx={{ marginRight: '10px' }} />,
-            }}
-            value={searchText}
-            onChange={(event) => setSearchText(event.target.value)}
-            sx={{
-              width: '50%',
-            }}
-          />
-        </Stack>
-      )}
-      <PostAreaComponent style={{ marginTop: '16px' }}>
-        {data?.postPreviewDtos?.map((user: ICollectPost) => {
-          return (
-            <PostComponent
-              key={user.postId}
-              thumbnail={user.thumbnail ?? ''}
-              title={user.title}
-              likesCount={user.likesCount}
-              viewsCount={user.viewsCount}
-              Icon={<Star fontSize="small" />}
-              href={`/${user.blogUrl}/home/${user.categoryId}/${user.postId}`}
+    <>
+      <Stack
+        width="100%"
+        textAlign="center"
+        color="#fff"
+        fontWeight={700}
+        fontSize="40px"
+        py={2}
+        bgcolor="primary.main">
+        GLOG
+      </Stack>
+      <Stack margin="32px auto" width="80%">
+        {!isSearch ? (
+          getDataIsSuccess && (
+            <ImageList variant="masonry" cols={4} gap={4}>
+              {kindArray?.map((item) => {
+                return <CollectPost item={item} key={item.postId} />;
+              })}
+              <div ref={ref} />
+            </ImageList>
+          )
+        ) : (
+          <Stack direction="row" spacing={4} justifyContent="center">
+            <Select value={searchType}>
+              <MenuItem value="user" onClick={() => setSearchType('user')}>
+                작성자
+              </MenuItem>
+              <MenuItem value="title" onClick={() => setSearchType('title')}>
+                제목
+              </MenuItem>
+              <MenuItem value="hashtag" onClick={() => setSearchType('hashtag')}>
+                해시태그
+              </MenuItem>
+              <MenuItem value="content" onClick={() => setSearchType('content')}>
+                글 내용
+              </MenuItem>
+            </Select>
+            <TextField
+              placeholder="검색어를 입력해주세요"
+              InputProps={{
+                startAdornment: <Search sx={{ marginRight: '10px' }} />,
+              }}
+              value={searchText}
+              onChange={(event) => setSearchText(event.target.value)}
+              sx={{
+                width: '50%',
+              }}
             />
-          );
-        })}
-      </PostAreaComponent>
-    </Stack>
+          </Stack>
+        )}
+        <PostAreaComponent style={{ marginTop: '16px' }}>
+          {data?.postPreviewDtos?.map((user: ICollectPost) => {
+            return (
+              <PostComponent
+                key={user.postId}
+                thumbnail={user.thumbnail ?? ''}
+                title={user.title}
+                likesCount={user.likesCount}
+                viewsCount={user.viewsCount}
+                Icon={<Star fontSize="small" />}
+                href={`/${user.blogUrl}/home/${user.categoryId}/${user.postId}`}
+              />
+            );
+          })}
+        </PostAreaComponent>
+      </Stack>
+    </>
   );
 }
 

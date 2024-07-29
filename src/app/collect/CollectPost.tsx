@@ -27,6 +27,9 @@ function CollectPost({ item }: { item: ICollectPost }) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       sx={{
+        overflow: 'hidden',
+        border: '1px solid #e2e2e2',
+        borderRadius: '8px',
         cursor: 'pointer',
         position: 'relative',
         ':hover': {
