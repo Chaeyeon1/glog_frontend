@@ -17,6 +17,7 @@ import {
 import { WriteProps } from '@/util/useWriteProps';
 import { useGetTemplateDetailQuery, useGetTemporaryDetailQuery } from '@/api/write-api';
 import { TokenType } from '@/types/common';
+import { useGetPostQuery } from '@/api/blog-api';
 
 const PR = ({ params }: { params: { categoryId: number } }) => {
   const [userTheme] = useUserThemeSSR();
@@ -27,6 +28,10 @@ const PR = ({ params }: { params: { categoryId: number } }) => {
   const [templateId] = useTemplateIdSSR();
   const [temporaryId] = useTemporaryIdSSR();
   // const [temporaryId, setTemporary] = useTemporaryIdSSR();
+  const { data: postData } = useGetPostQuery({
+    params: { postId: Number(params.categoryId) },
+    token,
+  });
 
   const { data: templateData, refetch: templateRefetch } = useGetTemplateDetailQuery({
     params: { templateId },
@@ -63,6 +68,10 @@ const PR = ({ params }: { params: { categoryId: number } }) => {
     setTags(temporaryData?.hashtags);
   }, [temporaryData]);
 
+  useEffect(() => {
+    setTitle(postData?.title);
+  }, [postData]);
+
   const writeProps: WriteProps = {
     title,
     content,
@@ -70,7 +79,7 @@ const PR = ({ params }: { params: { categoryId: number } }) => {
   };
 
   return (
-    <Stack mt={10} spacing={4} data-color-mode={userTheme}>
+    <Stack mt={10} px={8} spacing={4} data-color-mode={userTheme}>
       <TextField
         sx={{ width: '30%' }}
         value={title}
