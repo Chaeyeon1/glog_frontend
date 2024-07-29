@@ -26,6 +26,7 @@ import Image from 'next/image';
 import { DEFAULT_IMAGE } from '@/constant/common';
 import PageProgress from '@/components/Progress/PageProgress';
 import { TokenType } from '@/types/common';
+import { enqueueSnackbar } from 'notistack';
 
 function page() {
   const theme = useTheme();
@@ -69,6 +70,7 @@ function page() {
       queryClient.invalidateQueries(['mypage']);
       queryClient.invalidateQueries(['userDetail']);
       setIsUserInfoEdit(false);
+      enqueueSnackbar({ variant: 'success', message: '프로필 이미지가 변경되었습니다.' });
     },
   });
 
