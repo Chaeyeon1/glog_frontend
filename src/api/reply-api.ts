@@ -19,7 +19,7 @@ export const useGetReplyQuery = ({ params, token }: { params: IReplyParams; toke
   const { isLoading, error, data } = useQuery(
     [`replies`, params, token],
     () => getReplyApi({ params, token }),
-    { enabled: !!params && !!token },
+    { enabled: !!params },
   );
   return { data, isLoading, error };
 };

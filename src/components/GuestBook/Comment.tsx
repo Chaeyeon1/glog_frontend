@@ -115,7 +115,7 @@ function Comment({
           )
         ) : who === 'owner' ? (
           <Stack alignItems="center" flexDirection="row" margin="0 10px">
-            <StarRateIcon></StarRateIcon>
+            <StarRateIcon />
           </Stack>
         ) : who === 'me' ? (
           <Stack flexDirection="row">
@@ -152,7 +152,8 @@ function Comment({
             defaultValue={message}
             onChange={(e) => {
               setPutMessage(e.target.value);
-            }}></TextField>
+            }}
+          />
           <Button
             onClick={() => {
               PutGuestbookClick();
