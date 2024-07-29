@@ -18,10 +18,8 @@ export const getPostApi = async ({ params, token }: { params: IPost; token: Toke
 };
 
 export const useGetPostQuery = ({ token, params }: { token: TokenType; params: IPost }) => {
-  const { isLoading, error, data } = useQuery(
-    [`post`, params, token],
-    () => getPostApi({ params, token }),
-    { enabled: !!params.postId },
+  const { isLoading, error, data } = useQuery([`post`, params, token], () =>
+    getPostApi({ params, token }),
   );
   return { data, isLoading, error };
 };

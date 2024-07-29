@@ -1,25 +1,45 @@
 'use client';
 
-import { MenuItem, Select, Stack, TextField, Typography } from '@mui/material';
+import { ImageList, MenuItem, Select, Stack, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import CollectArray from './CollectArray';
 import { Search, Star } from '@mui/icons-material';
 import { useIsSearchSSR } from '../../../hooks/useRecoilSSR';
-import { useGetCollectSearchQuery } from '@/api/collect-api';
+import { useGetCollectDataQuery, useGetCollectSearchQuery } from '@/api/collect-api';
 import { ICollectPost } from '@/types/dto';
 import PostComponent from '@/components/Post/Post';
 import { PostAreaComponent } from '../scrap/scrap.style';
 import { TokenType } from '@/types/common';
+import { useInView } from 'react-intersection-observer';
+import CollectPost from './CollectPost';
 
 function Collect() {
   const [isSearch] = useIsSearchSSR();
   const [searchText, setSearchText] = useState<string>('');
   const [searchType, setSearchType] = useState<'user' | 'title' | 'hashtag' | 'content'>('user');
   const [token, setToken] = useState<TokenType>(null);
+  const {
+    data: collectData,
+    getDataIsSuccess,
+    getNextPage,
+    getNextPageIsPossible,
+  } = useGetCollectDataQuery();
+  const [kindArray, setKindArray] = useState<ICollectPost[]>(collectData);
   const { data } = useGetCollectSearchQuery({
     params: { type: searchType, value: searchText },
     token,
   });
+  const [ref, inView] = useInView();
+
+  useEffect(() => {
+    // 스크롤 맨 밑에 도달했을 때 데이터를 가져옴
+    if (inView && getNextPageIsPossible) {
+      getNextPage();
+    }
+  }, [inView, collectData]);
+
+  useEffect(() => {
+    setKindArray(collectData);
+  }, [collectData]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -28,22 +48,16 @@ function Collect() {
   }, []);
 
   return (
-    <Stack mt={16}>
+    <Stack mt={16} margin="0 auto" width="60%">
       {!isSearch ? (
-        <Stack padding={'10px 40px'} spacing={4}>
-          <Typography color="oppositeColor.main" fontSize="24px">
-            추천수가 많은 게시글
-          </Typography>
-          <CollectArray kind="likes" />
-          <Typography color="oppositeColor.main" fontSize="24px">
-            조회수가 많은 게시글
-          </Typography>
-          <CollectArray kind="views" />
-          <Typography color="oppositeColor.main" fontSize="24px">
-            최근 게시글
-          </Typography>
-          <CollectArray kind="recent" />
-        </Stack>
+        getDataIsSuccess && (
+          <ImageList variant="masonry" cols={3} gap={8}>
+            {kindArray?.map((item) => {
+              return <CollectPost item={item} key={item.postId} />;
+            })}
+            <div ref={ref} />
+          </ImageList>
+        )
       ) : (
         <Stack direction="row" spacing={4} justifyContent="center">
           <Select value={searchType}>
@@ -74,7 +88,7 @@ function Collect() {
         </Stack>
       )}
       <PostAreaComponent style={{ marginTop: '16px' }}>
-        {data?.postPreviewDtos.map((user: ICollectPost) => {
+        {data?.postPreviewDtos?.map((user: ICollectPost) => {
           return (
             <PostComponent
               key={user.postId}

@@ -10,7 +10,9 @@ const getMypageApi = async ({ token }: { token: TokenType }) => {
 };
 
 export const useGetMypageQuery = ({ token }: { token: TokenType }) => {
-  const { isLoading, error, data } = useQuery([`mypage`, token], () => getMypageApi({ token }), {
+  const { isLoading, error, data } = useQuery({
+    queryKey: [`mypage`, token],
+    queryFn: () => getMypageApi({ token }),
     enabled: !!token,
     refetchOnWindowFocus: false,
   });

@@ -28,6 +28,6 @@ const unAxiosApi = (url: string, data?: any) => {
   return instance;
 };
 
-export const defaultInstance = (token: TokenType) =>
+export const defaultInstance = (token?: TokenType) =>
   axiosApi(process.env.NEXT_PUBLIC_API_URL!, token);
 export const unAxiosDefaultInstance = unAxiosApi(process.env.NEXT_PUBLIC_API_URL!);
