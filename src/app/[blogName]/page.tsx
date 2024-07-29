@@ -75,12 +75,14 @@ const Home = ({ params }: { params: { blogName: string } }) => {
               ) : (
                 <Stack spacing={4} justifyContent="center" alignItems="center" height="100%">
                   <Typography>등록된 Readme가 존재하지 않습니다.</Typography>
-                  <Button
-                    size="small"
-                    variant="outlined"
-                    onClick={() => router.push(`/히write/readme/${params.blogName}`)}>
-                    Readme 추가
-                  </Button>
+                  {readMe?.isMe && (
+                    <Button
+                      size="small"
+                      variant="outlined"
+                      onClick={() => router.push(`/히write/readme/${params.blogName}`)}>
+                      Readme 추가
+                    </Button>
+                  )}
                 </Stack>
               )}
             </Stack>

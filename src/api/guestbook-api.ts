@@ -26,7 +26,7 @@ export const useGetGuestbookQuery = ({
   const { isLoading, error, data } = useQuery(
     ['guestbook', params, token],
     () => GetGuestbookApi({ params, token }),
-    { enabled: !!params.blogId && !!token },
+    { enabled: !!params.blogId },
   );
 
   return { isLoading, error, data };
