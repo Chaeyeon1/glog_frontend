@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import PostComponent from '../../../../components/Post/Post';
 import { useState } from 'react';
-import { PostAreaComponent, PostPagination, ScrapList } from './category.style';
+import { PostAreaComponent, PostPagination } from './category.style';
 import CenterContent from '@/components/Layout/CenterContent';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import LockIcon from '@mui/icons-material/Lock';
@@ -43,7 +43,6 @@ function page({ params }: { params: { blogName: string; categoryId: string } }) 
 
   return (
     <CenterContent maxWidth={'2000px'}>
-      <ScrapList>{params.categoryId}</ScrapList>
       <DragAndDrop
         blogName={params.blogName}
         footprintList={writeList}

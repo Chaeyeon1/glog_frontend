@@ -93,7 +93,7 @@ export const useGetSearchCategoryQuery = ({
   const { isLoading, error, data } = useQuery(
     ['searchCategory', params, token],
     () => GetSearchCategoryApi({ params, token }),
-    { enabled: !!params.categoryId && !!params.page && !!token },
+    { enabled: !!params.categoryId && typeof params.page === 'number' && !!token },
   );
 
   return { isLoading, error, data };
