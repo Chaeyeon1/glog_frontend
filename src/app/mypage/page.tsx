@@ -3,6 +3,9 @@
 
 import CenterContent from '@/components/Layout/CenterContent';
 import {
+  Dialog,
+  DialogActions,
+  DialogContent,
   Stack,
   TextField,
   ToggleButton,
@@ -27,6 +30,9 @@ import { DEFAULT_IMAGE } from '@/constant/common';
 import PageProgress from '@/components/Progress/PageProgress';
 import { TokenType } from '@/types/common';
 import { enqueueSnackbar } from 'notistack';
+import { deleteUserApi } from '@/api/userDetail-api';
+import useModalOpen from '@/hooks/useModalOpen';
+import { useRouter } from 'next/navigation';
 
 function page() {
   const theme = useTheme();
@@ -42,6 +48,12 @@ function page() {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [image, setImage] = useState('');
   const { data } = useGetVisitQuery({ token });
+  const router = useRouter();
+  const {
+    open: dialogOpen,
+    handleClose: handleDialogClose,
+    handleOpen: handleDialogOpen,
+  } = useModalOpen();
   const handleAlignment = (_: React.MouseEvent<HTMLElement>, newYearWeekToggle: string | null) => {
     if (newYearWeekToggle !== null) {
       setYearWeekToggle(newYearWeekToggle);
@@ -78,6 +90,19 @@ function page() {
     onSuccess: () => {
       queryClient.invalidateQueries(['mypage']);
       setIsBlogNameEdit(false);
+    },
+  });
+
+  const { mutateAsync: deleteUserMutate } = useMutation(deleteUserApi, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['userDetail']);
+      enqueueSnackbar({
+        message: '회원탈퇴가 성공적으로 완료되었습니다.',
+        variant: 'success',
+      });
+      localStorage.removeItem('token');
+      handleDialogClose();
+      router.push('/login');
     },
   });
 
@@ -142,7 +167,7 @@ function page() {
       {!userData ? (
         <PageProgress />
       ) : (
-        <CenterContent maxWidth={'1000px'} sx={{ gap: '64px' }}>
+        <CenterContent maxWidth={'1000px'} sx={{ gap: '32px' }}>
           <Stack spacing={4} width="100%">
             <Stack width="100%" alignItems="flex-end">
               <ToggleButtonGroup
@@ -386,7 +411,22 @@ function page() {
               border={`1px solid ${theme.palette.primary.main}`}>
               <Stack>방문자 수 : {data} </Stack>
             </CenterContent>
+            <Button sx={{ width: '100px', marginTop: '24px' }} onClick={handleDialogOpen}>
+              계정 탈퇴
+            </Button>
           </Stack>
+          <Dialog open={dialogOpen} onClose={handleDialogClose}>
+            <DialogContent>회원 탈퇴를 진행하시겠습니까?</DialogContent>
+            <DialogActions>
+              <Button onClick={handleDialogClose}>아니요</Button>
+              <Button
+                onClick={() => {
+                  deleteUserMutate({ token });
+                }}>
+                네
+              </Button>
+            </DialogActions>
+          </Dialog>
         </CenterContent>
       )}
     </>

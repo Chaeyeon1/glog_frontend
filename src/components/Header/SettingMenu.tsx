@@ -23,7 +23,6 @@ function SettingMenu({ open, onClose, anchorEl }: ModalType & { anchorEl: null |
     handleOpen: handleDialogOpen,
   } = useModalOpen();
   const router = useRouter();
-  // const queryClient = useQueryClient()
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
