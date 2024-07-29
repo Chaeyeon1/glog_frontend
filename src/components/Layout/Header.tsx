@@ -74,7 +74,7 @@ export default function Header() {
 
   return (
     <Stack
-      bgcolor={pathname.includes('/home') ? 'transparent' : 'primary.main'}
+      bgcolor="transparent"
       direction="row"
       position="fixed"
       justifyContent="space-between"
@@ -87,6 +87,7 @@ export default function Header() {
         sx={{ cursor: 'pointer' }}
         width="fit-content"
         fontSize="32px"
+        left={0}
         fontWeight={700}
         // color={pathname.includes('/home') ? 'primary.main' : 'white'}
         zIndex={20005}>
@@ -94,31 +95,31 @@ export default function Header() {
           href="/collect"
           color="#ffffff"
           style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-          <Image width={100} height={51} src="/assets/white-logo.png" alt="GLOG" />
+          <Image width={100} height={48} src="/assets/GLOG_RED_LOGO.png" alt="GLOG" />
         </PageLink>
       </Stack>
       <Stack direction="row" alignItems="center" gap={2}>
         {pathname.includes('/collect') &&
           (isSearch ? (
-            <IconButton sx={{ color: '#ffffff' }} size="medium" onClick={() => setIsSearch(false)}>
+            <IconButton size="medium" color="primary" onClick={() => setIsSearch(false)}>
               <Home fontSize="large" />
             </IconButton>
           ) : (
-            <IconButton sx={{ color: '#ffffff' }} size="medium" onClick={() => setIsSearch(true)}>
+            <IconButton color="primary" size="medium" onClick={() => setIsSearch(true)}>
               <Search fontSize="large" />
             </IconButton>
           ))}
         {userTheme === 'dark' ? (
-          <IconButton sx={{ color: '#ffffff' }} onClick={toggleUserTheme}>
+          <IconButton color="primary" onClick={toggleUserTheme}>
             <DarkModeIcon fontSize="large" />
           </IconButton>
         ) : (
-          <IconButton sx={{ color: '#ffffff' }} onClick={toggleUserTheme}>
+          <IconButton color="primary" onClick={toggleUserTheme}>
             <LightModeIcon fontSize="large" />
           </IconButton>
         )}
         {token && (
-          <IconButton sx={{ color: '#ffffff' }} size="medium" onClick={handleAlarmClick}>
+          <IconButton color="primary" size="medium" onClick={handleAlarmClick}>
             <NotificationsIcon fontSize="large" />
           </IconButton>
         )}
@@ -139,7 +140,7 @@ export default function Header() {
             </PageLink>
           </Stack>
         )}
-        <IconButton sx={{ color: '#ffffff' }} size="medium" onClick={handleClick}>
+        <IconButton color="primary" size="medium" onClick={handleClick}>
           <MenuIcon fontSize="large" />
         </IconButton>
         <SettingMenu open={menuOpen} onClose={handleClose} anchorEl={anchorEl} />
