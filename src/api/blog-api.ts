@@ -1,4 +1,11 @@
-import { IBlog, IBlogUrlParams, IChangeBlogName, IPost, ISidebar } from '@/types/dto';
+import {
+  IBlog,
+  IBlogUrlParams,
+  IChangeBlogName,
+  IPost,
+  ISidebar,
+  SidebarContent,
+} from '@/types/dto';
 import { defaultInstance } from '.';
 import { useQuery } from '@tanstack/react-query';
 import { TokenType } from '@/types/common';
@@ -63,13 +70,15 @@ const getSidebarApi = async ({ params, token }: { params: ISidebar; token: Token
 };
 
 export const useGetSidebarQuery = ({ params, token }: { params: ISidebar; token: TokenType }) => {
-  const { isLoading, error, data } = useQuery(
-    [`sidebar`, params, token],
-    () => getSidebarApi({ params, token }),
-    {
-      enabled: !!params.blogId,
-    },
-  );
+  const {
+    isLoading,
+    error,
+    data: response,
+  } = useQuery([`sidebar`, params, token], () => getSidebarApi({ params, token }), {
+    enabled: !!params.blogId,
+  });
+  const data: SidebarContent = response;
+
   return { data, isLoading, error };
 };
 

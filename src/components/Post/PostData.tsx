@@ -24,7 +24,7 @@ import RepliesComponent, {
 } from '../../app/[blogName]/home/[categoryId]/[postId]/postId.style';
 import DragAndDrop from '@/components/DND/DragAndDrop';
 import { useGetSidebarQuery, useGetPostQuery } from '@/api/blog-api';
-import { IIntroduce, IPostContent, IReplyContent, ISidebarContent } from '@/types/dto';
+import { IIntroduce, IPostContent, IReplyContent, SidebarPostType } from '@/types/dto';
 import CenterContent from '@/components/Layout/CenterContent';
 import { Home, KeyboardArrowRight } from '@mui/icons-material';
 import MDEditor from '@uiw/react-md-editor';
@@ -76,9 +76,9 @@ const PostData = ({
   const [reply, setReply] = useState<IReplyContent>();
 
   //sidebar, main-post
-  const [writeList, setWriteList] = useState<ISidebarContent[]>();
+  const [writeList, setWriteList] = useState<SidebarPostType[]>();
   const [post, setPost] = useState<IPostContent>();
-  const sidebarContent: ISidebarContent[] = sidebarData?.sidebarDtos;
+  const sidebarContent: SidebarPostType[] = sidebarData?.sidebarDtos;
 
   useEffect(() => {
     if (typeof window !== 'undefined') {

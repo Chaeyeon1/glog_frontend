@@ -1,18 +1,17 @@
 'use client';
 import React, { useEffect } from 'react';
-import PostComponent from '../../../../components/Post/Post';
 import { useState } from 'react';
-import { PostAreaComponent, PostPagination } from './category.style';
+import { PostPagination } from './category.style';
 import CenterContent from '@/components/Layout/CenterContent';
-import LockOpenIcon from '@mui/icons-material/LockOpen';
-import LockIcon from '@mui/icons-material/Lock';
 import { useGetSidebarQuery } from '@/api/blog-api';
-import { ISearchCategory, ISidebarContent } from '@/types/dto';
+import { ISearchCategory, SidebarPostType } from '@/types/dto';
 import DragAndDrop from '@/components/DND/DragAndDrop';
-import { Stack } from '@mui/material';
+import { ImageList, Stack, Typography } from '@mui/material';
 import { useGetBlogIdQuery } from '@/api/readme-api';
 import { useGetSearchCategoryQuery } from '@/api/category-api';
 import { TokenType } from '@/types/common';
+import CollectPost from '@/app/collect/CollectPost';
+import Progress from '@/components/Progress/Progress';
 
 function page({ params }: { params: { blogName: string; categoryId: string } }) {
   const [page, setPage] = useState(0);
@@ -20,8 +19,7 @@ function page({ params }: { params: { blogName: string; categoryId: string } }) 
   const [, setBlogId] = useState();
   const { data: blogIdData } = useGetBlogIdQuery({ params: { blogUrl: params.blogName }, token });
   const { data: sidebarData } = useGetSidebarQuery({ params: { blogId: blogIdData }, token });
-  const [writeList, setWriteList] = useState<ISidebarContent[]>();
-
+  const [writeList, setWriteList] = useState<SidebarPostType[]>();
   const { data: searchCategoryData } = useGetSearchCategoryQuery({
     params: { categoryId: Number(params.categoryId), page },
     token,
@@ -40,6 +38,9 @@ function page({ params }: { params: { blogName: string; categoryId: string } }) 
   }, [blogIdData, searchCategoryData, sidebarData]);
 
   const totalPages = searchCategory?.totalPages;
+  const currentCategoryName = sidebarData?.sidebarDtos?.find(
+    (sidebar) => sidebar.categoryId === Number(params.categoryId),
+  )?.categoryName;
 
   return (
     <CenterContent maxWidth={'2000px'}>
@@ -48,28 +49,15 @@ function page({ params }: { params: { blogName: string; categoryId: string } }) 
         footprintList={writeList}
         isMe={sidebarData?.isMyPage}
         rightContainer={
-          <Stack width="100%">
-            <PostAreaComponent>
-              {searchCategory?.postPreviewDtos.map((postInfo) => {
-                return (
-                  <PostComponent
-                    isPrivate
-                    key={postInfo.postId}
-                    thumbnail={postInfo.thumbnail}
-                    title={postInfo.title}
-                    likesCount={postInfo.likesCount}
-                    viewsCount={postInfo.viewsCount}
-                    Icon={
-                      postInfo.isPrivate ? (
-                        <LockIcon fontSize="small" />
-                      ) : (
-                        <LockOpenIcon fontSize="small" />
-                      )
-                    }
-                  />
-                );
-              })}
-            </PostAreaComponent>
+          <Stack width="100%" spacing={5}>
+            <Typography variant="h6" fontWeight={700}>
+              {currentCategoryName}
+            </Typography>
+            <ImageList variant="masonry" cols={4} gap={4}>
+              {searchCategory?.postPreviewDtos?.map((item) => {
+                return <CollectPost item={item} key={item.postId} />;
+              }) ?? <Progress />}
+            </ImageList>
             <PostPagination
               count={totalPages}
               page={page + 1}

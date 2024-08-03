@@ -166,7 +166,7 @@ export interface ISidebar {
 }
 
 // 사이드바 전체 내용
-export interface ISidebarContent {
+export interface SidebarPostType {
   categoryId: number;
   categoryName: string;
   isPrCategory: boolean;
@@ -174,6 +174,12 @@ export interface ISidebarContent {
     postId: number;
     title: string;
   }[];
+}
+
+// 사이드바 전체 내용
+export interface SidebarContent {
+  isMyPage: boolean;
+  sidebarDtos: SidebarPostType[];
 }
 
 // 사이드바 카테고리 내용

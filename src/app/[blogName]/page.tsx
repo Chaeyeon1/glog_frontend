@@ -5,7 +5,7 @@ import { useGetReadMeQuery, useGetBlogIdQuery } from '@/api/readme-api';
 import Button from '@/components/Button/Button';
 import DragAndDrop from '@/components/DND/DragAndDrop';
 import FootPrintAnimation from '@/components/FootPrint/FootPrintAnimation';
-import { ISidebarContent } from '@/types/dto';
+import { SidebarPostType } from '@/types/dto';
 import { Stack, Typography } from '@mui/material';
 import MDEditor from '@uiw/react-md-editor';
 import { useEffect, useState } from 'react';
@@ -14,7 +14,7 @@ import { TokenType } from '@/types/common';
 import Progress from '@/components/Progress/Progress';
 
 const Home = ({ params }: { params: { blogName: string } }) => {
-  const [writeList, setWriteList] = useState<ISidebarContent[]>();
+  const [writeList, setWriteList] = useState<SidebarPostType[]>();
   const [token, setToken] = useState<TokenType>(null);
   const { data: blogIdData } = useGetBlogIdQuery({ params: { blogUrl: params.blogName }, token });
   const { data: sidebarData } = useGetSidebarQuery({ params: { blogId: blogIdData }, token });
