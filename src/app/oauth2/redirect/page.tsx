@@ -78,7 +78,7 @@ const Page = () => {
             fullWidth
             sx={{ marginBottom: '30px' }}
             id="outlined-basic"
-            label="이름"
+            label="블로그 이름"
             variant="outlined"
             value={blogName}
             onChange={(e) => {
@@ -88,7 +88,7 @@ const Page = () => {
           <TextField
             required
             fullWidth
-            sx={{ marginBottom: '5px' }}
+            sx={{ marginBottom: '30px' }}
             id="outlined-basic"
             label="닉네임"
             variant="outlined"
@@ -97,9 +97,6 @@ const Page = () => {
               setNickname(e.target.value);
             }}
           />
-          <Stack fontSize="10px" color="red" marginBottom="15px">
-            *닉네임이 블로그 주소에 반영 됩니다.
-          </Stack>
           <Button fullWidth sx={{ height: '50px' }} variant="outlined" onClick={postOnClick}>
             입력
           </Button>
