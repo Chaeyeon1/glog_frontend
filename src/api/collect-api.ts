@@ -1,5 +1,6 @@
 import {
   ICollect,
+  ICollectContent,
   ICollectPost,
   ISearch,
   ISearchContent,
@@ -37,15 +38,19 @@ export const useGetCollectDataQuery = ({
 
   const {
     data: queryData,
-    fetchNextPage: getNextPage,
+    fetchNextPage,
     isSuccess: getDataIsSuccess,
-    hasNextPage: getNextPageIsPossible,
-  } = useInfiniteQuery({
+    hasNextPage,
+    isFetching,
+    // eslint-disable-next-line @typescript-eslint/ban-types
+  } = useInfiniteQuery<ICollectContent, Object>({
     queryKey: ['collectData', searchType, searchText],
     queryFn: ({ pageParam = 1 }) =>
       getCollectDataApi({ params: { kind: searchType, page: pageParam } }),
-    getNextPageParam: (lastPage) => lastPage.nextCursor,
-    getPreviousPageParam: (firstPage) => firstPage.prevCursor,
+    getNextPageParam: (lastPage, allPages) => {
+      const nextPage = allPages.length + 1;
+      return lastPage.postPreviewDtos.length === 0 ? undefined : nextPage;
+    },
     enabled: !searchText,
   });
 
@@ -53,7 +58,7 @@ export const useGetCollectDataQuery = ({
     () => (queryData ? queryData.pages.flatMap(({ postPreviewDtos }) => postPreviewDtos) : []),
     [queryData],
   );
-  return { data: newData, getNextPage, getDataIsSuccess, getNextPageIsPossible };
+  return { data: newData, fetchNextPage, getDataIsSuccess, hasNextPage, isFetching };
 };
 
 const getColletSearchApi = async ({ params }: { params: ISearch }) => {

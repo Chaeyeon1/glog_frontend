@@ -15,21 +15,21 @@ const CollectPosts = ({
 }) => {
   const {
     data: collectData,
-    getNextPage,
-    getNextPageIsPossible,
+    isFetching,
+    hasNextPage,
+    fetchNextPage,
   } = useGetCollectDataQuery({ searchType, searchText });
   const { data: searchData } = useGetCollectSearchQuery({
     params: { type: searchType, value: searchText ?? '' },
   });
-  const [ref, inView] = useInView();
+  const [ref, inView] = useInView({ threshold: 0, delay: 0 });
   const [kindArray, setKindArray] = useState<ICollectPost[]>(collectData);
 
   useEffect(() => {
-    // 스크롤 맨 밑에 도달했을 때 데이터를 가져옴
-    if (inView && getNextPageIsPossible) {
-      getNextPage();
+    if (inView) {
+      !isFetching && hasNextPage && fetchNextPage();
     }
-  }, [inView, collectData]);
+  }, [inView, isFetching, hasNextPage, fetchNextPage]);
 
   useEffect(() => {
     if (['likes', 'views', 'recent'].includes(searchType)) {
