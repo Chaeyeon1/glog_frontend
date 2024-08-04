@@ -10,10 +10,10 @@ import {
   useTheme,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { useIsSearchSSR } from '../../../hooks/useRecoilSSR';
-import CollectPosts from './CollectPosts';
-import { CollectFilter } from './_related/types';
 import { useDebounceValue } from 'usehooks-ts';
+import { useIsSearchSSR } from '../../../../hooks/useRecoilSSR';
+import { CollectFilter } from '../_related/types';
+import CollectPosts from '../CollectPosts';
 
 function Collect() {
   const [isSearch] = useIsSearchSSR();
@@ -46,8 +46,7 @@ function Collect() {
       <Stack
         width="100%"
         textAlign="center"
-        bgcolor="primary.main"
-        color="#fff"
+        color="primary.main"
         fontWeight={900}
         fontSize="80px"
         py={2}>

@@ -44,7 +44,7 @@ function CollectPost({ item }: { item: ICollectPost }) {
         src={`${thumbnail ?? DEFAULT_IMAGE}?w=248&fit=crop&auto=format`}
         alt={title}
         loading="lazy"
-        style={{ display: 'block', width: '100%', minHeight: '120px' }}
+        style={{ display: 'block', width: '100%', minHeight: '120px', objectFit: 'unset' }}
       />
       {isHovered && (
         <Stack
