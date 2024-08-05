@@ -13,8 +13,9 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { DeleteWriteApi } from '@/api/write-api';
 import { enqueueSnackbar } from 'notistack';
 import { TokenType } from '@/types/common';
+import { useRouter } from 'next/navigation';
 
-function page({ params }: { params: { categoryId: string } }) {
+function page({ params }: { params: { blogName: string; categoryId: string } }) {
   const [token, setToken] = useState<TokenType>(null);
   const { data: postedData } = useGetPRQuery({
     params: { categoryId: Number(params.categoryId) },
@@ -23,7 +24,9 @@ function page({ params }: { params: { categoryId: string } }) {
   const { data: unPostedData } = useGetPRUnpostedQuery({
     params: { categoryId: Number(params.categoryId) },
     token,
+    enabled: !!postedData?.isAuthor,
   });
+  const router = useRouter();
   const [unPosted, setUnPosted] = useState(unPostedData);
   const queryClient = useQueryClient();
   const deleteWritePrQuery = useMutation(DeleteWriteApi, {
@@ -99,25 +102,29 @@ function page({ params }: { params: { categoryId: string } }) {
       </Stack>
       {postedData?.prPostedDtos?.prPostedDtos?.length > 0 ? (
         postedData.prPostedDtos.prPostedDtos?.map((post) => {
+          const { postId } = post ?? {};
           return (
             <List
               key={post?.postId}
               width="100%"
               content={post?.prTitle}
+              onClick={() => router.push(`/${params.blogName}/home/${params.categoryId}/${postId}`)}
               buttonAction={
-                <Stack direction="row">
-                  <PageLink href={`/write/pr/update/${Number(params.categoryId)}/${post.postId}`}>
-                    <Button size="small" color="primary">
-                      수정
+                postedData.isAuthor ? (
+                  <Stack direction="row">
+                    <PageLink href={`/write/pr/update/${Number(params.categoryId)}/${post.postId}`}>
+                      <Button size="small" color="primary">
+                        수정
+                      </Button>
+                    </PageLink>
+                    <Button
+                      onClick={() => deletePrPostOnClick(post.postId)}
+                      size="small"
+                      color="error">
+                      삭제
                     </Button>
-                  </PageLink>
-                  <Button
-                    onClick={() => deletePrPostOnClick(post.postId)}
-                    size="small"
-                    color="error">
-                    삭제
-                  </Button>
-                </Stack>
+                  </Stack>
+                ) : undefined
               }
             />
           );

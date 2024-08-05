@@ -38,16 +38,18 @@ export const getPRUnPostedApi = async ({
 export const useGetPRUnpostedQuery = ({
   params,
   token,
+  enabled = true,
 }: {
   params: IPRParams;
   token: TokenType;
+  enabled?: boolean;
 }) => {
   const {
     isLoading,
     error,
     data: backendData,
-  } = useQuery([`prUnpostedList`, token], () => getPRUnPostedApi({ params, token }), {
-    enabled: !!params.categoryId && !!token,
+  } = useQuery([`prUnpostedList`, token, enabled], () => getPRUnPostedApi({ params, token }), {
+    enabled: !!params.categoryId && !!token && enabled,
   });
   const data: IUnPostedPost = backendData;
   return { data, isLoading, error };
