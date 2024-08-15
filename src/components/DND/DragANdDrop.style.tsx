@@ -1,5 +1,44 @@
 import { styled } from '@mui/material/styles';
 import { Stack } from '@mui/material';
+import IconButton from '../Button/IconButton';
+
+export const CategoryTitleContainer = styled(Stack)({
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  borderRadius: '0px 8px',
+});
+
+export const CategoryTitleLeftContainer = styled(Stack)({
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  gap: '4px',
+});
+
+export const Dot = styled(Stack)({
+  width: '4px',
+  height: '4px',
+  backgroundColor: '#000',
+  borderRadius: '9999px',
+});
+
+export const CategoryItem = styled(Stack)({
+  color: '#000',
+  ':hover': { color: 'rgba(0,0,0,0.4)' },
+  cursor: 'pointer',
+  wordBreak: 'break-all',
+});
+
+export const PRButton = styled(IconButton)(() => {
+  return {
+    fontSize: '12px',
+    cursor: 'pointer',
+    ':hover': { opacity: 0.6 },
+    alignItems: 'center',
+    padding: '0px',
+  };
+});
 
 export const BearFootprint = styled(Stack)({
   position: 'relative',

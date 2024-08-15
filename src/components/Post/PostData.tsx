@@ -47,11 +47,11 @@ import { AddLikeApi, DeleteWriteApi } from '@/api/write-api';
 import { enqueueSnackbar } from 'notistack';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import { postVisitApi } from '@/api/mypage-api';
-import { useUserThemeSSR } from '../../../hooks/useRecoilSSR';
 import { DEFAULT_IMAGE } from '@/constant/common';
 import { TokenType } from '@/types/common';
 import { useGetUserDetailQuery } from '@/api/userDetail-api';
 
+type OrderType = 'likesCount' | 'createdAt';
 const PostData = ({
   params,
 }: {
@@ -63,12 +63,11 @@ const PostData = ({
   const { data: sidebarData } = useGetSidebarQuery({ params: { blogId: blogIdData }, token });
   const { data: postData } = useGetPostQuery({ params: { postId: Number(params.postId) }, token });
   const [IntroduceOpen, setIntroduceOpen] = useState<boolean>(false);
-  const [userTheme] = useUserThemeSSR();
   const router = useRouter();
   const theme = useTheme();
   const [page, setPage] = useState(0);
-  const [order, setOrder] = useState('likesCount');
-  const orderList = ['likesCount', 'createdAt'];
+  const [order, setOrder] = useState<OrderType>('likesCount');
+  const orderList: OrderType[] = ['likesCount', 'createdAt'];
   const { data: replyData } = useGetReplyQuery({
     params: { postId: Number(params.postId), page: page, order: order },
     token,
@@ -257,14 +256,20 @@ const PostData = ({
         footprintList={writeList}
         isMe={sidebarData?.isMyPage}
         rightContainer={
-          <Stack width={'100%'} bgcolor={userTheme === 'dark' ? 'transparent' : '#FCFAF1'} p={12}>
+          <Stack width={'100%'} px={12}>
             <MDEditor.Markdown key={post?.content} source={post?.content} />
-            {/* 댓글 */}
             <PostReply>
               <Stack mb={8} spacing={2}>
-                <Stack direction="row" spacing={4} alignItems="center">
-                  <Stack fontSize="14px">조회수 : {post?.viewsCount} </Stack>
-                  <Stack direction="row" alignItems="center" spacing={2}>
+                <Stack
+                  borderTop={`1px solid ${theme.palette.primary.main}`}
+                  direction="row"
+                  spacing={4}
+                  py={1}
+                  alignItems="center">
+                  <Stack color="#000" fontSize="14px">
+                    조회수 : {post?.viewsCount}
+                  </Stack>
+                  <Stack color="#000" direction="row" alignItems="center" spacing={2}>
                     <Stack fontSize="14px">추천수 : {post?.likesCount} </Stack>
                     <IconButton
                       size="small"
@@ -288,6 +293,7 @@ const PostData = ({
                   })}
                 </Stack>
               </Stack>
+              {/* 댓글 */}
               {!!reply?.replyDtos.length && (
                 <ReplyHandle>
                   <Stack flexDirection={'row'}>
@@ -373,7 +379,8 @@ const PostData = ({
                   sx={{ margin: '30px 0' }}
                   onChange={(_, newPage) => {
                     setPage(newPage - 1);
-                  }}></ReplyPagenation>
+                  }}
+                />
               </GetReplies>
             )}
           </Stack>

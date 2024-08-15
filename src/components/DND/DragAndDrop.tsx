@@ -5,16 +5,21 @@ import { Stack, Tooltip, useTheme } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import FootPrint from '../../../public/assets/yellowFootPrint.png';
 import IconButton from '../Button/IconButton';
-import { Add, Edit } from '@mui/icons-material';
+import { Add, Article, Edit } from '@mui/icons-material';
 import CategorySettingModal from './CategorySettingModal';
 import PageLink from '../PageLink/PageLink';
 import Github from '../Github/Github';
 import Button from '../Button/Button';
 import CreateCategoryModal from './CreateCategoryModal';
-import { DEFAULT_IMAGE } from '@/constant/common';
+import {
+  CategoryItem,
+  CategoryTitleContainer,
+  CategoryTitleLeftContainer,
+  Dot,
+  PRButton,
+} from './DragANdDrop.style';
+import GlogTooltip from '../Tooltip/Tooltip';
 
 type Footprint = {
   categoryId: number;
@@ -60,173 +65,131 @@ function DragAndDrop({ rightContainer, footprintList, blogName, isMe }: DragAndD
         <DragDropContext onDragEnd={dragHandler}>
           <CenterContent bgcolor="themeColor.main">
             <Stack gap={8} width="100%" height="100%" direction="row">
-              <Stack
-                sx={{ transition: 'all .35s ease-in-out', flexShrink: 0 }}
-                position="relative"
-                gap={8}>
-                {isMe && (
-                  <Button
-                    variant="outlined"
-                    fullWidth
-                    onClick={() => setCreateCategoryOpen(true)}
-                    sx={{ marginBottom: '-24px' }}>
-                    카테고리 생성
-                  </Button>
-                )}
-                {footprintList?.map((category) => {
-                  return (
-                    <Droppable key={category.categoryId} droppableId={String(category.categoryId)}>
-                      {(provided, snapshot) => (
-                        <div
-                          className="top-container"
-                          style={{
-                            backgroundColor: snapshot.isDraggingOver
-                              ? 'transparent'
-                              : 'transparent',
-                          }}
-                          {...provided.droppableProps}
-                          ref={provided.innerRef}>
-                          <Stack
-                            direction="row"
-                            justifyContent="space-between"
-                            bgcolor="primary.main"
-                            padding="4px 8px"
-                            borderRadius="0px 8px">
-                            <Stack direction="row" spacing={1}>
-                              <PageLink href={`/${blogName}/home/${category.categoryId}`}>
-                                <Tooltip title="카테고리 모아보기" placement="left">
-                                  <Stack
-                                    sx={{ padding: 1, ':hover': { color: 'rgba(0,0,0,0.4)' } }}
-                                    color={theme.palette.oppositeColor.main}>
+              <Stack>
+                <Button variant="contained" sx={{ borderRadius: '10px', marginBottom: 3 }}>
+                  HOME
+                </Button>
+                <Stack
+                  borderTop={`2px solid ${theme.palette.primary.main}`}
+                  px={2}
+                  pt={3}
+                  width="130px"
+                  sx={{ transition: 'all .35s ease-in-out', flexShrink: 0 }}
+                  position="relative"
+                  gap={8}>
+                  {isMe && (
+                    <CategoryItem
+                      onClick={() => setCreateCategoryOpen(true)}
+                      sx={{ fontSize: '16px', fontWeight: 600, marginBottom: '-24px' }}>
+                      + 카테고리
+                    </CategoryItem>
+                  )}
+                  {footprintList?.map((category) => {
+                    return (
+                      <Droppable
+                        key={category.categoryId}
+                        droppableId={String(category.categoryId)}>
+                        {(provided, snapshot) => (
+                          <div
+                            className="top-container"
+                            style={{
+                              backgroundColor: snapshot.isDraggingOver
+                                ? 'transparent'
+                                : 'transparent',
+                            }}
+                            {...provided.droppableProps}
+                            ref={provided.innerRef}>
+                            <CategoryTitleContainer>
+                              <CategoryTitleLeftContainer>
+                                <Dot />
+                                {category?.isPrCategory ? (
+                                  <GlogTooltip title="PR 페이지" placement="top">
+                                    <PageLink
+                                      onClick={() => {
+                                        setCategoryId(category.categoryId);
+                                      }}
+                                      href={`/${blogName}/prList/${category.categoryId}`}>
+                                      <PRButton>
+                                        <Article sx={{ fontSize: '20px' }} />
+                                      </PRButton>
+                                    </PageLink>
+                                  </GlogTooltip>
+                                ) : (
+                                  isMe && (
+                                    <GlogTooltip title="PR 페이지" placement="top">
+                                      <PRButton
+                                        onClick={() => {
+                                          setOpen(true);
+                                          setCategoryId(category.categoryId);
+                                        }}>
+                                        <Article sx={{ fontSize: '20px' }} />
+                                      </PRButton>
+                                    </GlogTooltip>
+                                  )
+                                )}
+                                <PageLink href={`/${blogName}/home/${category.categoryId}`}>
+                                  <CategoryItem sx={{ fontSize: '16px', fontWeight: 600 }}>
                                     {category.categoryName}
-                                  </Stack>
-                                </Tooltip>
-                              </PageLink>
-                              {isMe && (
-                                <Tooltip
-                                  onClick={() => {
-                                    setCategoryEditOpen(true);
-                                    setParamsCategoryId(category.categoryId);
-                                  }}
-                                  title="게시글 수정">
-                                  <IconButton sx={{ padding: '0px' }} size="small">
-                                    <Edit fontSize="small" />
-                                  </IconButton>
-                                </Tooltip>
-                              )}
-                            </Stack>
-                            <Stack direction="row" alignItems="center" spacing={1}>
+                                  </CategoryItem>
+                                </PageLink>
+                                {isMe && (
+                                  <Tooltip title="게시글 수정">
+                                    <IconButton
+                                      onClick={() => {
+                                        setCategoryEditOpen(true);
+                                        setParamsCategoryId(category.categoryId);
+                                      }}
+                                      sx={{ padding: '0px', color: '#000' }}
+                                      size="small">
+                                      <Edit sx={{ fontSize: '14px' }} />
+                                    </IconButton>
+                                  </Tooltip>
+                                )}
+                              </CategoryTitleLeftContainer>
                               {isMe && (
                                 <PageLink href={`/write/create/${category.categoryId}`}>
                                   <Tooltip title="게시글 작성">
-                                    <IconButton sx={{ padding: '0px' }} size="small">
-                                      <Add fontSize="small" />
+                                    <IconButton sx={{ padding: '0px', color: '#000' }} size="small">
+                                      <Add sx={{ fontSize: '14px' }} />
                                     </IconButton>
                                   </Tooltip>
                                 </PageLink>
                               )}
+                            </CategoryTitleContainer>
+                            <Stack
+                              sx={{
+                                borderRadius: '8px',
+                              }}>
+                              {category.postTitleDtos?.map((post) => {
+                                return (
+                                  <Draggable
+                                    key={post.postId}
+                                    draggableId={`${post.postId}`}
+                                    index={post.postId}>
+                                    {(provided) => (
+                                      <Stack
+                                        ref={provided.innerRef}
+                                        {...provided.draggableProps}
+                                        {...provided.dragHandleProps}>
+                                        <PageLink
+                                          href={`/${blogName}/home/${category.categoryId}/${post.postId}`}>
+                                          <CategoryItem sx={{ opacity: 0.8 }}>
+                                            - {post.title}
+                                          </CategoryItem>
+                                        </PageLink>
+                                      </Stack>
+                                    )}
+                                  </Draggable>
+                                );
+                              })}
                             </Stack>
-                          </Stack>
-                          <Stack>
-                            {category?.isPrCategory ? (
-                              <PageLink
-                                onClick={() => {
-                                  setCategoryId(category.categoryId);
-                                }}
-                                href={`/${blogName}/prList/${category.categoryId}`}>
-                                <Stack
-                                  height="100%"
-                                  alignItems="center"
-                                  sx={{
-                                    fontSize: '14px',
-                                    cursor: 'pointer',
-                                    ':hover': { opacity: 0.6 },
-                                    color: theme.palette.oppositeColor.main,
-                                  }}
-                                  pl={4}
-                                  pt={1}>
-                                  PR 연동 보러가기 {'->'}
-                                </Stack>
-                              </PageLink>
-                            ) : (
-                              isMe && (
-                                <Stack
-                                  onClick={() => {
-                                    setOpen(true);
-                                    setCategoryId(category.categoryId);
-                                  }}
-                                  sx={{
-                                    fontSize: '14px',
-                                    cursor: 'pointer',
-                                    ':hover': { opacity: 0.6 },
-                                    color: theme.palette.oppositeColor.main,
-                                  }}
-                                  pl={4}
-                                  pt={1}>
-                                  PR 연동 하러가기 {'->'}
-                                </Stack>
-                              )
-                            )}
-                          </Stack>
-                          <Stack
-                            sx={{
-                              padding: '8px',
-                              borderRadius: '8px',
-                            }}>
-                            {category.postTitleDtos?.map((post) => {
-                              return (
-                                <Draggable
-                                  key={post.postId}
-                                  draggableId={`${post.postId}`}
-                                  index={post.postId}>
-                                  {(provided) => (
-                                    <Stack
-                                      sx={{
-                                        padding: '4px 8px',
-                                        ':hover': {
-                                          borderRadius: '8px',
-                                          backgroundColor: 'primary.light',
-                                        },
-                                        ':active': {
-                                          backgroundColor: 'transparent',
-                                        },
-                                      }}
-                                      ref={provided.innerRef}
-                                      {...provided.draggableProps}
-                                      {...provided.dragHandleProps}>
-                                      <PageLink
-                                        href={`/${blogName}/home/${category.categoryId}/${post.postId}`}>
-                                        <Stack
-                                          direction="row"
-                                          justifyContent="left"
-                                          alignItems="center"
-                                          width="fit-content"
-                                          gap={2}>
-                                          <Image
-                                            src={FootPrint ?? DEFAULT_IMAGE}
-                                            alt="footPrint"
-                                            width="15"
-                                            height="15"
-                                          />
-                                          <Stack
-                                            width="101px"
-                                            color={theme.palette.oppositeColor.main}>
-                                            {post.title}
-                                          </Stack>
-                                        </Stack>
-                                      </PageLink>
-                                    </Stack>
-                                  )}
-                                </Draggable>
-                              );
-                            })}
-                          </Stack>
-                          {provided.placeholder}
-                        </div>
-                      )}
-                    </Droppable>
-                  );
-                })}
+                            {provided.placeholder}
+                          </div>
+                        )}
+                      </Droppable>
+                    );
+                  })}
+                </Stack>
               </Stack>
               <Droppable droppableId="right-droppable">
                 {(provided) => {
