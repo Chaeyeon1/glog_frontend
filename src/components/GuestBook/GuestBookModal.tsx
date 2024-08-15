@@ -81,6 +81,7 @@ function GuestBookModal({ open, blogId, onClose }: GuestbookType) {
               }}
             />
             <Button
+              sx={{ flexShrink: 0 }}
               onClick={() => {
                 postGuestbookClick();
               }}>
