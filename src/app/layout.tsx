@@ -32,7 +32,7 @@ export default function RootLayout(props: { children: ReactNode }) {
   const { children } = props;
 
   return (
-    <html lang="en">
+    <html lang="kr">
       <body>
         <Recoil>
           <ReactQuery>

@@ -37,7 +37,7 @@ export const BlackContainer = styled(Stack)({
 export const ImageContainer = styled(Stack)(({ imageSrc }: { imageSrc: string }) => ({
   backgroundAttachment: 'fixed',
   backgroundImage: `url(${imageSrc})`,
-  backgroundSize: '100% 38vh',
+  backgroundSize: '100% 35vh',
   backgroundRepeat: 'no-repeat',
   width: '100%',
   height: '100%',
