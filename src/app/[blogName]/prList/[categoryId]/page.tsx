@@ -14,13 +14,11 @@ import { DeleteWriteApi } from '@/api/write-api';
 import { enqueueSnackbar } from 'notistack';
 import { TokenType } from '@/types/common';
 import { useRouter } from 'next/navigation';
-import Progress from '@/components/Progress/Progress';
 
 function page({ params }: { params: { blogName: string; categoryId: string } }) {
   const [token, setToken] = useState<TokenType>(null);
   const { data: postedData } = useGetPRQuery({
     params: { categoryId: Number(params.categoryId) },
-    token,
   });
   const { data: unPostedData } = useGetPRUnpostedQuery({
     params: { categoryId: Number(params.categoryId) },
@@ -29,7 +27,6 @@ function page({ params }: { params: { blogName: string; categoryId: string } }) 
   });
   const router = useRouter();
   const [unPosted, setUnPosted] = useState(unPostedData);
-  const unPostedContent = unPosted?.prUnPostedDtos?.prUnPostedDtos;
   const queryClient = useQueryClient();
   const deleteWritePrQuery = useMutation(DeleteWriteApi, {
     onSuccess: () => {
@@ -63,43 +60,39 @@ function page({ params }: { params: { blogName: string; categoryId: string } }) 
             작성하지 않은 PR
           </Stack>
           <Stack p={2} direction="row" spacing={4} overflow={'overlay'}>
-            {unPostedContent ? (
-              unPostedContent.map((unPost) => {
-                return (
-                  <PageLink key={unPost.prId} href={`/write/pr/${unPost.prId}`}>
-                    <Stack
-                      sx={{
-                        transition: 'all .35s ease-in-out',
-                        cursor: 'pointer',
-                        ':hover': { transform: 'translateY(-4px)' },
-                      }}
-                      minWidth="220px"
-                      height="124px"
-                      bgcolor="primary.main"
-                      p={4}
-                      borderRadius="8px"
-                      justifyContent="space-around">
-                      <Stack direction="row" justifyContent="space-between">
-                        <Stack color="#000000" fontSize="20px" fontWeight="bold">
-                          #{unPost.prId}
-                        </Stack>
-                      </Stack>
-                      <Stack
-                        color="#000000"
-                        sx={{ wordBreak: 'break-all' }}
-                        overflow="hidden"
-                        textOverflow="ellipsis"
-                        display="inline"
-                        whiteSpace="nowrap">
-                        {unPost.prTitle}
+            {unPosted?.prUnPostedDtos?.prUnPostedDtos?.map((unPost) => {
+              return (
+                <PageLink key={unPost.prId} href={`/write/pr/${unPost.prId}`}>
+                  <Stack
+                    sx={{
+                      transition: 'all .35s ease-in-out',
+                      cursor: 'pointer',
+                      ':hover': { transform: 'translateY(-4px)' },
+                    }}
+                    minWidth="220px"
+                    height="124px"
+                    bgcolor="primary.main"
+                    p={4}
+                    borderRadius="8px"
+                    justifyContent="space-around">
+                    <Stack direction="row" justifyContent="space-between">
+                      <Stack color="#000000" fontSize="20px" fontWeight="bold">
+                        #{unPost.prId}
                       </Stack>
                     </Stack>
-                  </PageLink>
-                );
-              })
-            ) : (
-              <Progress />
-            )}
+                    <Stack
+                      color="#000000"
+                      sx={{ wordBreak: 'break-all' }}
+                      overflow="hidden"
+                      textOverflow="ellipsis"
+                      display="inline"
+                      whiteSpace="nowrap">
+                      {unPost.prTitle}
+                    </Stack>
+                  </Stack>
+                </PageLink>
+              );
+            })}
           </Stack>
         </>
       )}

@@ -3,19 +3,19 @@ import { defaultInstance } from '.';
 import { useQuery } from '@tanstack/react-query';
 import { TokenType } from '@/types/common';
 
-export const getPRApi = async ({ params, token }: { params: IPRParams; token: TokenType }) => {
-  const { data } = await defaultInstance(token).get('/pr/posts/posted', { params });
+export const getPRApi = async ({ params }: { params: IPRParams }) => {
+  const { data } = await defaultInstance().get('/pr/posts/posted', { params });
 
   return data;
 };
 
-export const useGetPRQuery = ({ params, token }: { params: IPRParams; token: TokenType }) => {
+export const useGetPRQuery = ({ params }: { params: IPRParams }) => {
   const {
     isLoading,
     error,
     data: backendData,
-  } = useQuery([`prList`, token], () => getPRApi({ params, token }), {
-    enabled: !!params.categoryId && !!token,
+  } = useQuery([`prList`, params], () => getPRApi({ params }), {
+    enabled: !!params.categoryId,
   });
 
   const data: IPostedPost = backendData;
