@@ -25,7 +25,7 @@ import DragAndDrop from '@/components/DND/DragAndDrop';
 import { useGetSidebarQuery, useGetPostQuery } from '@/api/blog-api';
 import { IIntroduce, IPostContent, IReplyContent, IUserDetail, SidebarPostType } from '@/types/dto';
 import CenterContent from '@/components/Layout/CenterContent';
-import { Home, KeyboardArrowRight } from '@mui/icons-material';
+import { Home, KeyboardArrowRight, Star } from '@mui/icons-material';
 import MDEditor from '@uiw/react-md-editor';
 import { useRouter } from 'next/navigation';
 import IconButton from '@/components/Button/IconButton';
@@ -50,6 +50,7 @@ import { postVisitApi } from '@/api/mypage-api';
 import { DEFAULT_IMAGE } from '@/constant/common';
 import { TokenType } from '@/types/common';
 import { useGetUserDetailQuery } from '@/api/userDetail-api';
+import { addScrapApi } from '@/api/scrap-api';
 
 type OrderType = 'likesCount' | 'createdAt';
 const PostData = ({
@@ -80,6 +81,12 @@ const PostData = ({
   const [writeList, setWriteList] = useState<SidebarPostType[]>();
   const [post, setPost] = useState<IPostContent>();
   const sidebarContent: SidebarPostType[] = sidebarData?.sidebarDtos;
+
+  const { mutateAsync: addScrapMutateAsync } = useMutation(addScrapApi, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['post']);
+    },
+  });
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -283,6 +290,18 @@ const PostData = ({
                       }}>
                       <ThumbUpIcon color={post?.isLiked ? 'primary' : undefined} />
                     </IconButton>
+                    <IconButton
+                      size="small"
+                      onClick={() => {
+                        !token
+                          ? enqueueSnackbar({ variant: 'error', message: '로그인이 필요합니다.' })
+                          : addScrapMutateAsync({
+                              params: { postId: Number(params?.postId) },
+                              token,
+                            });
+                      }}>
+                      <Star color={post?.isScraped ? 'primary' : undefined} />
+                    </IconButton>
                   </Stack>
                 </Stack>
                 <Stack direction="row" spacing={2}>
@@ -415,7 +434,7 @@ const PostData = ({
                     요청 중
                   </Stack>
                 ) : introduce?.relationship === 'friended' ? (
-                  <>
+                  <Stack direction="row" alignItems="center" spacing={1}>
                     <Stack margin="0 5px 0 10px">친구 요청</Stack>
                     <Tooltip title="수락" arrow>
                       <Button
@@ -428,7 +447,6 @@ const PostData = ({
                         <CheckIcon />
                       </Button>
                     </Tooltip>
-
                     <Tooltip title="거절" arrow>
                       <Button
                         sx={{ minWidth: '36px', height: '36px', padding: '0' }}
@@ -440,7 +458,7 @@ const PostData = ({
                         <CloseIcon />
                       </Button>
                     </Tooltip>
-                  </>
+                  </Stack>
                 ) : (
                   <Stack>
                     {!post?.isAuthor && token && (
