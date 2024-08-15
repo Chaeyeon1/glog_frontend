@@ -1,8 +1,8 @@
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, CircularProgressProps } from '@mui/material';
 import React from 'react';
 
-const Progress = () => {
-  return <CircularProgress color="primary" />;
+const Progress = ({ ...rest }: CircularProgressProps) => {
+  return <CircularProgress color="primary" {...rest} />;
 };
 
 export default Progress;

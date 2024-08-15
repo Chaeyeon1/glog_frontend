@@ -1,4 +1,4 @@
-import { ListProps, Radio, RadioProps, Stack, Typography } from '@mui/material';
+import { Radio, RadioProps, Stack, StackProps, Typography } from '@mui/material';
 import React, { ReactNode } from 'react';
 
 function List({
@@ -6,12 +6,13 @@ function List({
   buttonAction,
   radioProps,
   width,
+  ...rest
 }: {
   content: string;
   buttonAction?: ReactNode;
   radioProps?: RadioProps;
   width?: number | string;
-} & ListProps) {
+} & StackProps) {
   return (
     <Stack
       sx={{
@@ -21,7 +22,9 @@ function List({
         width: width ?? '600px',
         borderBottom: '1px solid #d9d9d9',
         justifyContent: 'space-between',
-      }}>
+        cursor: 'pointer',
+      }}
+      {...rest}>
       <Stack direction="row" alignItems="center">
         {radioProps && <Radio {...radioProps} />}
         <Typography>{content}</Typography>

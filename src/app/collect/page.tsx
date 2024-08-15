@@ -48,7 +48,7 @@ function Collect() {
         textAlign="center"
         bgcolor="primary.main"
         color="#fff"
-        fontWeight={900}
+        fontWeight={500}
         fontSize="80px"
         py={2}>
         GLOG
