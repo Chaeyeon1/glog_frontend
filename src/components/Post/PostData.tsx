@@ -1,6 +1,5 @@
 'use client';
 import {
-  Avatar,
   Box,
   Chip,
   Icon,
@@ -24,7 +23,7 @@ import RepliesComponent, {
 } from '../../app/[blogName]/home/[categoryId]/[postId]/postId.style';
 import DragAndDrop from '@/components/DND/DragAndDrop';
 import { useGetSidebarQuery, useGetPostQuery } from '@/api/blog-api';
-import { IIntroduce, IPostContent, IReplyContent, SidebarPostType } from '@/types/dto';
+import { IIntroduce, IPostContent, IReplyContent, IUserDetail, SidebarPostType } from '@/types/dto';
 import CenterContent from '@/components/Layout/CenterContent';
 import { Home, KeyboardArrowRight } from '@mui/icons-material';
 import MDEditor from '@uiw/react-md-editor';
@@ -51,6 +50,7 @@ import { postVisitApi } from '@/api/mypage-api';
 import { useUserThemeSSR } from '../../../hooks/useRecoilSSR';
 import { DEFAULT_IMAGE } from '@/constant/common';
 import { TokenType } from '@/types/common';
+import { useGetUserDetailQuery } from '@/api/userDetail-api';
 
 const PostData = ({
   params,
@@ -74,6 +74,8 @@ const PostData = ({
     token,
   });
   const [reply, setReply] = useState<IReplyContent>();
+  const { data: userDetailData } = useGetUserDetailQuery({ token });
+  const [userDetail, setUserDetail] = useState<IUserDetail>();
 
   //sidebar, main-post
   const [writeList, setWriteList] = useState<SidebarPostType[]>();
@@ -85,6 +87,10 @@ const PostData = ({
       setToken(localStorage.getItem('token'));
     }
   }, []);
+
+  useEffect(() => {
+    setUserDetail(userDetailData);
+  }, [userDetailData]);
 
   //댓글 post 기능 연동
   const queryClient = useQueryClient();
@@ -314,7 +320,12 @@ const PostData = ({
               )}
               {token && (
                 <WriteReply>
-                  <Avatar sx={{ width: 35, height: 35 }} alt="" src="/static/images/avatar/1.jpg" />
+                  <Image
+                    width={40}
+                    height={40}
+                    alt="profile Image"
+                    src={userDetail?.thumbnail ?? DEFAULT_IMAGE}
+                  />
                   <TextField
                     fullWidth
                     variant="standard"
