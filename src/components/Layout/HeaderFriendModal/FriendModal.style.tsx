@@ -185,7 +185,6 @@ function FriendListComponent({
                   <CheckIcon />
                 </Button>
               </Tooltip>
-
               <Tooltip title="거절" arrow>
                 <Button
                   sx={{ minWidth: '36px', height: '36px', padding: '0' }}

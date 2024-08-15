@@ -330,7 +330,7 @@ function RepliesComponent({
                     요청 중
                   </Stack>
                 ) : introduce?.relationship === 'friended' ? (
-                  <>
+                  <Stack direction="row" alignItems="center">
                     <Stack margin="0 5px 0 10px">친구 요청</Stack>
                     <Tooltip title="수락" arrow>
                       <Button
@@ -343,7 +343,6 @@ function RepliesComponent({
                         <CheckIcon />
                       </Button>
                     </Tooltip>
-
                     <Tooltip title="거절" arrow>
                       <Button
                         sx={{ minWidth: '36px', height: '36px', padding: '0' }}
@@ -355,7 +354,7 @@ function RepliesComponent({
                         <CloseIcon />
                       </Button>
                     </Tooltip>
-                  </>
+                  </Stack>
                 ) : (
                   <Stack>
                     <Button onClick={() => FriendRequestOnClick()}>친구 요청</Button>
