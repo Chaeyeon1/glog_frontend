@@ -1,3 +1,25 @@
+.stickyParent {
+  height: 700vh;
+}
+
+.sticky {
+  position: sticky;
+  top: 0px;
+  max-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.horizontal {
+  display: flex;
+}
+
+.dim {
+  width: 100vw;
+  height: 100vh;
+  flex-shrink: 0;
+}
+
 .main {
   display: flex;
   flex-direction: column;
