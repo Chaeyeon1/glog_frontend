@@ -6,7 +6,6 @@ import {
   isSidebarOpenState,
   tokenState,
   userThemeState,
-  isSearchState,
 } from '@/recoil/atom';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -64,15 +63,4 @@ export function useTemporaryIdSSR() {
   }, []);
 
   return [isInitial ? 0 : value, setValue] as const;
-}
-
-export function useIsSearchSSR() {
-  const [isInitial, setIsInitial] = useState(false);
-  const [value, setValue] = useRecoilState(isSearchState);
-
-  useEffect(() => {
-    setIsInitial(false);
-  }, []);
-
-  return [isInitial ? false : value, setValue] as const;
 }
