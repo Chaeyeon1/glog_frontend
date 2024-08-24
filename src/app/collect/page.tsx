@@ -46,47 +46,32 @@ function Collect() {
 
   return (
     <>
-      <Stack
-        width="100%"
-        textAlign="center"
-        bgcolor="primary.main"
-        color="#fff"
-        fontWeight={500}
-        fontSize="80px"
-        py={2}>
-        GLOG
+      <Stack direction="row" spacing={2} borderBottom={`2px solid ${theme.palette.primary.main}`}>
+        <Select
+          size="small"
+          variant="outlined"
+          sx={{
+            color: 'primary.main',
+            [`&.${outlinedInputClasses.root}`]: {
+              [`& .${outlinedInputClasses.notchedOutline}`]: { border: '1px solid transparent' },
+            },
+            [`& .${svgIconClasses.root}`]: { fill: theme.palette.primary.main },
+            width: '120px',
+          }}
+          value={searchType}>
+          {menuItemList.map((item) => (
+            <MenuItem key={item.value} value={item.value} onClick={() => setSearchType(item.value)}>
+              {item.label}
+            </MenuItem>
+          ))}
+        </Select>
       </Stack>
-      <Stack margin="32px auto" width="80%">
-        <Stack direction="row" spacing={2} borderBottom={`2px solid ${theme.palette.primary.main}`}>
-          <Select
-            size="small"
-            variant="outlined"
-            sx={{
-              color: 'primary.main',
-              [`&.${outlinedInputClasses.root}`]: {
-                [`& .${outlinedInputClasses.notchedOutline}`]: { border: '1px solid transparent' },
-              },
-              [`& .${svgIconClasses.root}`]: { fill: theme.palette.primary.main },
-              width: '120px',
-            }}
-            value={searchType}>
-            {menuItemList.map((item) => (
-              <MenuItem
-                key={item.value}
-                value={item.value}
-                onClick={() => setSearchType(item.value)}>
-                {item.label}
-              </MenuItem>
-            ))}
-          </Select>
-        </Stack>
-        <ImageList variant="masonry" cols={4} gap={4}>
-          {kindArray?.map((item) => {
-            return <CollectPost item={item} key={item.postId} />;
-          })}
-          <div ref={ref} />
-        </ImageList>
-      </Stack>
+      <ImageList variant="masonry" cols={4} gap={4}>
+        {kindArray?.map((item) => {
+          return <CollectPost item={item} key={item.postId} />;
+        })}
+        <div ref={ref} />
+      </ImageList>
     </>
   );
 }
