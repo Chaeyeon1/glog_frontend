@@ -234,12 +234,15 @@ function RepliesComponent({
           <ReplyLike>
             <Stack marginTop="5px">{likesCount}</Stack>
             {isLiked ? (
-              <IconButton sx={{ padding: '0px', marginLeft: '10px' }} onClick={ReplyLikeOnClick}>
-                <ThumbUpAltIcon></ThumbUpAltIcon>
+              <IconButton
+                color="primary"
+                sx={{ padding: '0px', marginLeft: '10px' }}
+                onClick={ReplyLikeOnClick}>
+                <ThumbUpAltIcon />
               </IconButton>
             ) : (
               <IconButton sx={{ padding: '0px', marginLeft: '10px' }} onClick={ReplyLikeOnClick}>
-                <ThumbUpOffAltIcon></ThumbUpOffAltIcon>
+                <ThumbUpOffAltIcon />
               </IconButton>
             )}
             <ChangeReply>
