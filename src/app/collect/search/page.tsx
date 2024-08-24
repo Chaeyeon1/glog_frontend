@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { ImageList, MenuItem } from '@mui/material';
 import { useDebounceValue } from 'usehooks-ts';
 import { SearchType } from '../_related/types';
-import CollectPost from '../CollectPost';
+import CollectPost from '../../../components/Post/CollectPost';
 import { useGetCollectSearchQuery } from '@/api/collect-api';
 import { SearchContainer, SearchSelect, SearchTextField } from '../_related/collect.style';
 

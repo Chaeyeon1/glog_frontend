@@ -8,7 +8,7 @@ import { useGetScrapQuery } from '@/api/scrap-api';
 import { IScrapContent } from '@/types/dto';
 import { TokenType } from '@/types/common';
 import { ImageList } from '@mui/material';
-import CollectPost from '../collect/CollectPost';
+import CollectPost from '../../components/Post/CollectPost';
 import Progress from '@/components/Progress/Progress';
 
 export default function Scrap() {

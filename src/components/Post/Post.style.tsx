@@ -1,74 +1,56 @@
 import { styled } from '@mui/material/styles';
-import { Icon, Stack, Theme } from '@mui/material';
-import Link from 'next/link';
+import { ImageListItem, Stack, Typography } from '@mui/material';
 
-export const Post = styled(Link)(({ theme }: { theme?: Theme }) => ({
-  backgroundColor: theme?.palette.subColor.main,
-  color: theme?.palette.oppositeColor.main,
-  padding: '10px',
-  borderRadius: '10px',
-  textDecorationLine: 'none',
-  boxShadow: `0px 0px 20px 1px ${theme?.palette.shadowColor.main}`,
-  transition: 'all .35s ease-in-out',
+export const PostContainer = styled(ImageListItem)(({ theme }) => ({
+  overflow: 'hidden',
+  border: '1px solid #e2e2e2',
+  borderRadius: '8px',
+  cursor: 'pointer',
+  position: 'relative',
   ':hover': {
-    transform: 'translateY(-10px)',
-    boxShadow: `0px 0px 20px 1px ${theme?.palette.shadowColor.dark}`,
+    transform: 'translateY(-1px)',
+    boxShadow: `0px 0px 5px 1px ${theme?.palette.shadowColor.dark}`,
+    transition: 'all .35s ease-in-out',
   },
 }));
 
-export const Thumbnail = styled(Stack)({
-  position: 'relative',
+export const PostThumbnail = styled('img')(() => ({
+  display: 'block',
   width: '100%',
-  height: '80%',
-  borderRadius: '15px',
-});
+  minHeight: '120px',
+  objectFit: 'unset',
+}));
 
-export const CostomizeButton = styled(Stack)({
+export const HoverContainer = styled(Stack)(() => ({
   position: 'absolute',
-  //나중에 버튼 테두리 없앨때 border: 'none', 추가
-  border: 'none',
-  backgroundColor: 'transparent',
-  color: '#C4C4C4',
-  right: '7px',
-  top: '10px',
-});
-
-export const PostPopular = styled(Stack)({
-  position: 'absolute',
-  display: 'flex',
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '100%',
   justifyContent: 'center',
   alignItems: 'center',
-  color: '#ffffff',
-  backgroundColor: 'rgba(0, 0, 0, 0.4)',
-  width: '100%',
-  height: '100%',
-  gap: '5px',
-  opacity: '0',
-  transition: 'all .35s ease-in-out',
-  ':hover': {
-    opacity: '1',
-  },
-});
+  overflow: 'hidden',
+  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+}));
 
-export const VisibilityIcon = styled(Icon)({
-  paddingLeft: '20px',
-});
+export const HoverContentContainer = styled(Stack)(() => ({
+  gap: 2,
+  width: '60%',
+}));
 
-export const Image = styled('img')({
-  position: 'absolute',
-  backgroundRepeat: 'no-repeat',
-  backgroundSize: 'cover',
-  backgroundPosition: 'center',
-  width: '100%',
-  height: '100%',
-});
-
-export const Title = styled(Stack)({
-  marginTop: '10px',
-  fontSize: '18px',
+export const HoverPostTitle = styled(Typography)(() => ({
+  whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
-  whiteSpace: 'nowrap',
-  textTransform: 'uppercase',
-  marginLeft: '2px',
-});
+  wordBreak: 'break-all',
+}));
+
+export const InteractCountContainer = styled(Stack)(() => ({
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+  gap: 8,
+}));
+
+export const HoverTypography = styled(Typography)(() => ({
+  color: '#fff',
+}));

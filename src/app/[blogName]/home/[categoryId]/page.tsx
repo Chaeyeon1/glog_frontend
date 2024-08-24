@@ -9,8 +9,8 @@ import { ImageList, Stack, Typography } from '@mui/material';
 import { useGetBlogIdQuery } from '@/api/readme-api';
 import { useGetSearchCategoryQuery } from '@/api/category-api';
 import { TokenType } from '@/types/common';
-import CollectPost from '@/app/collect/CollectPost';
 import Progress from '@/components/Progress/Progress';
+import CollectPost from '@/components/Post/CollectPost';
 
 function page({ params }: { params: { blogName: string; categoryId: string } }) {
   const [token, setToken] = useState<TokenType>(null);

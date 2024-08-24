@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { ImageList, MenuItem } from '@mui/material';
 import { ViewType } from './_related/types';
-import CollectPost from './CollectPost';
+import CollectPost from '../../components/Post/CollectPost';
 import { useGetCollectDataQuery } from '@/api/collect-api';
 import { useInView } from 'react-intersection-observer';
 import { SearchContainer, SearchSelect } from './_related/collect.style';
