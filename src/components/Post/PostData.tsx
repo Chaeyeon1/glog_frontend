@@ -47,7 +47,7 @@ import { AddLikeApi, DeleteWriteApi } from '@/api/write-api';
 import { enqueueSnackbar } from 'notistack';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import { postVisitApi } from '@/api/mypage-api';
-import { DEFAULT_IMAGE } from '@/constant/common';
+import { DEFAULT_IMAGE, SIDEBAR_WIDTH } from '@/constant/common';
 import { TokenType } from '@/types/common';
 import { useGetUserDetailQuery } from '@/api/userDetail-api';
 import { addScrapApi } from '@/api/scrap-api';
@@ -203,56 +203,82 @@ const PostData = ({
       <ThumbnailArea>
         <ImageContainer imageSrc={postData?.thumbnail ?? DEFAULT_IMAGE} />
         <BlackContainer paddingTop="64px">
-          <CenterContent bgcolor="transparent">
-            <Stack gap={8} width="100%" height="100%" direction="row">
-              <Stack width="140px" height="100%"></Stack>
-              <Stack color="#ffffff">
-                <Stack height="24px" direction={'row'} alignItems="center" gap={1}>
-                  <Box>
-                    {
-                      sidebarContent?.filter(
-                        (category) => category.categoryId === Number(params.categoryId),
-                      )[0]?.categoryName
-                    }
-                  </Box>
-                  <Icon fontSize="small" sx={{ marginTop: '-6px' }}>
-                    <KeyboardArrowRight />
-                  </Icon>
-                  <Box style={{ fontWeight: 'bold' }}>{post?.title}</Box>
-                </Stack>
-                <Stack fontSize="36px">{post?.title}</Stack>
-                <Stack direction="row" alignItems={'center'} height="30px" gap={3} marginTop="24px">
-                  <Button
-                    sx={{ minWidth: '30px', width: '30px', height: '30px', borderRadius: '50%' }}
-                    onClick={() => setIntroduceOpen(true)}>
-                    <img
-                      style={{
-                        width: '35px',
-                        height: '35px',
-                        borderRadius: '50%',
-                      }}
-                      src={post?.author?.profileImage ?? DEFAULT_IMAGE}
-                      alt="profileImage"
-                    />
-                  </Button>
+          <CenterContent color="#fff" direction="row" gap="32px">
+            <Stack width={`${SIDEBAR_WIDTH}px`} height="100%" flexShrink={0} />
+            <Stack px="48px" sx={{ overflow: 'hidden' }}>
+              <Stack height="24px" direction={'row'} alignItems="center" gap={1}>
+                <Box
+                  style={{
+                    fontWeight: 'bold',
+                    maxWidth: '200px',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    wordBreak: 'break-all',
+                  }}>
+                  {
+                    sidebarContent?.filter(
+                      (category) => category.categoryId === Number(params.categoryId),
+                    )[0]?.categoryName
+                  }
+                </Box>
+                <Icon fontSize="small" sx={{ marginTop: '-6px' }}>
+                  <KeyboardArrowRight />
+                </Icon>
+                <Box
+                  style={{
+                    fontWeight: 'bold',
+                    maxWidth: '200px',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    wordBreak: 'break-all',
+                  }}>
+                  {post?.title}
+                </Box>
+              </Stack>
+              <Box
+                fontSize="36px"
+                style={{
+                  fontWeight: 'bold',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  wordBreak: 'break-all',
+                }}>
+                {post?.title}
+              </Box>
+              <Stack direction="row" alignItems={'center'} height="30px" gap={3} marginTop="24px">
+                <Button
+                  sx={{ minWidth: '30px', width: '30px', height: '30px', borderRadius: '50%' }}
+                  onClick={() => setIntroduceOpen(true)}>
+                  <img
+                    style={{
+                      width: '35px',
+                      height: '35px',
+                      borderRadius: '50%',
+                    }}
+                    src={post?.author?.profileImage ?? DEFAULT_IMAGE}
+                    alt="profileImage"
+                  />
+                </Button>
 
-                  <Stack margin="auto 0px">{post?.author?.nickname}</Stack>
-                  <IconButton color="white">
-                    <Home fontSize="small" onClick={() => router.push(`/${params.blogName}`)} />
-                  </IconButton>
-                  {post?.isAuthor && (
-                    <>
-                      <PageLink href={`/write/update/${params.categoryId}/${params.postId}`}>
-                        <Button>수정</Button>
-                      </PageLink>
-                      <Button
-                        onClick={() => deletePrPostOnClick(Number(params?.postId))}
-                        color="error">
-                        삭제
-                      </Button>
-                    </>
-                  )}
-                </Stack>
+                <Stack margin="auto 0px">{post?.author?.nickname}</Stack>
+                <IconButton color="white">
+                  <Home fontSize="small" onClick={() => router.push(`/${params.blogName}`)} />
+                </IconButton>
+                {post?.isAuthor && (
+                  <>
+                    <PageLink href={`/write/update/${params.categoryId}/${params.postId}`}>
+                      <Button>수정</Button>
+                    </PageLink>
+                    <Button
+                      onClick={() => deletePrPostOnClick(Number(params?.postId))}
+                      color="error">
+                      삭제
+                    </Button>
+                  </>
+                )}
               </Stack>
             </Stack>
           </CenterContent>

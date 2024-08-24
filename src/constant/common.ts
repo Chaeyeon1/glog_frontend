@@ -22,3 +22,5 @@ export const GITHUB_AUTH_URL =
 
 export const SERVER_URL = process.env.NEXT_PUBLIC_API_URL;
 export const DEFAULT_IMAGE = '/assets/9.jpeg';
+
+export const SIDEBAR_WIDTH = 140;
