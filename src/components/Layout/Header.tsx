@@ -5,7 +5,7 @@ import { IconButton, Menu, MenuItem, Stack, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
-import { useIsSearchSSR, useUserThemeSSR } from '../../../hooks/useRecoilSSR';
+import { useUserThemeSSR } from '../../../hooks/useRecoilSSR';
 import { usePathname, useRouter } from 'next/navigation';
 import PageLink from '../PageLink/PageLink';
 import Image from 'next/image';
@@ -24,7 +24,6 @@ import useModalOpen from '@/hooks/useModalOpen';
 export default function Header() {
   const [userTheme, setUserTheme] = useUserThemeSSR();
   const pathname = usePathname();
-  const [isSearch, setIsSearch] = useIsSearchSSR();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [alarmAnchorEl, setAlarmAnchorEl] = useState<null | HTMLElement>(null);
   const alarmOpen = Boolean(alarmAnchorEl);
@@ -100,12 +99,15 @@ export default function Header() {
       </Stack>
       <Stack direction="row" alignItems="center" gap={2}>
         {pathname.includes('/collect') &&
-          (isSearch ? (
-            <IconButton size="medium" color="primary" onClick={() => setIsSearch(false)}>
+          (pathname.includes('/search') ? (
+            <IconButton size="medium" color="primary" onClick={() => router.push('/collect')}>
               <Home fontSize="large" />
             </IconButton>
           ) : (
-            <IconButton color="primary" size="medium" onClick={() => setIsSearch(true)}>
+            <IconButton
+              color="primary"
+              size="medium"
+              onClick={() => router.push('/collect/search')}>
               <Search fontSize="large" />
             </IconButton>
           ))}
