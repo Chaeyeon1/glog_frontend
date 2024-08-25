@@ -43,6 +43,12 @@ export default function Header() {
     if (typeof window !== 'undefined') {
       setToken(localStorage.getItem('token'));
     }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setToken(localStorage.getItem('token'));
+    }
   }, [isLoading]);
 
   useEffect(() => {
