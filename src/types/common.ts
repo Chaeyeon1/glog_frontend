@@ -20,6 +20,7 @@ export type CategorySettingModalType = {
   open: boolean;
   categoryId: number;
   onClose: () => void;
+  categoryName?: string;
 };
 
 // Private 버튼 Map Type

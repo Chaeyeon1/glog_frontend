@@ -10,10 +10,16 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { DeleteCategoryApi, PutCategoryApi } from '@/api/category-api';
 import { enqueueSnackbar } from 'notistack';
 
-function CategorySettingModal({ open, categoryId, onClose }: CategorySettingModalType) {
+function CategorySettingModal({
+  open,
+  categoryId,
+  onClose,
+  categoryName,
+}: CategorySettingModalType) {
   const queryClient = useQueryClient();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [token, setToken] = useState<TokenType>(null);
+  const [newCategoryName, setNewCategoryName] = useState('');
   const deleteCategoryQuery = useMutation(DeleteCategoryApi, {
     onSuccess() {
       queryClient.invalidateQueries(['sidebar']);
@@ -27,14 +33,14 @@ function CategorySettingModal({ open, categoryId, onClose }: CategorySettingModa
     if (typeof window !== 'undefined') {
       setToken(localStorage.getItem('token'));
     }
-  }, []);
+    setNewCategoryName(categoryName ?? '');
+  }, [open]);
 
   const deleteClick = () => {
     deleteCategoryQuery.mutateAsync({ params: { categoryId }, token });
     onClose();
   };
 
-  const [newCategoryName, setNewCategoryName] = useState('');
   const putCategoryQuery = useMutation(PutCategoryApi, {
     onSuccess() {
       queryClient.invalidateQueries(['sidebar']);
@@ -75,6 +81,7 @@ function CategorySettingModal({ open, categoryId, onClose }: CategorySettingModa
               sx={{ width: '350px' }}
               variant="outlined"
               size="small"
+              value={newCategoryName}
               onChange={(e) => {
                 setNewCategoryName(e.target.value);
               }}

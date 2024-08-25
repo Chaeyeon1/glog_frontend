@@ -111,6 +111,7 @@ export default function Header() {
               <Search fontSize="large" />
             </IconButton>
           ))}
+
         {userTheme === 'dark' ? (
           <IconButton color="primary" onClick={toggleUserTheme}>
             <DarkModeIcon fontSize="large" />

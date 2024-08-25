@@ -217,6 +217,10 @@ function DragAndDrop({ rightContainer, footprintList, blogName, isMe }: DragAndD
           <CategorySettingModal
             open={categoryEditOpen}
             categoryId={paramsCategoryId}
+            categoryName={
+              footprintList?.find((category) => category.categoryId === paramsCategoryId)
+                ?.categoryName
+            }
             onClose={() => setCategoryEditOpen(false)}
           />
           <CreateCategoryModal
