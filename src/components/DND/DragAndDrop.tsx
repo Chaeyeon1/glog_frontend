@@ -173,10 +173,16 @@ function DragAndDrop({ rightContainer, footprintList, blogName, isMe }: DragAndD
                                         {...provided.draggableProps}
                                         {...provided.dragHandleProps}>
                                         <PageLink
+                                          style={{
+                                            wordBreak: 'break-all',
+                                            whiteSpace: 'nowrap',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                            flexShrink: 0,
+                                            maxWidth: '100%',
+                                          }}
                                           href={`/${blogName}/home/${category.categoryId}/${post.postId}`}>
-                                          <CategoryItem sx={{ opacity: 0.8 }}>
-                                            - {post.title}
-                                          </CategoryItem>
+                                          - {post.title}
                                         </PageLink>
                                       </Stack>
                                     )}

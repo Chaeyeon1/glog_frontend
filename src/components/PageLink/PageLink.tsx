@@ -16,6 +16,8 @@ function PageLink({
         width: 'fit-content',
         textDecoration: 'none',
         color: color ?? theme.palette.oppositeColor.main,
+        textOverflow: 'ellipsis',
+        maxWidth: '100%',
         ...style,
       }}
       {...rest}>
