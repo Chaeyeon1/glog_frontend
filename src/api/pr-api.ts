@@ -14,8 +14,8 @@ export const useGetPRQuery = ({ params, token }: { params: IPRParams; token?: To
     isLoading,
     error,
     data: backendData,
-  } = useQuery([`prList`, params], () => getPRApi({ params, token }), {
-    enabled: !!params.categoryId,
+  } = useQuery([`prList`, params, token], () => getPRApi({ params, token }), {
+    enabled: !!params.categoryId && !token,
   });
 
   const data: IPostedPost = backendData;

@@ -26,6 +26,7 @@ function page({ params }: { params: { blogName: string; categoryId: string } }) 
     token,
     enabled: !!postedData?.isAuthor,
   });
+
   const router = useRouter();
   const [unPosted, setUnPosted] = useState(unPostedData);
   const queryClient = useQueryClient();
