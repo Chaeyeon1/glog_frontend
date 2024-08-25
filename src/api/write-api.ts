@@ -54,7 +54,11 @@ const GetTemplateApi = async ({ token }: { token: TokenType }) => {
 };
 
 export const useGetTemplateQuery = ({ token }: { token: TokenType }) => {
-  const { isLoading, error, data } = useQuery([`template`, token], () => GetTemplateApi({ token }));
+  const { isLoading, error, data } = useQuery(
+    [`template`, token],
+    () => GetTemplateApi({ token }),
+    { enabled: !!token },
+  );
   return { data, isLoading, error };
 };
 

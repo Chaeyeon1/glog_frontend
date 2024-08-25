@@ -46,7 +46,7 @@ const PR = ({ params }: { params: { categoryId: number; postId: number } }) => {
   });
 
   useEffect(() => {
-    templateRefetch();
+    templateId > 0 && templateRefetch();
   }, [templateId]);
 
   useEffect(() => {

@@ -5,6 +5,7 @@ import axios from 'axios';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const axiosApi = (url: string, token: TokenType, data?: any) => {
+  console.log(token);
   const instance = axios.create({
     baseURL: url,
     withCredentials: true,

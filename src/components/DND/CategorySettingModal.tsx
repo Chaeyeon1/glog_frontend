@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Modal from '../Modal/Modal';
 import { ModalActions, ModalContent, ModalTitle } from '../Modal/Modal.style';
-import { Stack, TextField } from '@mui/material';
+import { dialogContentClasses, Stack, TextField } from '@mui/material';
 import ModalButton from '../Modal/ModalButton';
 import { CategorySettingModalType, TokenType } from '@/types/common';
 import Button from '../Button/Button';
@@ -71,7 +71,7 @@ function CategorySettingModal({
           </Button>
         </Stack>
       </ModalTitle>
-      <ModalContent sx={{ '&&.MuiDialogContent-root': { paddingTop: '0px' } }}>
+      <ModalContent sx={{ [`&&.${dialogContentClasses.root}`]: { paddingTop: '0px' } }}>
         <Stack mt={4} width="600px" spacing={5}>
           <Stack direction="row" alignItems="center" spacing={8}>
             <Stack fontSize="16px" fontWeight="bold">

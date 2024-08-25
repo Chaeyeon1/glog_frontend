@@ -45,7 +45,7 @@ const Write = ({ params }: { params: { categoryId: number } }) => {
   }, []);
 
   useEffect(() => {
-    templateRefetch();
+    templateId > 0 && templateRefetch();
   }, [templateId]);
 
   useEffect(() => {
