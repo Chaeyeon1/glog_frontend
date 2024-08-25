@@ -37,6 +37,7 @@ function CategorySettingModal({ open, categoryId, onClose }: CategorySettingModa
   const [newCategoryName, setNewCategoryName] = useState('');
   const putCategoryQuery = useMutation(PutCategoryApi, {
     onSuccess() {
+      queryClient.invalidateQueries(['sidebar']);
       queryClient.invalidateQueries(['category']);
     },
   });
