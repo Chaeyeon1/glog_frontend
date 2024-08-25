@@ -28,7 +28,7 @@ import RepliesComponent, {
   WriteReply,
   DetailContentContainer,
   ActionContainer,
-} from '../../app/[blogName]/home/[categoryId]/[postId]/postId.style';
+} from '@/app/[blogName]/home/[categoryId]/[postId]/postId.style';
 import DragAndDrop from '@/components/DND/DragAndDrop';
 import { useGetSidebarQuery, useGetPostQuery } from '@/api/blog-api';
 import { IIntroduce, IPostContent, IReplyContent, IUserDetail, SidebarPostType } from '@/types/dto';
@@ -377,6 +377,7 @@ const PostData = ({
                       message={replyInfo.message}
                       likesCount={replyInfo.likesCount}
                       isLiked={replyInfo.isLiked}
+                      createdAt={replyInfo.createdAt}
                       who={replyInfo.who}></RepliesComponent>
                   );
                 })}

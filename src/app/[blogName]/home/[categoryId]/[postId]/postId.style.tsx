@@ -22,6 +22,8 @@ import { DEFAULT_IMAGE, SIDEBAR_WIDTH } from '@/constant/common';
 import { TokenType } from '@/types/common';
 import CenterContent from '@/components/Layout/CenterContent';
 import Image from 'next/image';
+import getDateFormat from '@/util/getDateFormat';
+import { Delete, Edit } from '@mui/icons-material';
 
 export const ThumbnailArea = styled(Stack)({
   width: '100%',
@@ -153,17 +155,6 @@ const ReplyMainInfo = styled(Stack)({
   flexDirection: 'column',
 });
 
-const ReplySubInfo = styled(Stack)({
-  flexDirection: 'row',
-});
-
-const ReplyLike = styled(Stack)({
-  flexDirection: 'row',
-  marginLeft: '20px',
-});
-
-const ChangeReply = styled(Stack)({});
-
 function RepliesComponent({
   userId,
   replyId,
@@ -173,6 +164,7 @@ function RepliesComponent({
   likesCount,
   isLiked,
   who,
+  createdAt,
 }: {
   userId: number;
   replyId: number;
@@ -182,6 +174,7 @@ function RepliesComponent({
   likesCount: number;
   isLiked: boolean;
   who: string;
+  createdAt: string;
 }) {
   const theme = useTheme();
   const queryClient = useQueryClient();
@@ -280,52 +273,45 @@ function RepliesComponent({
   }, [introduceData]);
 
   return (
-    <Stack borderBottom={`1px solid #E8E8E8`} flexDirection={'column'} padding="15px" width="100%">
+    <Stack borderBottom="1px solid #E8E8E8" flexDirection={'column'} padding="15px" width="100%">
       <ReplyMainInfo>
-        <Stack flexDirection="row" alignItems="center" marginBottom="10px">
+        <Stack spacing={4} direction="row" alignItems="center" marginBottom="10px">
           <Button
             sx={{ minWidth: '35px', width: '35px', height: '35px', borderRadius: '50%' }}
             onClick={() => setIntroduceOpen(true)}>
             <Image width={35} height={35} alt="profile Image" src={profileImage ?? DEFAULT_IMAGE} />
           </Button>
-          <Stack margin="0 10px">{nickname}</Stack>
-          <ReplyLike>
-            <Stack marginTop="5px">{likesCount}</Stack>
-            {isLiked ? (
-              <IconButton
-                color="primary"
-                sx={{ padding: '0px', marginLeft: '10px' }}
-                onClick={ReplyLikeOnClick}>
-                <ThumbUpAltIcon />
-              </IconButton>
-            ) : (
-              <IconButton sx={{ padding: '0px', marginLeft: '10px' }} onClick={ReplyLikeOnClick}>
-                <ThumbUpOffAltIcon />
-              </IconButton>
-            )}
-            <ChangeReply>
-              {who === 'me(author)' || who === 'me' ? (
-                <Button onClick={() => setPutReplyOpen(true)}>수정하기</Button>
-              ) : (
-                <></>
-              )}
-            </ChangeReply>
-            <Stack>
-              {who === 'me(author)' || who === 'me' ? (
-                <Button onClick={() => deleteClick()}>삭제하기</Button>
-              ) : (
-                <></>
-              )}
+          <Stack>
+            <Stack direction="row" alignItems="center" spacing={3}>
+              <Stack>{nickname}</Stack>
+              <Stack>{getDateFormat(createdAt)}</Stack>
+              <Stack direction="row" alignItems="center" spacing={1}>
+                <Stack>{likesCount}</Stack>
+                {isLiked ? (
+                  <IconButton color="primary" onClick={ReplyLikeOnClick}>
+                    <ThumbUpAltIcon />
+                  </IconButton>
+                ) : (
+                  <IconButton onClick={ReplyLikeOnClick}>
+                    <ThumbUpOffAltIcon />
+                  </IconButton>
+                )}
+                {(who === 'me(author)' || who === 'me') && (
+                  <>
+                    <IconButton size="small" onClick={() => setPutReplyOpen(true)}>
+                      <Edit />
+                    </IconButton>
+                    <IconButton size="small" onClick={() => deleteClick()}>
+                      <Delete />
+                    </IconButton>
+                  </>
+                )}
+              </Stack>
             </Stack>
-          </ReplyLike>
+            <Stack>{message}</Stack>
+          </Stack>
         </Stack>
-
-        <Stack>
-          <ReplySubInfo></ReplySubInfo>
-        </Stack>
-        <Stack>{message}</Stack>
       </ReplyMainInfo>
-
       <Modal open={putReplyOpen} onClose={() => setPutReplyOpen(false)}>
         <ModalTitle>수정하기</ModalTitle>
         <ModalContent>
