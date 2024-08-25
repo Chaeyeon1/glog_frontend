@@ -19,6 +19,7 @@ function page({ params }: { params: { blogName: string; categoryId: string } }) 
   const [token, setToken] = useState<TokenType>(null);
   const { data: postedData } = useGetPRQuery({
     params: { categoryId: Number(params.categoryId) },
+    token,
   });
   const { data: unPostedData } = useGetPRUnpostedQuery({
     params: { categoryId: Number(params.categoryId) },

@@ -4,7 +4,7 @@ import { IUserDetail } from '@/types/dto';
 import { TokenType } from '@/types/common';
 import { usePathname } from 'next/navigation';
 
-export const GetUserDetailApi = async ({ token }: { token: TokenType }) => {
+export const getUserDetailApi = async ({ token }: { token: TokenType }) => {
   const { data } = await defaultInstance(token).get('/user/detail');
 
   return data;
@@ -22,7 +22,7 @@ export const useGetUserDetailQuery = ({ token }: { token: TokenType }) => {
     isLoading,
     error,
     data: backendData,
-  } = useQuery(['userDetail', token, pathname], () => GetUserDetailApi({ token }), {
+  } = useQuery(['userDetail', token, pathname], () => getUserDetailApi({ token }), {
     enabled: !!token,
   });
 
