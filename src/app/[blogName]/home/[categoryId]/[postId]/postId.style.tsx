@@ -1,5 +1,5 @@
 import IconButton from '@/components/Button/IconButton';
-import { Pagination, TextField, Tooltip } from '@mui/material';
+import { Box, Pagination, TextField, Tooltip } from '@mui/material';
 import { Stack } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
@@ -18,8 +18,10 @@ import CloseIcon from '@mui/icons-material/Close';
 import { DeleteReplyApi, PatchReplyLikeApi, putReplyApi } from '@/api/reply-api';
 import { Dialog } from '@/components/Dialog/Dialog';
 import { enqueueSnackbar } from 'notistack';
-import { DEFAULT_IMAGE } from '@/constant/common';
+import { DEFAULT_IMAGE, SIDEBAR_WIDTH } from '@/constant/common';
 import { TokenType } from '@/types/common';
+import CenterContent from '@/components/Layout/CenterContent';
+import Image from 'next/image';
 
 export const ThumbnailArea = styled(Stack)({
   width: '100%',
@@ -43,22 +45,91 @@ export const ImageContainer = styled(Stack)(({ imageSrc }: { imageSrc: string })
   height: '100%',
 }));
 
-export const ProfileImg = styled(Stack)(({ imageSrc }: { imageSrc: string }) => ({
-  backgroundAttachment: 'fixed',
-  backgroundImage: `url(${imageSrc})`,
-  backgroundRepeat: 'no-repeat',
-  borderRadius: '50%',
+export const HeaderCenterContent = styled(CenterContent)(() => ({
+  color: '#fff',
+  flexDirection: 'row',
+  gap: '32px',
 }));
 
-export const PostReply = styled(Stack)({
+export const HeaderContentContainer = styled(Stack)({
+  padding: '0px 48px',
+  overflow: 'hidden',
+});
+
+export const BreadCrumbsContainer = styled(Stack)({
+  height: '24px',
+  flexDirection: 'row',
+  alignItems: 'center',
+  gap: '4px',
+  width: 'fit-content',
+  maxWidth: '100%',
+});
+
+export const EllipsisContent = styled(Box)({
+  fontWeight: 'bold',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  wordBreak: 'break-all',
+  flexShrink: 0,
+  maxWidth: '100%',
+});
+
+export const ActionButtonContainer = styled(Stack)({
+  flexDirection: 'row',
+  alignItems: 'center',
+  height: '30px',
+  gap: '12px',
+  marginTop: '12px',
+});
+
+export const ProfileImg = styled('img')({
+  width: '35px',
+  height: '35px',
+  borderRadius: '50%',
+  cursor: 'pointer',
+});
+
+export const EmptySidebar = styled(Stack)(() => ({
+  width: `${SIDEBAR_WIDTH}px`,
+  height: '100%',
+  flexShrink: 0,
+}));
+
+// export const ProfileImg = styled(Stack)(({ imageSrc }: { imageSrc: string }) => ({
+//   backgroundAttachment: 'fixed',
+//   backgroundImage: `url(${imageSrc})`,
+//   backgroundRepeat: 'no-repeat',
+//   borderRadius: '50%',
+// }));
+
+export const ReplyContainer = styled(Stack)({
   marginTop: '50px',
   height: '100%',
   flexDirection: 'column',
 });
 
+export const DetailContentContainer = styled(Stack)({
+  marginBottom: '32px',
+  gap: '8px',
+});
+
+export const ActionContainer = styled(Stack)(({ theme }) => ({
+  borderTop: `1px solid ${theme.palette.primary.main}`,
+  flexDirection: 'row',
+  gap: '8px',
+  padding: '4px 0px 0px 0px',
+  alignItems: 'center',
+}));
+
+export const CountContainer = styled(Stack)({
+  color: '#000',
+  fontSize: '14px',
+});
+
 export const ReplyHandle = styled(Stack)({
   flexDirection: 'row',
-  // marginBottom: '20px',
+  marginBottom: '20px',
 });
 
 export const ReplyCount = styled(Stack)({});
@@ -66,16 +137,17 @@ export const ReplyCount = styled(Stack)({});
 export const WriteReply = styled(Stack)({
   flexDirection: 'row',
   alignItems: 'center',
+  padding: '0px 15px',
 });
 
 export const GetReplies = styled(Stack)({
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  margin: '60px 0',
+  marginTop: '30px',
 });
 
-export const ReplyPagenation = styled(Pagination)({});
+export const ReplyPagination = styled(Pagination)({});
 
 const ReplyMainInfo = styled(Stack)({
   flexDirection: 'column',
@@ -208,27 +280,13 @@ function RepliesComponent({
   }, [introduceData]);
 
   return (
-    <Stack
-      flexDirection={'column'}
-      padding="15px"
-      width="100%"
-      margin="20px 0 10px 0"
-      border="3px solid rgb(189,189,189)"
-      borderRadius="15px">
+    <Stack borderBottom={`1px solid #E8E8E8`} flexDirection={'column'} padding="15px" width="100%">
       <ReplyMainInfo>
         <Stack flexDirection="row" alignItems="center" marginBottom="10px">
           <Button
             sx={{ minWidth: '35px', width: '35px', height: '35px', borderRadius: '50%' }}
             onClick={() => setIntroduceOpen(true)}>
-            <img
-              style={{
-                width: '35px',
-                height: '35px',
-                borderRadius: '50%',
-              }}
-              src={profileImage ?? DEFAULT_IMAGE}
-              alt="profileImage"
-            />
+            <Image width={35} height={35} alt="profile Image" src={profileImage ?? DEFAULT_IMAGE} />
           </Button>
           <Stack margin="0 10px">{nickname}</Stack>
           <ReplyLike>

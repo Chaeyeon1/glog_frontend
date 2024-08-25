@@ -20,6 +20,7 @@ import {
   PRButton,
 } from './DragANdDrop.style';
 import GlogTooltip from '../Tooltip/Tooltip';
+import { SIDEBAR_WIDTH } from '@/constant/common';
 
 type Footprint = {
   categoryId: number;
@@ -73,7 +74,7 @@ function DragAndDrop({ rightContainer, footprintList, blogName, isMe }: DragAndD
                   borderTop={`2px solid ${theme.palette.primary.main}`}
                   px={2}
                   pt={3}
-                  width="130px"
+                  width={`${SIDEBAR_WIDTH}px`}
                   sx={{ transition: 'all .35s ease-in-out', flexShrink: 0 }}
                   position="relative"
                   gap={8}>

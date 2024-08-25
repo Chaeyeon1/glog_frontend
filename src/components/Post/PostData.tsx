@@ -1,6 +1,5 @@
 'use client';
 import {
-  Box,
   Chip,
   Icon,
   Menu,
@@ -8,26 +7,33 @@ import {
   Stack,
   TextField,
   Tooltip,
+  Typography,
   useTheme,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import RepliesComponent, {
   BlackContainer,
+  BreadCrumbsContainer,
+  ActionButtonContainer,
+  EllipsisContent,
+  EmptySidebar,
   GetReplies,
+  HeaderCenterContent,
+  HeaderContentContainer,
   ImageContainer,
-  PostReply,
+  ReplyContainer,
   ReplyHandle,
-  ReplyPagenation,
+  ReplyPagination,
   ThumbnailArea,
   WriteReply,
+  DetailContentContainer,
+  ActionContainer,
 } from '../../app/[blogName]/home/[categoryId]/[postId]/postId.style';
 import DragAndDrop from '@/components/DND/DragAndDrop';
 import { useGetSidebarQuery, useGetPostQuery } from '@/api/blog-api';
 import { IIntroduce, IPostContent, IReplyContent, IUserDetail, SidebarPostType } from '@/types/dto';
-import CenterContent from '@/components/Layout/CenterContent';
-import { Home, KeyboardArrowRight, Star } from '@mui/icons-material';
+import { KeyboardArrowRight, Star } from '@mui/icons-material';
 import MDEditor from '@uiw/react-md-editor';
-import { useRouter } from 'next/navigation';
 import IconButton from '@/components/Button/IconButton';
 import Button from '@/components/Button/Button';
 import { PostReplyApi, useGetReplyQuery } from '@/api/reply-api';
@@ -47,7 +53,7 @@ import { AddLikeApi, DeleteWriteApi } from '@/api/write-api';
 import { enqueueSnackbar } from 'notistack';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import { postVisitApi } from '@/api/mypage-api';
-import { DEFAULT_IMAGE, SIDEBAR_WIDTH } from '@/constant/common';
+import { DEFAULT_IMAGE } from '@/constant/common';
 import { TokenType } from '@/types/common';
 import { useGetUserDetailQuery } from '@/api/userDetail-api';
 import { addScrapApi } from '@/api/scrap-api';
@@ -64,7 +70,6 @@ const PostData = ({
   const { data: sidebarData } = useGetSidebarQuery({ params: { blogId: blogIdData }, token });
   const { data: postData } = useGetPostQuery({ params: { postId: Number(params.postId) }, token });
   const [IntroduceOpen, setIntroduceOpen] = useState<boolean>(false);
-  const router = useRouter();
   const theme = useTheme();
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState<OrderType>('likesCount');
@@ -197,76 +202,39 @@ const PostData = ({
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const categoryName = sidebarContent?.filter(
+    (category) => category.categoryId === Number(params.categoryId),
+  )[0]?.categoryName;
 
   return (
     <Stack>
       <ThumbnailArea>
         <ImageContainer imageSrc={postData?.thumbnail ?? DEFAULT_IMAGE} />
         <BlackContainer paddingTop="64px">
-          <CenterContent color="#fff" direction="row" gap="32px">
-            <Stack width={`${SIDEBAR_WIDTH}px`} height="100%" flexShrink={0} />
-            <Stack px="48px" sx={{ overflow: 'hidden' }}>
-              <Stack height="24px" direction={'row'} alignItems="center" gap={1}>
-                <Box
-                  style={{
-                    fontWeight: 'bold',
-                    maxWidth: '200px',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    wordBreak: 'break-all',
-                  }}>
-                  {
-                    sidebarContent?.filter(
-                      (category) => category.categoryId === Number(params.categoryId),
-                    )[0]?.categoryName
-                  }
-                </Box>
+          <HeaderCenterContent>
+            <EmptySidebar />
+            <HeaderContentContainer>
+              <BreadCrumbsContainer>
+                <EllipsisContent>{categoryName}</EllipsisContent>
                 <Icon fontSize="small" sx={{ marginTop: '-6px' }}>
                   <KeyboardArrowRight />
                 </Icon>
-                <Box
+                <EllipsisContent>{post?.title}</EllipsisContent>
+              </BreadCrumbsContainer>
+              <EllipsisContent fontSize="36px">{post?.title}</EllipsisContent>
+              <ActionButtonContainer>
+                <img
                   style={{
-                    fontWeight: 'bold',
-                    maxWidth: '200px',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    wordBreak: 'break-all',
-                  }}>
-                  {post?.title}
-                </Box>
-              </Stack>
-              <Box
-                fontSize="36px"
-                style={{
-                  fontWeight: 'bold',
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  wordBreak: 'break-all',
-                }}>
-                {post?.title}
-              </Box>
-              <Stack direction="row" alignItems={'center'} height="30px" gap={3} marginTop="24px">
-                <Button
-                  sx={{ minWidth: '30px', width: '30px', height: '30px', borderRadius: '50%' }}
-                  onClick={() => setIntroduceOpen(true)}>
-                  <img
-                    style={{
-                      width: '35px',
-                      height: '35px',
-                      borderRadius: '50%',
-                    }}
-                    src={post?.author?.profileImage ?? DEFAULT_IMAGE}
-                    alt="profileImage"
-                  />
-                </Button>
-
+                    width: '35px',
+                    height: '35px',
+                    borderRadius: '50%',
+                    cursor: 'pointer',
+                  }}
+                  onClick={() => setIntroduceOpen(true)}
+                  src={post?.author?.profileImage ?? DEFAULT_IMAGE}
+                  alt="profileImage"
+                />
                 <Stack margin="auto 0px">{post?.author?.nickname}</Stack>
-                <IconButton color="white">
-                  <Home fontSize="small" onClick={() => router.push(`/${params.blogName}`)} />
-                </IconButton>
                 {post?.isAuthor && (
                   <>
                     <PageLink href={`/write/update/${params.categoryId}/${params.postId}`}>
@@ -279,9 +247,9 @@ const PostData = ({
                     </Button>
                   </>
                 )}
-              </Stack>
-            </Stack>
-          </CenterContent>
+              </ActionButtonContainer>
+            </HeaderContentContainer>
+          </HeaderCenterContent>
         </BlackContainer>
       </ThumbnailArea>
       <DragAndDrop
@@ -291,45 +259,38 @@ const PostData = ({
         rightContainer={
           <Stack width={'100%'} px={12}>
             <MDEditor.Markdown key={post?.content} source={post?.content} />
-            <PostReply>
-              <Stack mb={8} spacing={2}>
-                <Stack
-                  borderTop={`1px solid ${theme.palette.primary.main}`}
-                  direction="row"
-                  spacing={4}
-                  py={1}
-                  alignItems="center">
+            <ReplyContainer>
+              <DetailContentContainer>
+                <ActionContainer>
                   <Stack color="#000" fontSize="14px">
                     조회수 : {post?.viewsCount}
                   </Stack>
-                  <Stack color="#000" direction="row" alignItems="center" spacing={2}>
-                    <Stack fontSize="14px">추천수 : {post?.likesCount} </Stack>
-                    <IconButton
-                      size="small"
-                      onClick={() => {
-                        !token
-                          ? enqueueSnackbar({ variant: 'error', message: '로그인이 필요합니다.' })
-                          : patchAddLikeQuery.mutateAsync({
-                              params: { postId: Number(params?.postId) },
-                              token,
-                            });
-                      }}>
-                      <ThumbUpIcon color={post?.isLiked ? 'primary' : undefined} />
-                    </IconButton>
-                    <IconButton
-                      size="small"
-                      onClick={() => {
-                        !token
-                          ? enqueueSnackbar({ variant: 'error', message: '로그인이 필요합니다.' })
-                          : addScrapMutateAsync({
-                              params: { postId: Number(params?.postId) },
-                              token,
-                            });
-                      }}>
-                      <Star color={post?.isScraped ? 'primary' : undefined} />
-                    </IconButton>
-                  </Stack>
-                </Stack>
+                  <Stack fontSize="14px">추천수 : {post?.likesCount} </Stack>
+                  <IconButton
+                    size="small"
+                    onClick={() => {
+                      !token
+                        ? enqueueSnackbar({ variant: 'error', message: '로그인이 필요합니다.' })
+                        : patchAddLikeQuery.mutateAsync({
+                            params: { postId: Number(params?.postId) },
+                            token,
+                          });
+                    }}>
+                    <ThumbUpIcon color={post?.isLiked ? 'primary' : undefined} />
+                  </IconButton>
+                  <IconButton
+                    size="small"
+                    onClick={() => {
+                      !token
+                        ? enqueueSnackbar({ variant: 'error', message: '로그인이 필요합니다.' })
+                        : addScrapMutateAsync({
+                            params: { postId: Number(params?.postId) },
+                            token,
+                          });
+                    }}>
+                    <Star color={post?.isScraped ? 'primary' : undefined} />
+                  </IconButton>
+                </ActionContainer>
                 <Stack direction="row" spacing={2}>
                   {post?.hashtags?.map((hashtag, i) => {
                     return (
@@ -337,12 +298,13 @@ const PostData = ({
                     );
                   })}
                 </Stack>
-              </Stack>
+              </DetailContentContainer>
               {/* 댓글 */}
               {!!reply?.replyDtos.length && (
                 <ReplyHandle>
-                  <Stack flexDirection={'row'}>
-                    <Stack>
+                  <Stack flexDirection={'row'} gap={6}>
+                    <Typography>댓글 {reply?.replyDtos.length}개</Typography>
+                    <Stack direction="row">
                       <Button
                         onClick={handleClick}
                         sx={{ padding: '0 10px 0 0', minWidth: '24px' }}>
@@ -364,23 +326,23 @@ const PostData = ({
                           최신순
                         </MenuItem>
                       </Menu>
+                      <Stack>정렬기준</Stack>
                     </Stack>
-                    <Stack>정렬기준</Stack>
                   </Stack>
                 </ReplyHandle>
               )}
               {token && (
                 <WriteReply>
                   <Image
-                    width={40}
-                    height={40}
+                    width={35}
+                    height={35}
                     alt="profile Image"
                     src={userDetail?.thumbnail ?? DEFAULT_IMAGE}
                   />
                   <TextField
                     fullWidth
                     variant="standard"
-                    label={'댓글 추가'}
+                    placeholder="댓글 추가"
                     sx={{ margin: '0 30px' }}
                     value={message}
                     onChange={(e) => {
@@ -401,7 +363,7 @@ const PostData = ({
                   </Button>
                 </WriteReply>
               )}
-            </PostReply>
+            </ReplyContainer>
             {!!reply?.replyDtos.length && (
               <GetReplies>
                 {reply.replyDtos.map((replyInfo) => {
@@ -418,7 +380,7 @@ const PostData = ({
                       who={replyInfo.who}></RepliesComponent>
                   );
                 })}
-                <ReplyPagenation
+                <ReplyPagination
                   count={replyData?.totalPages}
                   page={page + 1}
                   sx={{ margin: '30px 0' }}
