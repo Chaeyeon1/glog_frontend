@@ -94,7 +94,7 @@ const Write = ({ params }: { params: { categoryId: number } }) => {
           });
 
           if (imageUrl) {
-            const newContent = `${content}\n![Uploaded Image](${imageUrl})\n`;
+            const newContent = `${content}\n![](${imageUrl})\n`;
             setContent(newContent);
           }
         }
