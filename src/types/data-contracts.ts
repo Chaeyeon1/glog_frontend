@@ -12,7 +12,7 @@
 export interface ReplyUpdateRequest {
   /** @format int64 */
   repyId?: number;
-  message?: string;
+  message: string;
 }
 
 export interface ReadmeDto {
@@ -22,13 +22,13 @@ export interface ReadmeDto {
 export interface PostCreateRequest {
   /** @format int64 */
   postId?: number;
-  title?: string;
-  content?: string;
-  isPrivate?: boolean;
+  title: string;
+  content: string;
+  isPrivate: boolean;
   /** @format int64 */
   prId?: number;
   /** @format int64 */
-  categoryId?: number;
+  categoryId: number;
   hashtags?: string[];
 }
 
@@ -94,7 +94,7 @@ export interface PostBasicDto {
 export interface ReplyCreateRequest {
   /** @format int64 */
   postId?: number;
-  message?: string;
+  message: string;
 }
 
 export interface UserInfoChangeRequest {
@@ -113,7 +113,7 @@ export interface UserDetailResponse {
 export type MyPageResponse = object;
 
 export interface CategoryCreateRequest {
-  categoryName?: string;
+  categoryName: string;
   isPrCategory?: boolean;
   repositoryUrl?: string;
 }
@@ -253,6 +253,254 @@ export interface PrWriteDto {
   body: string;
 }
 
+export interface Alarm {
+  /** @format int64 */
+  id?: number;
+  user?: User;
+  /** @format int64 */
+  postId?: number;
+  /** @format int64 */
+  categoryId?: number;
+  message?: string;
+  checked?: boolean;
+  type?: 'reply' | 'friend';
+  /** @format date-time */
+  createdAt?: string;
+}
+
+export interface Blog {
+  /** @format int64 */
+  id?: number;
+  user?: User;
+  categories?: Category[];
+  posts?: Post[];
+  guestBook?: Guestbook;
+  visit?: Visit;
+  blogName: string;
+  blogUrl: string;
+  readme?: string;
+}
+
+export interface BookMessage {
+  /** @format int64 */
+  id?: number;
+  guestBook?: Guestbook;
+  user?: User;
+  message: string;
+  /** @format date-time */
+  createdAt?: string;
+}
+
+export interface Category {
+  /** @format int64 */
+  id?: number;
+  posts?: Post[];
+  blog?: Blog;
+  categoryName: string;
+  isPrcategory: boolean;
+  reopsitoryUrl?: string;
+  githubRepository?: GithubRepository;
+  prPosts?: PrPost[];
+}
+
+export interface Friend {
+  /** @format int64 */
+  id?: number;
+  status: boolean;
+  fromUser?: User;
+  fromUserNewPost: boolean;
+  toUser?: User;
+  toUserNewPost: boolean;
+}
+
+export interface GithubRepository {
+  /** @format int64 */
+  id?: number;
+  user?: User;
+  repoName: string;
+  ownerName: string;
+  category?: Category;
+  isCategoryRegi: boolean;
+  prPost?: PrPost[];
+}
+
+export interface Guestbook {
+  /** @format int64 */
+  id?: number;
+  user?: User;
+  blog?: Blog;
+  bookMessages?: BookMessage[];
+}
+
+export interface History {
+  /** @format int64 */
+  id?: number;
+  /** @format date */
+  date?: string;
+  /**
+   * @format int32
+   * @max 3
+   */
+  count: number;
+  user?: User;
+}
+
+export interface Post {
+  /** @format int64 */
+  id?: number;
+  hashtags?: PostHashtag[];
+  replies?: Reply[];
+  postLikes?: PostLike[];
+  scraps?: Scrap[];
+  prPost?: PrPost;
+  user?: User;
+  category?: Category;
+  blog?: Blog;
+  title: string;
+  content: string;
+  thumbnail?: string;
+  blogUrl: string;
+  /** @format int32 */
+  likesCount: number;
+  /** @format int32 */
+  viewsCount: number;
+  isPrivate: boolean;
+  isPr: boolean;
+  /** @format date-time */
+  createdAt?: string;
+}
+
+export interface PostHashtag {
+  /** @format int64 */
+  id?: number;
+  post?: Post;
+  tag: string;
+}
+
+export interface PostLike {
+  /** @format int64 */
+  id?: number;
+  user?: User;
+  post?: Post;
+}
+
+export interface PrPost {
+  /** @format int64 */
+  id?: number;
+  post?: Post;
+  category?: Category;
+  /** @format int32 */
+  prNumber: number;
+  prTitle: string;
+  isPosted: boolean;
+  prBody?: string;
+  githubRepository?: GithubRepository;
+}
+
+export interface Reply {
+  /** @format int64 */
+  id?: number;
+  replyLikes?: ReplyLike[];
+  user?: User;
+  post?: Post;
+  message: string;
+  /** @format int32 */
+  likesCount: number;
+  isEdit: boolean;
+  /** @format date-time */
+  createdAt?: string;
+}
+
+export interface ReplyLike {
+  /** @format int64 */
+  id?: number;
+  user?: User;
+  reply?: Reply;
+}
+
+export interface Scrap {
+  /** @format int64 */
+  id?: number;
+  user?: User;
+  post?: Post;
+}
+
+export interface Template {
+  /** @format int64 */
+  id?: number;
+  title?: string;
+  content?: string;
+  thumbnail?: string;
+  user?: User;
+  hashtagList?: TemplateHashtag[];
+}
+
+export interface TemplateHashtag {
+  /** @format int64 */
+  id?: number;
+  tag: string;
+  template?: Template;
+}
+
+export interface Temporary {
+  /** @format int64 */
+  id?: number;
+  title?: string;
+  content?: string;
+  thumbnail?: string;
+  user?: User;
+  hashtags?: TemporaryHashtag[];
+}
+
+export interface TemporaryHashtag {
+  /** @format int64 */
+  id?: number;
+  tag: string;
+  temporary?: Temporary;
+}
+
+export interface User {
+  /** @format int64 */
+  id?: number;
+  nickname: string;
+  introduction?: string;
+  imageUrl?: string;
+  /** @format int32 */
+  friendCount: number;
+  /** @format int32 */
+  skin: number;
+  email: string;
+  emailVerified: boolean;
+  provider: 'local' | 'facebook' | 'google' | 'github';
+  providerId: string;
+  githubID?: string;
+  githubToken?: string;
+  blog?: Blog;
+  posts?: Post[];
+  postLikes?: PostLike[];
+  replies?: Reply[];
+  guestBook?: Guestbook;
+  bookMessages?: BookMessage[];
+  fromFriends?: Friend[];
+  toFriends?: Friend[];
+  histories?: History[];
+  scraps?: Scrap[];
+  templates?: Template[];
+  temporaries?: Temporary[];
+  alarms?: Alarm[];
+  githubRepository?: GithubRepository[];
+}
+
+export interface Visit {
+  /** @format int64 */
+  id?: number;
+  /** @format date */
+  date?: string;
+  blog?: Blog;
+  /** @format int32 */
+  count?: number;
+}
+
 export interface PathDto {
   influxPath?: string;
 }
@@ -323,9 +571,11 @@ export interface SidebarDtos {
 export interface AlarmDto {
   message?: string;
   checked?: boolean;
-  type?: 'reply';
+  type?: 'reply' | 'friend';
   /** @format int64 */
-  referencedId?: number;
+  postId?: number;
+  /** @format int64 */
+  categoryId?: number;
   /** @format date-time */
   createdAt?: string;
 }
@@ -488,6 +738,8 @@ export type WritePrPostData = PrWriteDto;
 
 export type CollectData = PostPreviewDtos;
 
+export type GetAllPostsData = Post;
+
 export type GoToMypageData = MyPageResponse;
 
 export type ReadHasBlogData = boolean;
@@ -513,6 +765,8 @@ export type GetBlogIdData = number;
 export type GetBlogUrlData = string;
 
 export type GetAlarmsData = AlarmDtos;
+
+export type DeleteUserData = string;
 
 export type DeletePostsPayload = number[];
 

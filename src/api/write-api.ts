@@ -1,7 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { defaultInstance } from '.';
 import { IRemovePostParams, ITemplateDetailParams, ITemporaryDetailParams } from '@/types/dto';
 import { TokenType } from '@/types/common';
+import { apiClient } from '@/util/ApiClient';
+import { UploadImagePayload } from '@/types/data-contracts';
 
 export const PostWriteApi = async ({ body, token }: { body: FormData; token: TokenType }) => {
   const { data } = await defaultInstance(token).post('/post', body, {
@@ -62,7 +64,20 @@ export const useGetTemplateQuery = ({ token }: { token: TokenType }) => {
   return { data, isLoading, error };
 };
 
-const GetTemplateDetailApi = async ({
+const PostImage = async ({ body }: { body: UploadImagePayload }) => {
+  const response = await apiClient.uploadImage(body);
+  return response.data;
+};
+
+export function usePostImage() {
+  const mutation = useMutation({
+    mutationFn: PostImage,
+  });
+
+  return mutation;
+}
+
+const getTemplateDetailApi = async ({
   params,
   token,
 }: {
@@ -83,7 +98,7 @@ export const useGetTemplateDetailQuery = ({
 }) => {
   const { isLoading, error, data, refetch } = useQuery(
     [`templateDetail`],
-    () => GetTemplateDetailApi({ params, token }),
+    () => getTemplateDetailApi({ params, token }),
     {
       enabled: false,
     },

@@ -1,7 +1,7 @@
 'use client';
 
 import { Stack, TextField } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { ClipboardEvent, useEffect, useState } from 'react';
 import MDEditor from '@uiw/react-md-editor';
 import {
   useTemplateIdSSR,
@@ -15,7 +15,11 @@ import BottomButton from '@/app/write/Bottom/BottomButton';
 import '@uiw/react-md-editor/markdown-editor.css';
 import '@uiw/react-markdown-preview/markdown.css';
 import { WriteProps } from '@/util/useWriteProps';
-import { useGetTemplateDetailQuery, useGetTemporaryDetailQuery } from '@/api/write-api';
+import {
+  useGetTemplateDetailQuery,
+  useGetTemporaryDetailQuery,
+  usePostImage,
+} from '@/api/write-api';
 import { useGetPostQuery } from '@/api/blog-api';
 import { TokenType } from '@/types/common';
 
@@ -28,6 +32,7 @@ const Update = ({ params }: { params: { categoryId: number; postId: number } }) 
   const [temporaryId] = useTemporaryIdSSR();
   const [token, setToken] = useState<TokenType>(null);
   const { data: postData } = useGetPostQuery({ params: { postId: Number(params.postId) }, token });
+  const { mutateAsync } = usePostImage();
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -80,6 +85,29 @@ const Update = ({ params }: { params: { categoryId: number; postId: number } }) 
     tags,
   };
 
+  const handlePaste = async (e: ClipboardEvent) => {
+    const clipboardItems = e.clipboardData.items;
+
+    for (const item of clipboardItems) {
+      if (item.type.indexOf('image') !== -1) {
+        const file = item.getAsFile();
+
+        if (file) {
+          const imageUrl = await mutateAsync({
+            body: {
+              image: file,
+            },
+          });
+
+          if (imageUrl) {
+            const newContent = `${content}\n![image](${imageUrl})\n`;
+            setContent(newContent);
+          }
+        }
+      }
+    }
+  };
+
   return (
     <Stack mt={10} px={8} spacing={4} data-color-mode={userTheme}>
       <TextField
@@ -93,7 +121,9 @@ const Update = ({ params }: { params: { categoryId: number; postId: number } }) 
         <TagList editTagArray={(newValue) => setTags(newValue)} tagArray={tags} />
         <TopButton />
       </ToolBar>
-      <MDEditor height="68vh" value={content} onChange={setContent} />
+      <div onPaste={handlePaste}>
+        <MDEditor height="68vh" value={content} onChange={setContent} />
+      </div>
       <BottomButton categoryId={params.categoryId} postId={params.postId} writeProps={writeProps} />
     </Stack>
   );

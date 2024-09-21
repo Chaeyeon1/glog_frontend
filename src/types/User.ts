@@ -9,7 +9,7 @@
  * ---------------------------------------------------------------
  */
 
-import { GetUserDetailData } from './data-contracts';
+import { DeleteUserData, GetUserDetailData } from './data-contracts';
 import { HttpClient, RequestParams } from './http-client';
 
 export class User<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
@@ -26,6 +26,22 @@ export class User<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
     this.request<GetUserDetailData, any>({
       path: `/user/detail`,
       method: 'GET',
+      secure: true,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags user-controller
+   * @name DeleteUser
+   * @request DELETE:/user
+   * @secure
+   * @response `200` `DeleteUserData` OK
+   */
+  deleteUser = (params: RequestParams = {}) =>
+    this.request<DeleteUserData, any>({
+      path: `/user`,
+      method: 'DELETE',
       secure: true,
       ...params,
     });

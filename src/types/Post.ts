@@ -14,6 +14,7 @@ import {
   Create2Data,
   Create2Payload,
   Delete2Data,
+  GetAllPostsData,
   PlusLikeData,
   ReadPostData,
   Update1Data,
@@ -148,6 +149,22 @@ export class Post<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
       path: `/post/previews/${kind}`,
       method: 'GET',
       query: query,
+      secure: true,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags post-controller
+   * @name GetAllPosts
+   * @request GET:/post/all
+   * @secure
+   * @response `200` `GetAllPostsData` OK
+   */
+  getAllPosts = (params: RequestParams = {}) =>
+    this.request<GetAllPostsData, any>({
+      path: `/post/all`,
+      method: 'GET',
       secure: true,
       ...params,
     });
