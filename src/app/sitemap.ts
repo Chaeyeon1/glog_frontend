@@ -38,49 +38,49 @@ export const getRecentPosts = () => {
     });
 };
 
-const formatISODate = (dateString: string): string => {
-  const date = new Date(dateString);
-  return date.toISOString();
-};
+// const formatISODate = (dateString: string): string => {
+//   const date = new Date(dateString);
+//   return date.toISOString();
+// };
 
-type PostType = {
-  postPreviewDtos: {
-    blogUrl: string;
-    title: string;
-    createdAt: string;
-    categoryId: string;
-    postId: string;
-  }[];
-};
+// type PostType = {
+//   postPreviewDtos: {
+//     blogUrl: string;
+//     title: string;
+//     createdAt: string;
+//     categoryId: string;
+//     postId: string;
+//   }[];
+// };
 const Sitemap = async (): Promise<MetadataRoute.Sitemap> => {
-  const likeProducts: PostType = await getLikePosts();
-  const viewProducts: PostType = await getViewPosts();
-  const recentProducts: PostType = await getRecentPosts();
+  // const likeProducts: PostType = await getLikePosts();
+  // const viewProducts: PostType = await getViewPosts();
+  // const recentProducts: PostType = await getRecentPosts();
 
-  const blogPosts = likeProducts.postPreviewDtos.map((post) => ({
-    url: `https://gloog.vercel.app/${post.blogUrl}/home/${post.categoryId}/${post.postId}`,
-    lastModified: formatISODate(post.createdAt),
-    changeFrequency: 'always' as const,
-    priority: 1,
-  }));
+  // const blogPosts = likeProducts.postPreviewDtos?.map((post) => ({
+  //   url: `https://gloog.vercel.app/${post.blogUrl}/home/${post.categoryId}/${post.postId}`,
+  //   lastModified: formatISODate(post.createdAt),
+  //   changeFrequency: 'always' as const,
+  //   priority: 1,
+  // }));
 
-  blogPosts.push(
-    ...viewProducts.postPreviewDtos.map((post) => ({
-      url: `https://gloog.vercel.app/${post.blogUrl}/home/${post.categoryId}/${post.postId}`,
-      lastModified: formatISODate(post.createdAt),
-      changeFrequency: 'always' as const,
-      priority: 1,
-    })),
-  );
+  // blogPosts.push(
+  //   ...viewProducts.postPreviewDtos.map((post) => ({
+  //     url: `https://gloog.vercel.app/${post.blogUrl}/home/${post.categoryId}/${post.postId}`,
+  //     lastModified: formatISODate(post.createdAt),
+  //     changeFrequency: 'always' as const,
+  //     priority: 1,
+  //   })),
+  // );
 
-  blogPosts.push(
-    ...recentProducts.postPreviewDtos.map((post) => ({
-      url: `https://gloog.vercel.app/${post.blogUrl}/home/${post.categoryId}/${post.postId}`,
-      lastModified: formatISODate(post.createdAt),
-      changeFrequency: 'always' as const,
-      priority: 1,
-    })),
-  );
+  // blogPosts.push(
+  //   ...recentProducts.postPreviewDtos.map((post) => ({
+  //     url: `https://gloog.vercel.app/${post.blogUrl}/home/${post.categoryId}/${post.postId}`,
+  //     lastModified: formatISODate(post.createdAt),
+  //     changeFrequency: 'always' as const,
+  //     priority: 1,
+  //   })),
+  // );
 
   return [
     {
@@ -89,7 +89,7 @@ const Sitemap = async (): Promise<MetadataRoute.Sitemap> => {
       changeFrequency: 'always',
       priority: 0.5,
     },
-    ...blogPosts,
+    // ...blogPosts,
   ];
 };
 
