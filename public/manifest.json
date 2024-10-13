@@ -1,0 +1,17 @@
+{
+  "name": "GLOG",
+  "short_name": "GLOG",
+  "description": "GLOG description",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#F94144",
+  "form-factor": "wide",
+  "icons": [
+    {
+      "src": "/assets/GLOG_RED_LOGO.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

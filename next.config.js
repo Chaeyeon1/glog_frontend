@@ -1,15 +1,21 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /** @type {import('next').NextConfig} */
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const removeImports = require('next-remove-imports')();
 
+// PWA 설정
+const withPWAConfig = require('next-pwa')({
+  dest: 'public',
+  register: true,
+  skipWaiting: true,
+});
+
+// 기존 Next.js 설정
 const nextConfig = {
-  // ...options,
   webpack: (config) => {
     config.module.rules.push({
       test: /\.svg$/,
       use: ['@svgr/webpack'],
     });
-
     return config;
   },
   images: {
@@ -22,6 +28,8 @@ const nextConfig = {
   },
 };
 
+// removeImports와 PWA 설정을 함께 적용
 module.exports = removeImports({
+  ...withPWAConfig,
   ...nextConfig,
 });
